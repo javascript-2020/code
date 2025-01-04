@@ -70,7 +70,8 @@
               var uint8   = new Uint8Array(saltlen);
               self.crypto.getRandomValues(uint8);
               var buf     = uint8.buffer;
-              var b64     = btoa(buf);
+              var str     = buf_str(buf);
+              var b64     = btoa(str);
               return b64;
               
         }//browser
