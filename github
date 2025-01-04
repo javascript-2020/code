@@ -1,0 +1,36 @@
+
+
+
+
+
+(async()=>{
+
+//  "https://api.github.com/repos/octocat/example/git/blobs/3a0f86fb8db8eea7ccbb9a95f325ddbedfb25e15"
+//  /repos/{owner}/{repo}/git/blobs/{file_sha}
+//  https://api.github.com/repos/*owner*/*repo*/contents/*path*
+
+
+
+      //var token     = '';
+      var headers   = { accept:'application/vnd.github+json',
+                        //authorization:`Bearer ${token}`
+                      };
+  
+      var user    = 'javascript-2020';
+      var repo    = 'libs';
+      var path    = 'html/github/github.html';
+      
+      var url   = `https://api.github.com/repos/${user}/${repo}/contents/${path}`;
+      var res   = await fetch(url,{headers});
+      var json  = await res.json();
+      var b64   = json.content;
+      var txt   = window.atob(b64);
+      console.log(txt);
+      
+      
+})();
+
+
+
+
+
