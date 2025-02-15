@@ -1,0 +1,107 @@
+<script type=module>
+
+
+import _7zWasm from 'https://cdn.jsdelivr.net/npm/7z-wasm@1.1.0/+esm'
+
+(async()=>{
+  
+      console.clear();
+  
+      var z7=await _7zWasm();
+      
+      var chmodOrig = z7.FS.chmod;
+      z7.FS.chmod = function(path, mode, dontFollow) {
+          if (!mode) {
+              return;
+          }
+          chmodOrig(path, mode, dontFollow);
+      };
+
+
+    
+      var opts   =  localStorage['github-token'] && {header:{authorization:`bearer ${localStorage['github-token']}`}};
+      var ext    =  await fetch('https://api.github.com/repos/javascript-2020/ext-code/contents/ext-loader.js',opts)
+                      .then(res=>res.json().then(json=>eval(atob(json.content))));
+
+
+        //var ext     = window.parent.ext;
+        //var dbmod   = (await ext.load.libs('js/core/dbmod/tiny-dbmod.js'))[0]
+        //console.log(dbmod);
+        dbmod();
+        await dbmod.create();
+      
+      
+        var uint8   = await dbmod.get();
+        console.log(!!uint8 && uint8.length);
+        if(!uint8){
+      
+              var blob    = await fetch('https://www.filesampleshub.com/download/archive/7z/sample1.7z').then(res=>res.blob());
+              var buf     = await blob.arrayBuffer();
+              var uint8   = new Uint8Array(buf);
+              dbmod.put(uint8);
+              
+        }
+      
+      
+      var archive   = 'sample1.7z';
+
+      z7.FS.mkdir('/files');
+      
+      const stream = z7.FS.open(archive,'w+');
+      z7.FS.write(stream,uint8,0,uint8.length);
+      z7.FS.close(stream);
+
+      var result    = z7.callMain(['l',archive]);
+      console.log(result);
+
+
+
+      z7.FS.mkdir('/output');
+      
+      console.log('chmod');
+
+      var result    = z7.FS.chmod('.',0o777);
+      console.log(result);
+      
+      
+      
+      console.log('extract');
+      
+      var result    = z7.callMain(['x',archive,'-ooutput']);
+      console.log(result);
+
+      
+      
+      
+      console.log(z7.FS.readFile('output/sample1.doc'));
+
+      
+
+
+      
+        function dbmod(data,name='data'){
+        
+              var db,resolve,promise=()=>new Promise(res=>resolve=res)
+              dbmod.create    = (data,name='data')=>{
+                                      var req               = window.indexedDB.open(name,1)
+                                      req.onsuccess         = e=>{db=req.result;resolve()}
+                                      req.onupgradeneeded   = e=>{db=req.result;db.createObjectStore(name,{keyPath:'key'})
+                                                                  data && req.transaction.objectStore(name).put({key:name,data})
+                                                                  resolve()}
+                                      return promise()
+                                }
+              dbmod.delete    = ()=>(window.indexedDB.deleteDatabase(name).onsuccess=e=>resolve(),promise())
+              dbmod.list      = async()=>(await window.indexedDB.databases()).forEach((db,i)=>console.log(i,':',db.name,db.version))
+              dbmod.put       = data=>(db.transaction(name,'readwrite').objectStore(name).put({key:name,data}).onsuccess=e=>resolve(),promise())
+              dbmod.get       = ()=>(db.transaction(name,'readwrite').objectStore(name).get(name).onsuccess=e=>resolve(e.target.result?.data),promise());
+          
+        }//dbmod
+        
+        
+        
+})();
+
+
+</script>
+
+
