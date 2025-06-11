@@ -59,10 +59,13 @@ https-file-server:d
                     }
               }
               
-              var url     = req.url.slice(1);
-              var fn      = path.resolve(abs,url);
-
-              var mode    = req.headers.mode;
+              var fn    = resolve(req,res);
+              if(fn===false){
+                    badreq(req,res,'invalid url');
+                    return;
+              }
+              
+              var mode      = req.headers.mode;
                                                                                 console.log(mode,fn);
               var unknown   = false;
               switch(mode){
@@ -154,6 +157,15 @@ https-file-server:d
               
         }//unauthorised
   
+        
+        function badreq(req,res){
+        
+              cors.headers(res);
+              res.writeHead(400);
+              res.end(reason);
+              
+        }//badreq
+        
         
   //:
   
