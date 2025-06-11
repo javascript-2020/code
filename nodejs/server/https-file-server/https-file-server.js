@@ -40,8 +40,11 @@ https-file-server:d
         
         require('https').createServer({key,cert},request).listen(port,'localhost');
                                                                                 console.log(`listening https://localhost:${port}/`);
+                                                                                console.log();
                                                                                 console.log('serving :',abs);
-        
+                                                                                console.log();
+                                                                                console.log('===');
+                                                                                console.log();
   //:
   
   
@@ -56,7 +59,7 @@ https-file-server:d
                     }
               }
               
-              var fn    = resolve(req,res);
+              var fn    = resolve.req(req);
               if(fn===false){
                     badreq(req,res,'invalid url');
                     return;
@@ -90,6 +93,17 @@ https-file-server:d
         
         
         resolve.df    = false;
+
+        
+        resolve.req   = function(req){
+        
+              var url       = req.url;
+              url           = url.slice(1);
+              var result    = resolve(url);
+              return result;
+              
+        }//req
+        
         
         function resolve(url,docroot=dir){
                                                                                 resolve.df && console.log('=== resolve ===');
