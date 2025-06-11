@@ -79,6 +79,28 @@ https-file-server:d
         }//request
         
         
+       function resolve(url,docroot=dir){
+                                                                                console.log('resolve :',url,docroot);
+              url         = decodeURI(url);
+                                                                                console.log('url :',url);
+              var p2      = path.resolve(docroot);
+                                                                                console.log('p2 :',p2);
+              var file    = path.resolve(docroot,url);
+                                                                                console.log('file :',file);
+              var s       = file.substring(0,p2.length);
+                                                                                console.log('s :',s);
+              var p1      = path.resolve(s);
+                                                                                console.log('p1 :',p1);
+              if(p1!==p2){
+                                                                                console.log('fail');
+                    return false;
+              }
+                                                                                console.log('ok',file);
+              return file;
+
+        }//resolve
+        
+        
         function cors(req,res){
         
               if(req.method!=='OPTIONS'){
