@@ -40,6 +40,7 @@ https-file-server:d
         
         require('https').createServer({key,cert},request).listen(port,'localhost');
                                                                                 console.log(`listening https://localhost:${port}/`);
+                                                                                console.log('serving :',abs);
         
   //:
   
