@@ -22,7 +22,9 @@ https-file-server:d
         var {O_CREAT}     = fs.constants;
 
 
-        resolve('');
+        var test   = process.argv[2];
+        console.log('test :',test);
+        resolve(test);
         
         process.exit();
 
@@ -88,7 +90,9 @@ https-file-server:d
         
         
        function resolve(url,docroot=dir){
-                                                                                console.log('resolve :',url,docroot);
+                                                                                console.log('=== resolve ===');
+                                                                                console.log('url :',url);
+                                                                                console.log('docroot :',docroot);
               url         = decodeURI(url);
                                                                                 console.log('url :',url);
               var p2      = path.resolve(docroot);
