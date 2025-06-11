@@ -89,25 +89,27 @@ https-file-server:d
         }//request
         
         
-       function resolve(url,docroot=dir){
-                                                                                console.log('=== resolve ===');
-                                                                                console.log('url :',url);
-                                                                                console.log('docroot :',docroot);
+        resolve.df    = false;
+        
+        function resolve(url,docroot=dir){
+                                                                                resolve.df && console.log('=== resolve ===');
+                                                                                resolve.df && console.log('url :',url);
+                                                                                resolve.df && console.log('docroot :',docroot);
               url         = decodeURI(url);
-                                                                                console.log('url :',url);
+                                                                                resolve.df && console.log('url :',url);
               var p2      = path.resolve(docroot);
-                                                                                console.log('p2 :',p2);
+                                                                                resolve.df && console.log('p2 :',p2);
               var file    = path.resolve(docroot,url);
-                                                                                console.log('file :',file);
+                                                                                resolve.df && console.log('file :',file);
               var s       = file.substring(0,p2.length);
-                                                                                console.log('s :',s);
+                                                                                resolve.df && console.log('s :',s);
               var p1      = path.resolve(s);
-                                                                                console.log('p1 :',p1);
+                                                                                resolve.df && console.log('p1 :',p1);
               if(p1!==p2){
-                                                                                console.log('fail');
+                                                                                resolve.df && console.log('fail');
                     return false;
               }
-                                                                                console.log('ok',file);
+                                                                                resolve.df && console.log('ok',file);
               return file;
 
         }//resolve
