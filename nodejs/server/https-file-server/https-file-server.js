@@ -21,6 +21,14 @@ https-file-server:d
         var fs            = require('fs');
         var {O_CREAT}     = fs.constants;
 
+
+        resolve('');
+        
+        process.exit();
+
+
+
+
         var getmime       = require('getmime.js');
         var keys          = require('keys.js');
         
