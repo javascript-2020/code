@@ -67,7 +67,7 @@ https-file-server:d
               
               var mode      = req.headers.mode;
                                                                                 console.log(mode,fn);
-              var unknown   = false;
+              var handled   = true;
               switch(mode){
               
                 case 'mkfile'     : mkfile(req,res,fn);         break;
@@ -77,17 +77,15 @@ https-file-server:d
                 case 'load'       : load(req,res,fn);           break;
                 case 'save'       : save(req,res,fn);           break;
                 
-                default           : unknown   = true;
+                default           : handled   = false;
                 
               }//switch
               
-              if(!unknown){
+              if(handled){
                     return;
               }
               
-              cors.headers(res);
-              res.writeHead(400);
-              res.end(`unknown mode : ${mode}`);
+              unknown(req,res,mode);
               
         }//request
         
@@ -176,6 +174,15 @@ https-file-server:d
               res.end(reason);
               
         }//badreq
+        
+        
+        function unknown(req,res,mode){
+        
+              cors.headers(res);
+              res.writeHead(400);
+              res.end(`unknown mode : ${mode}`);
+        
+        }//unknown
         
         
   //:
