@@ -167,7 +167,7 @@ https-file-server:d
         }//unauthorised
   
         
-        function badreq(req,res){
+        function badreq(req,res,reason){
         
               cors.headers(res);
               res.writeHead(400);
