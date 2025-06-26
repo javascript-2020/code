@@ -45,6 +45,20 @@ https-file-server:d
         
         function init(){
         
+              load();
+              
+              require('https').createServer({key,cert},request).listen(port,'localhost');
+                                                                                console.log(`listening https://localhost:${port}/`);
+                                                                                console.log();
+                                                                                console.log('serving :',abs);
+                                                                                console.log();
+                                                                                console.log('===');
+                                                                                console.log();
+        }//init
+        
+        
+        function load(){
+        
               var load    = '';
               if(fs.existsSync('key.pem')){
                     key   = fs.readFileSync('key.pem','utf8');
@@ -60,16 +74,8 @@ https-file-server:d
               if(load){
                                                                                 console.log('load',load);
               }
-              
-              require('https').createServer({key,cert},request).listen(port,'localhost');
-                                                                                console.log(`listening https://localhost:${port}/`);
-                                                                                console.log();
-                                                                                console.log('serving :',abs);
-                                                                                console.log();
-                                                                                console.log('===');
-                                                                                console.log();
-        }//init
         
+        }//load
         
   //:
   
