@@ -340,7 +340,7 @@ https-file-server:d
         }//readdir
         
         
-        function dirclear(req,res,fn){
+        async function dirclear(req,res,fn){
 
               var list      = await fsp.readdir(fn);
               var errors    = [];
