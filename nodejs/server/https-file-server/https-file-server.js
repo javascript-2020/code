@@ -30,8 +30,8 @@ https-file-server:d
         var getmime       = require('getmime.js');
         var keys          = require('keys.js');
         
-        //var key           = fs.readFileSync('key.pem');
-        //var cert          = fs.readFileSync('cert.pem');
+        var key;
+        var cert;
         
         var abs           = path.resolve(__dirname,dir);
         if(!abs.endsWith('/')){
@@ -45,6 +45,13 @@ https-file-server:d
         
         function init(){
         
+              if(fs.existsSync('key.pem')){
+                    key   = fs.readFileSync('key.pem','utf8');
+              }
+              if(fs.existsSync('cert.pem')){
+                    cert    = fs.readFileSync('cert.pem','utf8');
+              }
+              
               require('https').createServer({key,cert},request).listen(port,'localhost');
                                                                                 console.log(`listening https://localhost:${port}/`);
                                                                                 console.log();
@@ -386,7 +393,7 @@ https-file-server:d
         
   //:
   
-        var cert    = 
+        cert    = 
               '-----BEGIN CERTIFICATE-----\n'                                       +
               'MIIDcjCCAlqgAwIBAgIBATANBgkqhkiG9w0BAQUFADAlMSMwIQYDVQQDExpsb2Nh\n'  +
               'bGhvc3QgdGVzdCBjZXJ0aWZpY2F0ZTAeFw0yNTA2MjYxNzQ5MDBaFw0yNjA2MjYx\n'  +
@@ -410,7 +417,7 @@ https-file-server:d
               '-----END CERTIFICATE-----\n'
         ;
 
-        var key   =
+        key   =
               '-----BEGIN RSA PRIVATE KEY-----\n'                                   +
               'MIIEpAIBAAKCAQEAqWZ5x4R8GVoRKeXe++SN54MzUD1BD/eNfmELIedKeof0m/Cx\n'  +
               'XQZn2KyxYzvPmCKM6qv0Y458sadmaG0HQGUb55lmox6T7U5LjF3C7HM2PZjuQw5Z\n'  +
