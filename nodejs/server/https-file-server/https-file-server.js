@@ -46,9 +46,11 @@ https-file-server:d
         function init(){
         
               if(fs.existsSync('key.pem')){
+                                                                                console.log('load key.pem');
                     key   = fs.readFileSync('key.pem','utf8');
               }
               if(fs.existsSync('cert.pem')){
+                                                                                console.log('load cert.pem');
                     cert    = fs.readFileSync('cert.pem','utf8');
               }
               
