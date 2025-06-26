@@ -45,7 +45,7 @@ https-file-server:d
         
         function init(){
         
-              load();
+              load_cert();
               
               require('https').createServer({key,cert},request).listen(port,'localhost');
                                                                                 console.log(`listening https://localhost:${port}/`);
@@ -57,7 +57,7 @@ https-file-server:d
         }//init
         
         
-        function load(){
+        function load_cert(){
         
               var load    = '';
               if(fs.existsSync('key.pem')){
