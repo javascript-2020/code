@@ -52,6 +52,9 @@ https-file-server:d
               }
               if(fs.existsSync('cert.pem')){
                     cert    = fs.readFileSync('cert.pem','utf8');
+                    if(load){
+                          load   += ',';
+                    }
                     load += 'cert.pem';
               }
               if(load){
