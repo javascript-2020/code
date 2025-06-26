@@ -45,13 +45,17 @@ https-file-server:d
         
         function init(){
         
+              var load    = '';
               if(fs.existsSync('key.pem')){
-                                                                                console.log('load key.pem');
                     key   = fs.readFileSync('key.pem','utf8');
+                    load += 'key.pem ';
               }
               if(fs.existsSync('cert.pem')){
-                                                                                console.log('load cert.pem');
                     cert    = fs.readFileSync('cert.pem','utf8');
+                    load += 'cert.pem';
+              }
+              if(load){
+                                                                                console.log('load',load);
               }
               
               require('https').createServer({key,cert},request).listen(port,'localhost');
@@ -61,7 +65,6 @@ https-file-server:d
                                                                                 console.log();
                                                                                 console.log('===');
                                                                                 console.log();
-                                                                                
         }//init
         
         
