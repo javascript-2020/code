@@ -19,6 +19,7 @@ https-file-server:d
         
         var path          = require('path');
         var fs            = require('fs');
+        var fsp           = fs.promises;
         var {O_CREAT}     = fs.constants;
                                                                                 if(0){
                                                                                   var test   = process.argv[2];
@@ -102,14 +103,17 @@ https-file-server:d
               var handled   = true;
               switch(mode){
               
-                case 'mkfile'     : mkfile(req,res,fn);         break;
-                case 'rmdir'      : rmdir(req,res,fn);          break;
-                case 'mkdir'      : mkdir(req,res,fn);          break;
-                case 'readdir'    : readdir(req,res,fn);        break;
-                case 'load'       : load(req,res,fn);           break;
-                case 'save'       : save(req,res,fn);           break;
+                case 'mkfile'       : mkfile(req,res,fn);         break;
+                case 'rmdir'        : rmdir(req,res,fn);          break;
+                case 'mkdir'        : mkdir(req,res,fn);          break;
+                case 'readdir'      : readdir(req,res,fn);        break;
+                case 'dir-clear'    : dirclear(req,res,fn);       break;
+                case 'load'         : load(req,res,fn);           break;
+                case 'save'         : save(req,res,fn);           break;
+                case 'upload'       : upload(req,res,fn);         break;
+                case 'download'     : download(req,res,fn);       break;
                 
-                default           : handled   = false;
+                default             : handled   = false;
                 
               }//switch
               
@@ -336,6 +340,43 @@ https-file-server:d
         }//readdir
         
         
+        function dirclear(req,res,fn){
+
+              var list      = await fsp.readdir(fn);
+              var errors    = [];
+              list.forEach(filename=>{
+              
+                    var err;
+                    try{
+                    
+                          fs.rmSync(fn+filename,{recursive:true,force:true});
+                          
+                    }
+                    catch(err2){
+                    
+                          err   = err2;
+                          
+                    }
+                    if(err){
+                          errors.push(err.toString());
+                    }
+                    
+              });
+
+              if(errors.length){
+                    cors.headers(res);
+                    res.writeHead(400);
+                    res.end(err.toString());
+                    return;
+              }
+              
+              cors.headers(res);
+              res.end('ok');
+              
+        
+        }//dirclear
+        
+        
         function load(req,res,fn){
 
               if(!fs.existsSync(fn)){
@@ -371,6 +412,40 @@ https-file-server:d
               });
                             
         }//save
+        
+        
+        function upload(req,res,fn){
+              
+              var stream    = fs.createWriteStream(fn);
+              req.pipe(stream);
+              req.on('end',()=>{
+              
+                    cors.headers(res);
+                    res.writeHead(200);
+                    res.end('ok');
+                    
+              });
+
+        }//upload
+        
+        
+        function download(req,res,fn){
+
+              if(!fs.existsSync(fn)){
+                    notfound(req,res);
+                    return;
+              }
+              
+              var mime      = getmime(fn);
+              var stream    = fs.createReadStream(fn);
+
+              cors.headers(res);
+              res.writeHead(200,{'content-type':mime});
+              stream.pipe(res);
+        
+        }//download
+        
+        
         
         
   //:
