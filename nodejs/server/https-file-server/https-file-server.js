@@ -88,11 +88,14 @@ https-file-server:d
   
         function request(req,res){
         
-              if(cors(req,res))return;
+              if(cors(req,res)){
+                                                                                request.log(req);
+                    return;
+              }
                     
               if(auth){
                     if(req.headers.auth!==auth){
-                                                                                console.log(req.method,req.url);
+                                                                                request.log(req);
                           unauthorised(req,res);
                           return;
                     }
@@ -100,13 +103,13 @@ https-file-server:d
               
               var fn    = resolve.req(req);
               if(fn===false){
-                                                                                console.log(req.method,req.url);
+                                                                                request.log(req);
                     badreq(req,res,'invalid url');
                     return;
               }
               
               var mode      = req.headers.mode;
-                                                                                console.log(req.method,req.url,mode,fn);
+                                                                                request.log(req,mode,fn);
               var handled   = true;
               switch(mode){
               
@@ -131,6 +134,21 @@ https-file-server:d
               unknown(req,res,mode);
               
         }//request
+
+        
+        request.log   = function(req,mode,fn){
+        
+              var spc   = [10,20,10,20];
+              var str   = [req.method,req.url];
+              if(mode){
+                    str.push(mode,fn);
+              }
+              str   = str.map((str,i)=>str.padEnd(spc[i]));
+              str   = str.join();
+              
+              console.log(str);
+              
+        }//log
         
         
         resolve.req   = function(req){
