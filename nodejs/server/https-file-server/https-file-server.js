@@ -159,6 +159,10 @@ https-file-server:d
                                                                                 resolve.df && console.log('fail');
                     return false;
               }
+              
+              if(url.endsWith('/')){
+                    file   += '/';
+              }
                                                                                 resolve.df && console.log('ok',file);
               return file;
 
