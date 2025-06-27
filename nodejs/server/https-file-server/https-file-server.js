@@ -82,11 +82,12 @@ https-file-server:d
   
   
         function request(req,res){
-                                                                                console.log(req.method,req.url);
+        
               if(cors(req,res))return;
-              
+                    
               if(auth){
                     if(req.headers.auth!==auth){
+                                                                                console.log(req.method,req.url);
                           unauthorised(req,res);
                           return;
                     }
@@ -94,12 +95,13 @@ https-file-server:d
               
               var fn    = resolve.req(req);
               if(fn===false){
+                                                                                console.log(req.method,req.url);
                     badreq(req,res,'invalid url');
                     return;
               }
               
               var mode      = req.headers.mode;
-                                                                                console.log(mode,fn);
+                                                                                console.log(req.method,req.url,mode,fn);
               var handled   = true;
               switch(mode){
               
@@ -126,7 +128,7 @@ https-file-server:d
         }//request
         
         
-        resolve.df    = false;
+        resolve.df    = true;
 
         
         resolve.req   = function(req){
@@ -168,7 +170,7 @@ https-file-server:d
               if(req.method!=='OPTIONS'){
                     return;
               }
-
+                                                                                console.log(req.method,req.url);
               cors.headers(res);              
               res.end();
               
@@ -195,7 +197,7 @@ https-file-server:d
         
         
         function unauthorised(req,res){
-        
+                            
               cors.headers(res);
               res.writeHead(401);
               res.end('unauthorised');
