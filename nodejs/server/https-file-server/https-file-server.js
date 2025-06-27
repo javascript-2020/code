@@ -28,6 +28,7 @@ https-file-server:d
                                                                                   
                                                                                   process.exit();
                                                                                 }
+                                                                                
         var getmime       = require('getmime.js');
         var keys          = require('keys.js');
         
@@ -38,7 +39,10 @@ https-file-server:d
         if(!abs.endsWith('/')){
               abs  += '/';
         }
+
         
+        resolve.df    = false;
+
         
   //:
   
@@ -127,9 +131,6 @@ https-file-server:d
               
         }//request
         
-        
-        resolve.df    = true;
-
         
         resolve.req   = function(req){
         
