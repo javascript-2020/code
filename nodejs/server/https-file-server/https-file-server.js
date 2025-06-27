@@ -345,11 +345,12 @@ https-file-server:d
               var list      = await fsp.readdir(fn);
               var errors    = [];
               list.forEach(item=>{
-                                                                                console.log(filename);
+
                     var err;
                     try{
                     
                           var abs   = fn+item.name;
+                                                                                console.log(abs);
                           fs.rmSync(abs,{recursive:true,force:true});
                           
                     }
