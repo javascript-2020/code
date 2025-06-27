@@ -80,7 +80,8 @@ https-file-server:d
                                                                                 console.log('load',load);
               }
         
-        }//load
+        }//load_cert
+
         
   //:
   
@@ -187,7 +188,7 @@ https-file-server:d
         cors.headers   = function(res){
         
               res.setHeader('access-control-allow-origin','*');
-              res.setHeader('access-control-allow-headers','auth, mode');
+              res.setHeader('access-control-allow-headers','auth, mode,content-type');
         
         }//header
         
