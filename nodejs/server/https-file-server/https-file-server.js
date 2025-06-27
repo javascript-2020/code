@@ -350,12 +350,12 @@ https-file-server:d
                                                                                 console.log('dirclear',fn);
               var list      = await fsp.readdir(fn);
               var errors    = [];
-              list.forEach((item,i)=>{
+              list.forEach((name,i)=>{
 
                     var err;
                     try{
                     
-                          var abs   = fn+item.name;
+                          var abs   = fn+name;
                                                                                 console.log(i,abs);
                           fs.rmSync(abs,{recursive:true,force:true});
                           
