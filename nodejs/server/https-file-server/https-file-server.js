@@ -144,7 +144,7 @@ https-file-server:d
                     str.push(mode,fn);
               }
               str   = str.map((str,i)=>str.padEnd(spc[i]));
-              str   = str.join();
+              str   = str.join(' ');
               
               console.log(str);
               
