@@ -465,6 +465,11 @@ https-file-server:d
                     return;
               }
               
+              if(!fs.statSync(fn).isFile()){
+                    badreq(req,res,'not file');
+                    return;
+              }
+              
               var mime      = getmime(fn);
               var stream    = fs.createReadStream(fn);
 
