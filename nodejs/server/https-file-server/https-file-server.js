@@ -194,7 +194,7 @@ https-file-server:d
               if(req.method!=='OPTIONS'){
                     return;
               }
-                                                                                console.log(req.method,req.url);
+
               cors.headers(res);              
               res.end();
               
