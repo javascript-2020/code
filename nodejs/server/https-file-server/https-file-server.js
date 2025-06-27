@@ -341,11 +341,11 @@ https-file-server:d
         
         
         async function dirclear(req,res,fn){
-
+                                                                                console.log('dirclear',fn);
               var list      = await fsp.readdir(fn);
               var errors    = [];
               list.forEach(filename=>{
-              
+                                                                                console.log(filename);
                     var err;
                     try{
                     
@@ -353,11 +353,12 @@ https-file-server:d
                           
                     }
                     catch(err2){
-                    
+                                                          
                           err   = err2;
                           
                     }
                     if(err){
+                                                                                console.log(err);
                           errors.push(err.toString());
                     }
                     
