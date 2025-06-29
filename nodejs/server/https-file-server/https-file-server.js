@@ -114,6 +114,7 @@ https-file-server:d
               switch(mode){
               
                 case 'mkfile'       : mkfile(req,res,fn);         break;
+                case 'rmfile'       : rmfile(req,res,fn);         break;
                 case 'rmdir'        : rmdir(req,res,fn);          break;
                 case 'mkdir'        : mkdir(req,res,fn);          break;
                 case 'readdir'      : readdir(req,res,fn);        break;
@@ -276,6 +277,32 @@ https-file-server:d
               res.end('ok');
               
         }//mkdir
+        
+        
+        function rmfile(req,res,fn){
+        
+              var err;
+              try{
+              
+                    fs.rmSync(fn,{recursive:true,force:true});
+                    
+              }
+              catch(err2){
+              
+                    err   = err2;
+                    
+              }
+              if(err){
+                    cors.headers(res);
+                    res.writeHead(400);
+                    res.end(err.toString());
+                    return;
+              }
+              
+              cors.headers(res);
+              res.end('ok');
+              
+        }//rmfile
         
         
         function rmdir(req,res,fn){
