@@ -2,7 +2,8 @@
 
 
 
-
+      var url   = 'https://localhost:3010/';
+      
 
       const stream    = new ReadableStream({start}).pipeThrough(new TextEncoderStream());
       
@@ -27,6 +28,12 @@
       
       
       const resp      = await fetch('test',{method:'post',body:stream,duplex:'half'});
+      
+      
+      
+      
+      
+      
       const reader    = resp.body.pipeThrough(new TextDecoderStream()).getReader();
                                                                         console.log('response stream aquired');
       while(true){
