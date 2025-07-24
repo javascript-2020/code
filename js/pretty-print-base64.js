@@ -9,16 +9,19 @@ console.log();
 
 
 
-        var w     = 60;
+        var w         = 60;
+        var indent    = 14;
         
         
-        var txt   = await navigator.clipboard.readText();
+        var txt       = await navigator.clipboard.readText();
         
         
-        var i     = txt.indexOf(',');
-        txt       = txt.slice(i+1);
+        var i         = txt.indexOf(',');
+        txt           = txt.slice(i+1);
         
-        var parts   = [];
+        var parts     = [];
+
+        
         while(true){
         
               var s   = txt.slice(0,w);
@@ -38,7 +41,9 @@ console.log();
         str       = str.slice(0,i+1);
         parts.push(str);
 
-
+        indent    = ''.padStart(indent,' ');
+        parts     = parts.map(str=>indent+str);
+        
         
         var txt   = parts.join('\n');
         console.log(txt);
