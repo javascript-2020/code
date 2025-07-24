@@ -8,10 +8,13 @@ console.log('pretty print base64');
 console.log();
 
 
+
         var w     = 60;
         
         
         var txt   = await navigator.clipboard.readText();
+        
+        
         var i     = txt.indexOf(',');
         txt       = txt.slice(i+1);
         
@@ -39,6 +42,9 @@ console.log();
         
         var txt   = parts.join('\n');
         console.log(txt);
+
+        
+        navigator.clipboard.writeText(txt);
         
         
 })();
