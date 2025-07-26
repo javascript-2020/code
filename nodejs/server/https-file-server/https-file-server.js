@@ -10,7 +10,7 @@ https-file-server:d
 
 */
                                                                                 console.clear();
-                                                                                console.log('https-file-server');
+                                                                                terminal_title('https-file-server');
                                                                                 console.log();
                                                                                 console.json=v=>console.log(JSON.stringify(v,null,4));
         var auth          = argv('auth')||'matt-123';
@@ -557,6 +557,19 @@ https-file-server:d
               return null;
               
         }//argv
+
+
+
+          function terminal_title(str){
+                                                                                console.log(str);
+                                                                                console.log();
+                var esc   = String.fromCharCode(27);
+                var c7    = String.fromCharCode(7);
+                var cmd   = `${esc}]0;${str}${c7}`;
+                process.stdout.write(cmd);
+                
+          }//terminal_title
+
         
         
   //:
@@ -616,7 +629,6 @@ https-file-server:d
         ;
         
         
-
 
 
 
