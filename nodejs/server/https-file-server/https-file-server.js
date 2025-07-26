@@ -459,7 +459,22 @@ https-file-server:d
               }
               */
               
-              var stream    = fs.createWriteStream(fn);
+              var err;
+              try{
+              
+                    var stream    = fs.createWriteStream(fn);
+                    
+              }//try
+              catch(err2){
+              
+                    err   = err2;
+                    
+              }//catch
+              if(err){
+                    var str   = 'invalid filename : '+fn+'\n'+err.toString();
+                    badrequest(req,res,str)
+                    return;
+              }
               
               req.pipe(stream);
               req.on('end',()=>{
