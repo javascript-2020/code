@@ -3,6 +3,9 @@
 
 /*
 
+//file-transfer-server.js:d
+
+22-07-25
 
 
 */
@@ -19,13 +22,13 @@
 
 
           var host          = '127.0.0.1';
-          var port          = 3001;
+          var port          = 3002;
           
-          var server    = require('https').createServer({key,cert},request).listen({host,port});
+          var server        = require('https').createServer({key,cert},request).listen({host,port});
           server.on('upgrade',upgrade);
                                                                                 console.log(`listening https://localhost:${port}`);
           
-          var clients   = [];
+          var clients       = [];
           
           
           function request(req,res){
@@ -41,8 +44,6 @@
                       return;
                 }
 
-
-                
           }//request
 
           
