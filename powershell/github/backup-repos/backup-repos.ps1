@@ -1,9 +1,11 @@
 
 
+#winget install --id Git.Git -e --source winget
+
 
 # === CONFIG ===
 $Username   = "your-github-username"
-$Token      = "ghp_your_token_here"
+$Token      = Read-Host -Prompt "Enter your GitHub Personal Access Token"
 $BackupRoot = "/work/github/tmp/"
 $DateStamp  = Get-Date -Format "yyyy-MM-dd"
 $ZipPath    = "/work/github/backup/github_$DateStamp.zip"
