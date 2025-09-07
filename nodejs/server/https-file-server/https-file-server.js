@@ -395,6 +395,25 @@ https-file-server:d
         
         async function dirclear(req,res,fn){
                                                                                 console.log('dirclear',fn);
+              var err;
+              try{
+              
+                    fs.mkdirSync(fn,{recursive:true});
+                    
+              }
+              catch(err2){
+                
+                    err   = err2;
+                    
+              }
+              if(err){
+                    cors.headers(res);
+                    res.writeHead(400);
+                    res.end(err.toString());
+                    return;
+              }
+              
+              
               var list      = await fsp.readdir(fn);
               var errors    = [];
               list.forEach((name,i)=>{
@@ -420,9 +439,10 @@ https-file-server:d
               });
 
               if(errors.length){
+                    var str   = errors.join('\n');
                     cors.headers(res);
                     res.writeHead(400);
-                    res.end(err.toString());
+                    res.end(str);
                     return;
               }
               
