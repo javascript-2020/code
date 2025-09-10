@@ -11,7 +11,7 @@ https-file-server:d
 */
                                                                                 console.clear();
                                                                                 terminal_title('https-file-server');
-                                                                                console.log(process.argv);
+                                                                                //console.log(process.argv);
                                                                                 console.log();
                                                                                 console.json=v=>console.log(JSON.stringify(v,null,4));
         var auth          = argv('auth')||'matt-123';
