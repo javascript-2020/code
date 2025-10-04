@@ -1,5 +1,7 @@
 
 
+# Set-ExecutionPolicy RemoteSigned
+
 
 # === CONFIG ===
 $Username   = "your-github-username"
