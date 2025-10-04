@@ -5,15 +5,19 @@
 
 
 # === CONFIG ===
-$Username   = "your-github-username"
+$Username   = Read-Host -Prompt "Enter GitHub UserName"
 $Token      = Read-Host -Prompt "Enter your GitHub Personal Access Token"
-$BackupRoot = "/work/github/tmp/"
+$BackupRoot = "/work/github/backup/"
+$BackupTmp = "$($BackupRoot)tmp/"
 $DateStamp  = Get-Date -Format "yyyy-MM-dd_HH-mm"
-$ZipPath    = "/work/github/backup/github-files_$DateStamp.zip"
+$ZipPath = "$($BackupRoot)github-files_$DateStamp.zip"
 
 # === SETUP ===
 if (!(Test-Path $BackupRoot)) {
-    New-Item -ItemType Directory -Path $BackupRoot | Out-Null
+    New-Item -ItemType Directory -Path $BackupRoot -Force | Out-Null
+}
+if (!(Test-Path $BackupTmp)) {
+    New-Item -ItemType Directory -Path $BackupTmp -Force | Out-Null
 }
 Set-Location $BackupRoot
 
@@ -25,34 +29,12 @@ $ExcludedRepos = @("test-repo","demo-project")
 $Repos = $Repos | Where-Object { $ExcludedRepos -notcontains $_.name }
 
 foreach ($Repo in $Repos) {
-    #$Name       = $Repo.name
-    #$DefaultRef = $Repo.default_branch
-    #$ZipUrl     = "https://github.com/$Username/$Name/archive/refs/heads/$DefaultRef.zip"
-    #$OutFile    = "$BackupRoot$Name-$DefaultRef.zip"
-
-
-    #Write-Host "`nrepo archive $($Repo.archive_url)"
-    #$RawUrl = $Repo.archive_url -replace '{/archive_format}{/ref}', "zipball/$($Repo.default_branch)"
-    #Write-Host "`nrawurl $RawUrl"
-    #$OutFile = "$BackupRoot$($Repo.name)-$($Repo.default_branch).zip"
-    #Write-Host "`noutfile $OutFile"
-    
-    
+  
     $Name       = $Repo.name
     $Branch     = $Repo.default_branch
     $FullName   = $Repo.full_name  # e.g., "username/reponame"
     $ZipUrl     = "https://api.github.com/repos/$FullName/zipball/$Branch"
-    $OutFile    = "$BackupRoot$Name-$Branch.zip"
-
-    
-    
-    
-    
-    #Write-Host "Downloading $($Repo.name)..."
-    #Invoke-WebRequest -Uri $RawUrl -Headers $Headers -OutFile $OutFile
-
-
-
+    $OutFile    = "$BackupTmp$Name-$Branch.zip"
 
     Write-Host "Downloading $Name ($DefaultRef)..."
     Invoke-WebRequest -Uri $ZipUrl -OutFile $OutFile
@@ -64,6 +46,11 @@ Compress-Archive -Path "$BackupRoot\*" -DestinationPath $ZipPath -Force
 
 # === CLEANUP ===
 Write-Host "`nCleaning up individual repo zips..."
-Get-ChildItem -Path $BackupRoot -Filter *.zip | Remove-Item -Force
+Get-ChildItem -Path $BackupTmp -Filter *.zip | Remove-Item -Force
 
 Write-Host "`nBackup complete. Archive saved as $ZipPath"
+
+
+
+
+
