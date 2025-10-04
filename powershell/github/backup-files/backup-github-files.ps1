@@ -1,6 +1,7 @@
 
 
 # Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+# Unblock-File -Path "C:\work\backup-files.ps1"
 
 
 # === CONFIG ===
