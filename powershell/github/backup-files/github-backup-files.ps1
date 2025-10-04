@@ -1,7 +1,7 @@
 
 
 # Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
-# Unblock-File -Path "C:\work\github-backup-files.ps1"
+# Unblock-File -Path "github-backup-files.ps1"
 
 
 # === CONFIG ===
