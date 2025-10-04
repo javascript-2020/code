@@ -1,6 +1,6 @@
 
 
-# Set-ExecutionPolicy RemoteSigned
+# Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
 
 
 # === CONFIG ===
