@@ -21,6 +21,9 @@ Set-Location $BackupRoot
 $Headers = @{ Authorization = "token $Token" }
 $Repos   = Invoke-RestMethod -Uri "https://api.github.com/user/repos?per_page=100" -Headers $Headers
 
+$ExcludedRepos = @("test-repo","demo-project")
+$Repos = $Repos | Where-Object { $ExcludedRepos -notcontains $_.name }
+
 foreach ($Repo in $Repos) {
     #$Name       = $Repo.name
     #$DefaultRef = $Repo.default_branch
