@@ -39,3 +39,9 @@ add cert ( admin )
 $certPath = "C:\path\to\your\certificate.cer"
 Import-Certificate -FilePath $certPath -CertStoreLocation "Cert:\LocalMachine\Root"
 
+
+import to CurrentUser store
+
+Import-Certificate -FilePath $certPath -CertStoreLocation "Cert:\CurrentUser\Root"
+
+
