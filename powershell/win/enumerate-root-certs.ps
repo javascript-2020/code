@@ -1,3 +1,6 @@
+
+enumerate certs
+
 Get-ChildItem -Path Cert:\LocalMachine\Root | ForEach-Object {
     [PSCustomObject]@{
         # Subject        = $_.Subject
@@ -11,3 +14,23 @@ Get-ChildItem -Path Cert:\LocalMachine\Root | ForEach-Object {
         # PublicKeyAlgo  = $_.PublicKey.KeyExchangeAlgorithm
     }
 }
+
+
+Get-ChildItem -Path Cert:\LocalMachine\Root | ForEach-Object {
+    if ($_.Subject -match "CN=([^,]+)") {
+        [PSCustomObject]@{
+            CN        = $matches[1]
+            NotBefore = $_.NotBefore
+        }
+    }
+}
+
+
+set friendly name
+
+$cert = Get-ChildItem -Path Cert:\LocalMachine\Root | Where-Object { $_.Subject -like "*YourCertSubject*" }
+$cert.FriendlyName = "My Custom Label"
+
+
+
+
