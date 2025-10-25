@@ -1,0 +1,13 @@
+Get-ChildItem -Path Cert:\LocalMachine\Root | ForEach-Object {
+    [PSCustomObject]@{
+        # Subject        = $_.Subject
+        # Issuer         = $_.Issuer
+        FriendlyName   = $_.FriendlyName
+        #Thumbprint     = $_.Thumbprint
+        NotBefore      = $_.NotBefore
+        #NotAfter       = $_.NotAfter
+        # SerialNumber   = $_.SerialNumber
+        #SignatureAlgo  = $_.SignatureAlgorithm.FriendlyName
+        # PublicKeyAlgo  = $_.PublicKey.KeyExchangeAlgorithm
+    }
+}
