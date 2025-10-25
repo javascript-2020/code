@@ -34,3 +34,8 @@ $cert.FriendlyName = "My Custom Label"
 
 
 
+add cert ( admin )
+
+$certPath = "C:\path\to\your\certificate.cer"
+Import-Certificate -FilePath $certPath -CertStoreLocation "Cert:\LocalMachine\Root"
+
