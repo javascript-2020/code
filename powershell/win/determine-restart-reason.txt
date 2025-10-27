@@ -17,3 +17,22 @@ Get-WinEvent -LogName System -FilterXPath "*[System[(EventID=1074 or EventID=600
 
 Get-WinEvent -LogName System -FilterXPath "*[System[(EventID=1074 or EventID=6008 or EventID=6006 or EventID=6005 or EventID=41 or EventID=1 or EventID=12 or EventID=13 or EventID=109 or EventID=1001 or EventID=10110or EventID=10111)]]" -MaxEvents 50 | Format-List TimeCreated,Id,Message
 
+
+
+Event ID	Source	Meaning
+1074	User32	Planned shutdown or restart (e.g., Windows Update, user action)
+6006	EventLog	Event log service stopped — indicates shutdown
+6005	EventLog	Event log service started — indicates boot
+6008	EventLog	Unexpected shutdown
+41	Kernel-Power	System rebooted without clean shutdown (e.g., power loss, crash)
+1	Kernel-General	System boot event
+12	Kernel-General	Operating system started
+13	Kernel-General	Operating system shutdown initiated
+109	Kernel-Power	Indicates power-related shutdown (e.g., battery failure)
+1001	BugCheck	Blue screen crash (BSOD) — includes stop code
+10110	DriverFrameworks-UserMode	Driver failure that may trigger restart
+10111	DriverFrameworks-UserMode	Driver recovery after failure
+
+
+
+
