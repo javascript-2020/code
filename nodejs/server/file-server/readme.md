@@ -1,6 +1,6 @@
 
 
-## fs server
+## file-server
 
 the fs server is a nodejs script that allows interacting with the local file system
 such as load, save, delete, create directory etc
