@@ -22,10 +22,12 @@
           var key;
           var cert;
           if(fs.existsSync('key.pem')){
+                                                                                console.log('load key/cert');
                 key             = fs.readFileSync('key.pem');
                 cert            = fs.readFileSync('cert.pem');
           }
           if(!key){
+                                                                                console.log('default key/cert');
                 ({key,cert}     = require('server-cert.js'));
           }
 
@@ -39,11 +41,12 @@
           var server    = require('https').createServer({key,cert},request).listen({host,port});
                                                                                 console.log(`listening https://${host}:${port}`);
           
+          var list          = [];
           var clients       = [];
           
           
           async function request(req,res){
-                                                                                console.log(req.method,req.url);
+                                                                                //console.log(req.method,req.url);
                 if(cors(req,res)){
                       return
                 }
@@ -88,6 +91,16 @@
           }//headers
           
 
+        
+        function nsess(){
+          
+              var sess      = {};
+              sess.clients  = [];
+              sess.time     = Date.now();
+              
+        }//nsess
+        
+        
         function ncon(){
 
               var con   = {
@@ -120,8 +133,11 @@
         }//init
         
         
-        request.setup   = function(req,res){
+        request.setup   = async function(req,res){
         
+              var body    = '';
+              for await(data of req)body   += data;
+              
               var mode    = 'master';
               if(clients.length){
                     mode    = 'polite';
@@ -147,7 +163,7 @@
                                                                   //console.log(body);
               
               
-              clients[index].sdp    = body;
+              clients[index].offer    = body;
               
               res.end('ok');
               
@@ -167,7 +183,7 @@
                                                                   //console.log(body);
               
               
-              clients[index].sdp    = body;
+              clients[index].answer    = body;
               
               res.end('ok');
               
@@ -213,19 +229,38 @@
 
         request.read    = function(req,res){
         
+              var mode    = 'master';
               var index   = 1;
               if(req.headers.mode=='polite'){
+                    mode    = 'polite';
                     index   = 0;
               }
 
-              
+          
+              var str   = '';    
               var con   = clients[index];
               
-              if(con){
-              
+              if(con){                                                                            
                                                                   console.log('request.read',req.headers.mode,index);
                                                                   //console.log(con);
                                                                   console.log(!!con.sdp,con.ice.length);
+                    var str   = JSON.stringify(con);
+      
+                    if(mode=='master'){
+                          con.offer     = null;
+                    }else{
+                          con.answer    = null;
+                    }
+                    con.ice.length    = 0;
+              }
+
+              res.end(str);
+              
+              
+              
+                            
+/*              
+              if(con){              
 
                                                       
                     if(con.sdp){
@@ -249,7 +284,9 @@
               }
               
               res.end();
-              
+*/
+
+
         }//read
 
 
