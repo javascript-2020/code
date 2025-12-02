@@ -54,6 +54,8 @@
                 switch(req.url){
                 
                   case '/'              : request.page(req,res);          break;
+                  case '/test'          : request.test(req,res);          break;
+                  
                   case '/init'          : request.init(req,res);          break;
                   case '/setup'         : request.setup(req,res);         break;
                   case '/offer'         : request.offer(req,res);         break;
@@ -123,6 +125,13 @@
               stream.pipe(res);
               
         }//page
+        
+        
+        request.test    = function(req,res){
+          
+              res.end('webrtc-file-transfer-http-server');
+              
+        }//test
         
         
         request.init    = function(req,res){
