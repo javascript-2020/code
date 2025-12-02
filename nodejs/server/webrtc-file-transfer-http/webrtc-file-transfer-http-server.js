@@ -10,22 +10,34 @@
 
 */
                                                                                 console.clear();
-                                                                                terminal_title('webrtc/file-transfer-http-server.js');
+                                                                                terminal_title('webrtc/webrtc-file-transfer-http-server.js');
                                                                                 console.json=v=>console.log(JSON.stringify(v,null,4));
-          var fs            = require('fs');
+          var fs                = require('fs');
           
           
-          var keys          = require('keys.js');
-          var wsmod         = require('wsmod.js');
-          wsmod             = wsmod();
-          var {key,cert}    = require('server-cert.js');
+          var keys              = require('keys.js');
+          var wsmod             = require('wsmod.js');
+          wsmod                 = wsmod();
+          
+          var key;
+          var cert;
+          if(fs.existsSync('key.pem')){
+                key             = fs.readFileSync('key.pem');
+                cert            = fs.readFileSync('cert.pem');
+          }
+          if(!key){
+                ({key,cert}     = require('server-cert.js'));
+          }
 
 
-          var host          = '0.0.0.0';
-          var port          = 3001;
+
+          var host              = argv('h','host')||'127.0.0.1';
+          var port              = argv('p','port')||3001;
+
+
           
-          var server        = require('https').createServer({key,cert},request).listen({host,port});
-                                                                                console.log(`listening https://localhost:${port}`);
+          var server    = require('https').createServer({key,cert},request).listen({host,port});
+                                                                                console.log(`listening https://${host}:${port}`);
           
           var clients       = [];
           
@@ -260,6 +272,38 @@
           
           
 */
+
+
+
+        function argv(id0){
+        
+              var nj    = arguments.length;
+              
+              var ni   = process.argv.length;
+              for(var i=0;i<ni;i++){
+              
+                    var id2   = process.argv[i];
+                    for(var j=0;j<nj;j++){
+                    
+                          var id    = arguments[j];
+                          
+                          switch(id2){
+                          
+                            case id           :
+                            case `-${id}`     :
+                            case `--${id}`    : return process.argv[i+1];
+                            
+                          }//switch
+                    
+                    }//forj
+                    
+              }//fori
+              
+              return null;
+              
+        }//argv
+
+
 
 
 
