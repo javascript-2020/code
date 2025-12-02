@@ -53,7 +53,7 @@
                   case '/'              : request.page(req,res);          break;
                   case '/init'          : request.init(req,res);          break;
                   case '/setup'         : request.setup(req,res);         break;
-                  case '/offer'         : request.offer(req.res);         break;
+                  case '/offer'         : request.offer(req,res);         break;
                   case '/answer'        : request.answer(req,res);        break;
                   case '/sdp'           : request.sdp(req,res);           break;
                   case '/ice'           : request.ice(req,res);           break;
