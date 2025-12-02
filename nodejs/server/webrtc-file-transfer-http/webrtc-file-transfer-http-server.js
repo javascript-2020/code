@@ -50,12 +50,14 @@
                 
                 switch(req.url){
                 
-                  case '/'        : request.page(req,res);        break;
-                  case '/init'    : request.init(req,res);        break;
-                  case '/setup'   : request.setup(req,res);       break;
-                  case '/sdp'     : request.sdp(req,res);         break;
-                  case '/ice'     : request.ice(req,res);         break;
-                  case '/read'    : request.read(req,res);        break;
+                  case '/'              : request.page(req,res);          break;
+                  case '/init'          : request.init(req,res);          break;
+                  case '/setup'         : request.setup(req,res);         break;
+                  case '/offer'         : request.offer(req.res);         break;
+                  case '/answer'        : request.answer(req,res);        break;
+                  case '/sdp'           : request.sdp(req,res);           break;
+                  case '/ice'           : request.ice(req,res);           break;
+                  case '/read'          : request.read(req,res);          break;
                   
                 }//switch
                 
@@ -131,6 +133,45 @@
               
         }//setup
         
+        
+        request.offer   = async function(req,res){
+          
+              var index   = 0;
+              if(req.headers.mode=='polite'){
+                    index   = 1;
+              }
+              
+              var body    = '';
+              for await(data of req)body   += data;
+                                                                  console.log('request.sdp',req.headers.mode,index);
+                                                                  //console.log(body);
+              
+              
+              clients[index].sdp    = body;
+              
+              res.end('ok');
+              
+        }//offer
+        
+        
+        request.answer    = async function(req,res){
+          
+              var index   = 0;
+              if(req.headers.mode=='polite'){
+                    index   = 1;
+              }
+              
+              var body    = '';
+              for await(data of req)body   += data;
+                                                                  console.log('request.sdp',req.headers.mode,index);
+                                                                  //console.log(body);
+              
+              
+              clients[index].sdp    = body;
+              
+              res.end('ok');
+              
+        }//answer
         
         
         request.sdp   = async function(req,res){
