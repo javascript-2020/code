@@ -16,12 +16,12 @@
           
           
           var keys          = require('keys.js');
-          var wsmod         = require('wsmod-v2.0.js');
+          var wsmod         = require('wsmod.js');
           wsmod             = wsmod();
           var {key,cert}    = require('server-cert.js');
 
 
-          var host          = '127.0.0.1';
+          var host          = '0.0.0.0';
           var port          = 3001;
           
           var server        = require('https').createServer({key,cert},request).listen({host,port});
@@ -38,6 +38,7 @@
                 
                 switch(req.url){
                 
+                  case '/'        : request.page(req,res);        break;
                   case '/init'    : request.init(req,res);        break;
                   case '/setup'   : request.setup(req,res);       break;
                   case '/sdp'     : request.sdp(req,res);         break;
@@ -87,6 +88,16 @@
   //:
   
   
+        request.page    = function(req,res){
+          
+              var stream    = fs.createReadStream('file-transfer-http.html');
+              
+              res.writeHead(200,{'content-type':'text/html'});
+              stream.pipe(res);
+              
+        }//page
+        
+        
         request.init    = function(req,res){
 
               clients   = [];
