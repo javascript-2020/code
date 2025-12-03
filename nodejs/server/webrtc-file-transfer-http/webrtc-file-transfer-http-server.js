@@ -6,9 +6,13 @@
 //webrtc-file-transfer-http-server.js:d
 
 22-07-25
-02-12-25
+02-12-25        before implementing this in production remember to validate user
+                input and csrf tokens, or samesite cookie
+
 
 */
+
+
                                                                                 console.clear();
                                                                                 terminal_title('webrtc/webrtc-file-transfer-http-server.js');
                                                                                 console.json=v=>console.log(JSON.stringify(v,null,4));
