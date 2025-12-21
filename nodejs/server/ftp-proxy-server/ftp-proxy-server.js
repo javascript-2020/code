@@ -17,6 +17,8 @@ ftp-server:d
         var auth          = argv('auth')||'matt-123';
         var dir           = argv('d','dir')||'';
         var port          = argv('p','port')||3001;
+        var ftp_host      = argv('ftp-host');
+        var ftp_port      = argv('ftp-port');
         
         var path          = require('path');
         var fs            = require('fs');
