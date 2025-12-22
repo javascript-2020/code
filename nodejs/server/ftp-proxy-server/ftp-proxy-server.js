@@ -32,6 +32,7 @@ ftp-server:d
                                                                                   process.exit();
                                                                                 }
         var ftp             = require('basic-ftp');
+        
         var client          = new ftp.Client();
         var params          = {};
         params.host         = ftp_host||'192.168.8.212';
