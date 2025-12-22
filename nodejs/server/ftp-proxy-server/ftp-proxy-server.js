@@ -17,8 +17,8 @@ ftp-server:d
         var auth          = argv('auth')||'matt-123';
         var dir           = argv('d','dir')||'';
         var port          = argv('p','port')||3001;
-        var ftp_host      = argv('ftp-host');
-        var ftp_port      = argv('ftp-port');
+        var ftp_host      = argv('ftp-host')||'192.168.8.212';
+        var ftp_port      = argv('ftp-port')||2222;
         
         var path          = require('path');
         var fs            = require('fs');
@@ -35,8 +35,8 @@ ftp-server:d
         
         var client          = new ftp.Client();
         var params          = {};
-        params.host         = ftp_host||'192.168.8.212';
-        params.port         = ftp_port||2222;
+        params.host         = ftp_host;
+        params.port         = ftp_port;
         params.user         = '';
         params.password     = 'hello@example.com';
         params.secure       = false;
