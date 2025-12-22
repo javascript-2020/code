@@ -34,8 +34,8 @@ ftp-server:d
         var ftp             = require('basic-ftp');
         var client          = new ftp.Client();
         var params          = {};
-        params.host         = '192.168.8.212';
-        params.port         = 2222;
+        params.host         = ftp_host||'192.168.8.212';
+        params.port         = ftp_port||2222;
         params.user         = '';
         params.password     = 'hello@example.com';
         params.secure       = false;
@@ -97,8 +97,8 @@ ftp-server:d
               require('https').createServer({key,cert},request).listen(port,'localhost');
                                                                                 console.log(`listening https://localhost:${port}/`);
                                                                                 console.log();
-                                                                                console.log('serving :',abs);
-                                                                                console.log();
+                                                                                //console.log('serving :',abs);
+                                                                                //console.log();
                                                                                 console.log('===');
                                                                                 console.log();
         }//init
@@ -160,13 +160,14 @@ ftp-server:d
                     return;
               }
 
-              
+
               var fn    = resolve.req(req);
               if(fn===false){
                                                                                 request.log(req);
                     badreq(req,res,'invalid url');
                     return;
               }
+
               
               var mode      = req.headers.mode;
                                                                                 request.log(req,mode,fn);
