@@ -103,7 +103,7 @@ file-server:d
                     }
               }
               
-              var {abs,error}   = resolve(req.url);
+              var {fn:abs,error}   = resolve(req.url);
               if(error){
                                                                                 request.log(req);
                     badreq(req,res,'invalid url');
