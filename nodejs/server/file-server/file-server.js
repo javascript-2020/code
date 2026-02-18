@@ -40,10 +40,10 @@ https-file-server:d
         if(!abs.endsWith('/')){
               abs  += '/';
         }
-
+        
         
         resolve.df    = false;
-
+        
         
   //:
   
@@ -80,9 +80,9 @@ https-file-server:d
               if(load){
                                                                                 console.log('load',load);
               }
-        
+              
         }//load_cert
-
+        
         
   //:
   
@@ -93,7 +93,7 @@ https-file-server:d
                                                                                 request.log(req);
                     return;
               }
-                    
+              
               if(auth){
                     if(req.headers.auth!==auth){
                                                                                 request.log(req);
@@ -136,7 +136,7 @@ https-file-server:d
               unknown(req,res,mode);
               
         }//request
-
+        
         
         request.log   = function(req,mode,fn){
         
@@ -167,7 +167,20 @@ https-file-server:d
                                                                                 resolve.df && console.log('=== resolve ===');
                                                                                 resolve.df && console.log('url :',url);
                                                                                 resolve.df && console.log('docroot :',docroot);
-              url         = decodeURI(url);
+              var err;
+              try{
+              
+                    url         = decodeURI(url);
+                    
+              }//try
+              catch(err2){
+              
+                    err   = err2;
+                    
+              }//catch
+              if(err){
+                    return false;
+              }
                                                                                 resolve.df && console.log('url :',url);
               var p2      = path.resolve(docroot);
                                                                                 resolve.df && console.log('p2 :',p2);
@@ -187,7 +200,7 @@ https-file-server:d
               }
                                                                                 resolve.df && console.log('ok',file);
               return file;
-
+              
         }//resolve
         
         
@@ -196,8 +209,8 @@ https-file-server:d
               if(req.method!=='OPTIONS'){
                     return;
               }
-
-              cors.headers(res);              
+              
+              cors.headers(res);
               res.end();
               
               return true;
@@ -209,7 +222,7 @@ https-file-server:d
         
               res.setHeader('access-control-allow-origin','*');
               res.setHeader('access-control-allow-headers','auth, mode,content-type');
-        
+              
         }//header
         
         
@@ -223,13 +236,13 @@ https-file-server:d
         
         
         function unauthorised(req,res){
-                            
+        
               cors.headers(res);
               res.writeHead(401);
               res.end('unauthorised');
               
         }//unauthorised
-  
+        
         
         function badreq(req,res,reason){
         
@@ -245,13 +258,13 @@ https-file-server:d
               cors.headers(res);
               res.writeHead(400);
               res.end(`unknown mode : ${mode}`);
-        
+              
         }//unknown
         
         
   //:
   
-        
+  
         function mkfile(req,res,fn){
         
               var err;
@@ -341,7 +354,7 @@ https-file-server:d
                     
               }
               catch(err2){
-                
+              
                     err   = err2;
                     
               }
@@ -355,9 +368,9 @@ https-file-server:d
               cors.headers(res);
               res.writeHead(200);
               res.end('ok');
-                  
+              
         }//mkdir
-
+        
         
         function readdir(req,res,fn){
         
@@ -384,7 +397,7 @@ https-file-server:d
                     }
                     
               });
-
+              
               var str   = JSON.stringify({files,dirs});
               
               cors.headers(res);
@@ -403,7 +416,7 @@ https-file-server:d
                     
               }
               catch(err2){
-                
+              
                     err   = err2;
                     
               }
@@ -418,7 +431,7 @@ https-file-server:d
               var list      = await fsp.readdir(fn);
               var errors    = [];
               list.forEach((name,i)=>{
-
+              
                     var err;
                     try{
                     
@@ -428,7 +441,7 @@ https-file-server:d
                           
                     }
                     catch(err2){
-                                                          
+                    
                           err   = err2;
                           
                     }
@@ -438,7 +451,7 @@ https-file-server:d
                     }
                     
               });
-
+              
               if(errors.length){
                     var str   = errors.join('\n');
                     cors.headers(res);
@@ -450,12 +463,12 @@ https-file-server:d
               cors.headers(res);
               res.end('ok');
               
-        
+              
         }//dirclear
         
         
         function load(req,res,fn){
-
+        
               if(!fs.existsSync(fn)){
                     notfound(req,res);
                     return;
@@ -463,7 +476,7 @@ https-file-server:d
               
               var mime      = getmime(fn);
               var stream    = fs.createReadStream(fn);
-
+              
               cors.headers(res);
               res.writeHead(200,{'content-type':mime});
               stream.pipe(res);
@@ -472,7 +485,7 @@ https-file-server:d
         
         
         function save(req,res,fn){
-
+        
               /*
               if(!fs.existsSync(fn)){
                     notfound(req,res);
@@ -505,12 +518,12 @@ https-file-server:d
                     res.end();
                     
               });
-                            
+              
         }//save
         
         
         function upload(req,res,fn){
-              
+        
               var stream    = fs.createWriteStream(fn);
               req.pipe(stream);
               req.on('end',()=>{
@@ -520,12 +533,12 @@ https-file-server:d
                     res.end('ok');
                     
               });
-
+              
         }//upload
         
         
         function download(req,res,fn){
-
+        
               if(!fs.existsSync(fn)){
                     notfound(req,res);
                     return;
@@ -538,11 +551,11 @@ https-file-server:d
               
               var mime      = getmime(fn);
               var stream    = fs.createReadStream(fn);
-
+              
               cors.headers(res);
               res.writeHead(200,{'content-type':mime});
               stream.pipe(res);
-        
+              
         }//download
         
         
@@ -570,7 +583,7 @@ https-file-server:d
                             case `--${id}`    : return process.argv[i+1];
                             
                           }//switch
-                    
+                          
                     }//forj
                     
               }//fori
@@ -578,9 +591,9 @@ https-file-server:d
               return null;
               
         }//argv
-
-
-
+        
+        
+        
           function terminal_title(str){
                                                                                 console.log(str);
                                                                                 console.log();
@@ -590,12 +603,12 @@ https-file-server:d
                 process.stdout.write(cmd);
                 
           }//terminal_title
-
-        
-        
+          
+          
+          
   //:
   
-        cert    = 
+        cert    =
               '-----BEGIN CERTIFICATE-----\n'                                       +
               'MIIDcjCCAlqgAwIBAgIBATANBgkqhkiG9w0BAQUFADAlMSMwIQYDVQQDExpsb2Nh\n'  +
               'bGhvc3QgdGVzdCBjZXJ0aWZpY2F0ZTAeFw0yNTA2MjYxNzQ5MDBaFw0yNjA2MjYx\n'  +
@@ -618,7 +631,7 @@ https-file-server:d
               'AZpOcmiSQO2WFjUS/N5y9g+zJs/Osw==\n'                                  +
               '-----END CERTIFICATE-----\n'
         ;
-
+        
         key   =
               '-----BEGIN RSA PRIVATE KEY-----\n'                                   +
               'MIIEpAIBAAKCAQEAqWZ5x4R8GVoRKeXe++SN54MzUD1BD/eNfmELIedKeof0m/Cx\n'  +
@@ -650,6 +663,7 @@ https-file-server:d
         ;
         
         
-
-
-
+        
+        
+        
+        
