@@ -10,7 +10,7 @@ https-file-server:d
 
 */
                                                                                 console.clear();
-                                                                                terminal_title('https-file-server');
+                                                                                terminal_title('file-server');
                                                                                 //console.log(process.argv);
                                                                                 console.log();
                                                                                 console.json=v=>console.log(JSON.stringify(v,null,4));
@@ -87,7 +87,7 @@ https-file-server:d
   //:
   
   
-        function request(req,res){
+        async function request(req,res){
         
               if(cors(req,res)){
                                                                                 request.log(req);
@@ -102,7 +102,7 @@ https-file-server:d
                     }
               }
               
-              var {abs,error}   = await resolve(req.url);
+              var {abs,error}   = resolve(req.url);
               if(error){
                                                                                 request.log(req);
                     badreq(req,res,'invalid url');
@@ -154,15 +154,16 @@ https-file-server:d
         
         
         resolve.df    = false;
+        //resolve.df    = true
         
-        async function resolve(url,docroot='.'){
-                                                                                resolve.df && console.log('=== resolve v2.0 ===');
-                                                                                resolve.df && console.log('url :',url);
-                                                                                resolve.df && console.log('docroot :',docroot);
+        function resolve(requrl,docroot='.'){
+                                                                                resolve.df && console.log('=== resolve v3.0 ===');
+                                                                                resolve.df && console.log('requrl ... : ',requrl);
+                                                                                resolve.df && console.log('docroot .. : ',docroot);
               var err;
               try{
               
-                    url         = decodeURI(url);
+                    requrl    = decodeURI(requrl);
                     
               }//try
               catch(err2){
@@ -171,44 +172,47 @@ https-file-server:d
                     
               }//catch
               if(err){
-                                                                                resolve.df && console.error(err);
+                                                                                resolve.df && console.log('error .... : ',err.message);
                     var error   = 'invalid url';
                     return {error};
               }
               
-              url         = url.slice(1);
-                                                                                resolve.df && console.log('url :',url);
-              var root    = path.resolve(docroot);
-              root       += path.sep;
-                                                                                resolve.df && console.log('root :',root);
-              var abs     = path.resolve(docroot,url);
-              var err;
-              try{
+              var url   = requrl;
               
-                    var stat    = await fs.promises.stat(abs);
-                    
-              }//try
-              catch(err2){
-              
-                    err   = err2;
-                    
-              }//catch
-              if(err){
-                    var error   = err.toString();
-                    return {error}
-              }
-              if(stat.isDirectory()){
-                    abs  += path.sep;
-              }
-                                                                                resolve.df && console.log('abs :',abs);
-                                                                                
-              if(!abs.startsWith(root)){
-                                                                                resolve.df && console.log('fail');
-                    var error   = 'resolve';
+              if(url.indexOf('\\')!=-1){
+                                                                                resolve.df && console.log('error .... : ','invalid url ( backslash )');
+                    var error   = 'invalid url ( backslash )';
                     return {error};
               }
               
-                                                                                resolve.df && console.log('ok',abs);
+              url         = url.slice(1);
+                                                                                resolve.df && console.log('url ...... : ',url);
+              var root    = path.resolve(docroot);
+              //root       += path.sep;
+                                                                                resolve.df && console.log('root ..... : ',root);
+              var abs     = path.resolve(docroot,url);
+                                                                                resolve.df && console.log('abs ...... : ',abs);
+                                                                                
+              if(!abs.startsWith(root)){
+                                                                                resolve.df && console.log('error .... : ','invalid docroot');
+                    var error   = 'invalid docroot';
+                    return {error};
+              }
+              
+              if(abs.length>root.length){
+                    if(abs[root.length]!=path.sep){
+                                                                                resolve.df && console.log('error .... : ','invlaid docroot-2');
+                          var error   = 'invalid docroot-2';
+                          return {error};
+                    }
+              }
+              
+              if(requrl.endsWith('/')){
+                    abs  += '/';
+              }
+              
+              
+                                                                                resolve.df && console.log('ok ....... : ',abs);
               return {abs};
               
         }//resolve
