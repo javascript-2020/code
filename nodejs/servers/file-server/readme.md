@@ -1,6 +1,14 @@
 
 
-## file-server
+<h1 style='display:flex;gap:20px'>
+      file-server.js
+      <div style='flex:1'></div>
+      <input type=button value='download file' onclick='btn.download()' style='font-size:16px'>
+      <input type=button value='download complete' onclick='btn.download.complete()' style='font-size:16px'>
+</h1>
+
+
+## Description
 
 the file server is a nodejs script that allows interacting with the local file system
 such as load, save, delete, create directory etc via a http request from say the browser
@@ -16,33 +24,34 @@ node fs-server
 
 ```
 
-
-it supports the following command line arguments
-
-|arg       | description                     | example        |
-|----------|---------------------------------|----------------|
-|-p, -port | specify port                    | -p 3001        |
-|          |                                 |                |
-|-auth     | specify authorisation header    | -auth p455w0rd |
-|          |                                 |                |
-| -d, -dir | specify the source directory    | -d /work/tmp   |
-|          |                                 |                |
-
-                                   
-```
-
-node file-server -p 3001 -auth my-password -d /work/tmp
+This server can run locally and allow access to the local filesystem from the browser / javascript through https requests
 
 ```
 
+        var res   = await fetch('https://localhost:3000/my-file.txt',{headers:{mode:'load',auth:'abc-123'}})
+        var txt   = await res.text();
+        consolelog(txt);
+        
+```
 
-the auth header is the way of securing the server
+## requires
+
+- getmime.js
+- keys.js
+- 
 
 
 
-the server can be interacted with via the library
 
+
+the server can be interacted with via the client-side library
+
+[file-server.js](/libs/js/io/file-server/file-server.html)
+      
+
+<!--
 [file-server.js [ github.com ]](https://github.com/javascript-2020/libs/blob/main/js/io/file-server/file-server.js)
+-->
 
 
 
@@ -73,6 +82,5 @@ the server can be interacted with via the library
 </script>
 
 ```
-
 
 
