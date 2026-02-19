@@ -1,6 +1,6 @@
 
 
-(async()=>{
+function create_archive(){
 
               var {create_archive}    = await import('https://libs.ext-code.com/js/io/create-archive/create-archive.m.js');
               
@@ -17,7 +17,9 @@
                     }}
               };
               
+              
               create_archive(zip,{download:'file-server.zip',df:true});
               
-})();
+              
+}//create_archive
 
