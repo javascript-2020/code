@@ -9,7 +9,7 @@
               
               var zip   = {
                     'file-server'   :{directory:{
-                          'file-server.js'   : {file:{github:{repo:'code',path:'/nodejs/servers/file-server/file-server.js'}}},
+                          'file-server.js'      : {file:{github:{repo:'code',path:'/nodejs/servers/file-server/file-server.js'}}},
                           
                           'node_modules'        : {directory:{
                                 'getmime.js'    : {file:{github:{repo:'libs',path:'/js/string/getmime/getmime.js'}}},
