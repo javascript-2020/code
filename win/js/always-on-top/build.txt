@@ -4,5 +4,7 @@ node-gyp configure
 node-gyp build
 
 
+node always-on-top.js
+
 
 
