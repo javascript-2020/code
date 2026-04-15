@@ -5,7 +5,6 @@
 
         const ffi = require('ffi-napi');
         
-        
         const user32 = ffi.Library('user32', {
           'GetForegroundWindow': ['int', []],
           'SetWindowPos': ['bool', ['int', 'int', 'int', 'int', 'int', 'int', 'uint']]
