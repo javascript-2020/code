@@ -1,0 +1,8 @@
+npm install node-gyp --global
+npm install
+node-gyp configure
+node-gyp build
+
+
+
+
