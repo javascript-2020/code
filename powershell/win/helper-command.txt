@@ -1,0 +1,117 @@
+#
+# add commands to powershell
+#
+# edit ps profile
+#
+# notepad $PROFILE
+#
+# not found
+#
+#
+# where the file lives
+#
+# echo $PROFILE
+#
+# create ps profile
+#
+# New-Item -ItemType File -Path $PROFILE -Force
+#
+#
+
+
+#
+# default place to start when openinig powershell
+# optional only when opened normally
+#
+
+if ($Host.Name -eq "ConsoleHost") {
+    Set-Location "C:\work"
+}
+
+
+#
+# empty direectory
+#
+
+function empty {
+    param([string]$Path)
+
+    if (-not (Test-Path $Path)) {
+        Write-Host "Directory does not exist: $Path"
+        return
+    }
+
+    Remove-Item "$Path\*" -Recurse -Force
+    Write-Host "Cleared: $Path"
+}
+
+
+#
+# mkdir and cd into it
+#
+
+function mkcd {
+    param([string]$Path)
+    New-Item -ItemType Directory -Path $Path -Force | Out-Null
+    Set-Location $Path
+}
+
+
+#
+# create file
+#
+
+function touch {
+    param([string]$Path)
+    if (Test-Path $Path) {
+        (Get-Item $Path).LastWriteTime = Get-Date
+    } else {
+        New-Item -ItemType File -Path $Path | Out-Null
+    }
+}
+
+
+function which {
+    param([string]$Name)
+    (Get-Command $Name -ErrorAction SilentlyContinue).Source
+}
+
+
+function ll {
+    Get-ChildItem | Format-Table Mode, LastWriteTime, Length, Name
+}
+
+
+function extract {
+    param([string]$File)
+
+    if (-not (Test-Path $File)) {
+        Write-Host "File not found: $File"
+        return
+    }
+
+    switch -Regex ($File) {
+        '\.zip$' {
+            Expand-Archive -Path $File -DestinationPath .
+        }
+        '\.(tar|tgz|tar\.gz)$' {
+            if (Get-Command tar -ErrorAction SilentlyContinue) {
+                tar -xf $File
+            } else {
+                Write-Host "tar not found. Install tar or use WSL."
+            }
+        }
+        default {
+            Write-Host "Unsupported archive type: $File"
+        }
+    }
+}
+
+
+function open {
+    param([string]$Target = ".")
+
+    Start-Process $Target
+}
+
+
