@@ -13,7 +13,7 @@ it supports the following command line arguments
 |          |                                 |                |
 |-p, -port | specify port                    | -p 3001        |
 |          |                                 |                |
-|-url      |     | -url /sub-dir |
+|-url      |     | -url /prefix-url |
 |          |                                 |                |
 | -d, -dir | specify the source directory    | -d /work/tmp   |
 |          |                                 |                |
