@@ -56,10 +56,10 @@
                     return;
               }
               
-              var mime    = getmime(abs);
-              var buf     = fs.readFileSync(abs);
+              var mime      = getmime(abs);
+              var stream    = fs.createReadStream(abs);
               res.writeHead(200,{'content-type':mime});
-              res.end(buf);
+              stream.pipe(res);
               
         }//request
         
