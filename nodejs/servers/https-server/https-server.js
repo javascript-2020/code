@@ -28,9 +28,9 @@
       var list          =[{url,dir}];
       
       require('https').createServer({key,cert},request).listen({host,port});
-      console.log(`listening https://localhost:${port}`);
-      
-      
+                                                                                console.log(`listening https://localhost:${port}`);
+                                                                                
+                                                                                
       function request(req,res){
                                                                                 console.log(req.method,req.url);
             var url   = req.url.slice(1);
