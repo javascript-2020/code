@@ -88,6 +88,7 @@
             
       }//badrequest
       
+      
       function cmd(req,res){
       
             if(req.headers.mode==='add'){
