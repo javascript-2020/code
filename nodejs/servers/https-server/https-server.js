@@ -11,60 +11,60 @@
 */
 
 
-      var fs            = require('fs');
-      var path          = require('path');
-      
-      var keys          = require('keys.js');
-      var argv          = require('argv.js');
-      
-      var docroot       = __dirname+'/';
-      
-      var host          = argv('h','host','127.0.0.1');
-      var port          = argv('p','port',3002);
-      
-      setup();
-      
-      var server        = require('https').createServer({key,cert},request);
-      server.on('error',err=>{
-                                                                                console.log(err.message)
-      });
-      server.listen({host,port});
-                                                                                console.log(`listening https://${host}:${port}`);
-                                                                                
-                                                                                
-      function request(req,res){
-                                                                                console.log(req.method,req.url);
-            if(cors(req,res)){
-                  return;
-            }
-            
-            var {abs,error}   = resolve(req.url,docroot);
-            if(error){
-                  badrequest(req,res);
-                  return;
-            }
-            
-            var abs   = root+url;
-                                                                                console.log(abs);
-            if(!fs.existsSync(abs)){
-                  notfound(req,res);
-                  return;
-            }
-            
-            var stat    = fs.statSync(abs);
-            if(!stat.isFile()){
-                  badrequest(req,res);
-                  return;
-            }
-            
-            var mime    = getmime(abs);
-            var buf     = fs.readFileSync(abs);
-            res.writeHead(200,{'content-type':mime});
-            res.end(buf);
-            
-      }//request
-      
-      
+        var fs            = require('fs');
+        var path          = require('path');
+        
+        var keys          = require('keys.js');
+        var argv          = require('argv.js');
+        
+        var docroot       = __dirname+'/';
+        
+        var host          = argv('h','host','127.0.0.1');
+        var port          = argv('p','port',3002);
+        
+        setup();
+        
+        var server        = require('https').createServer({key,cert},request);
+        server.on('error',err=>{
+                                                                                  console.log(err.message)
+        });
+        server.listen({host,port});
+                                                                                  console.log(`listening https://${host}:${port}`);
+                                                                                  
+                                                                                  
+        function request(req,res){
+                                                                                  console.log(req.method,req.url);
+              if(cors(req,res)){
+                    return;
+              }
+              
+              var {abs,error}   = resolve(req.url,docroot);
+              if(error){
+                    badrequest(req,res);
+                    return;
+              }
+              
+              var abs   = root+url;
+                                                                                  console.log(abs);
+              if(!fs.existsSync(abs)){
+                    notfound(req,res);
+                    return;
+              }
+              
+              var stat    = fs.statSync(abs);
+              if(!stat.isFile()){
+                    badrequest(req,res);
+                    return;
+              }
+              
+              var mime    = getmime(abs);
+              var buf     = fs.readFileSync(abs);
+              res.writeHead(200,{'content-type':mime});
+              res.end(buf);
+              
+        }//request
+        
+        
         cors.headers   = function(res){
         
               res.setHeader('access-control-allow-origin','*');
@@ -142,30 +142,19 @@
               url         = url.slice(1);
                                                                                 resolve.df && console.log('url ...... : ',url);
               var root    = path.resolve(docroot);
-              //root       += path.sep;
+              root       += path.sep;
                                                                                 resolve.df && console.log('root ..... : ',root);
               var abs     = path.resolve(docroot,url);
                                                                                 resolve.df && console.log('abs ...... : ',abs);
-                                                                                
               if(!abs.startsWith(root)){
                                                                                 resolve.df && console.log('error .... : ','invalid docroot');
                     var error   = 'invalid docroot';
                     return {error};
               }
               
-              if(abs.length>root.length){
-                    if(abs[root.length]!=path.sep){
-                                                                                resolve.df && console.log('error .... : ','invlaid docroot-2');
-                          var error   = 'invalid docroot-2';
-                          return {error};
-                    }
-              }
-              
               if(requrl.endsWith('/')){
                     abs  += '/';
               }
-              
-              
                                                                                 resolve.df && console.log('ok ....... : ',abs);
               return {abs};
               
