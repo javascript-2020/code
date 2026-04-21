@@ -66,7 +66,6 @@
             }
             
             var mime    = getmime(abs);
-            
             var buf     = fs.readFileSync(abs);
             res.writeHead(200,{'content-type':mime});
             res.end(buf);
