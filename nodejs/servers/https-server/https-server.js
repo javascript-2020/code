@@ -43,8 +43,6 @@
                     badrequest(req,res);
                     return;
               }
-              
-              var abs   = root+url;
                                                                                   console.log(abs);
               if(!fs.existsSync(abs)){
                     notfound(req,res);
