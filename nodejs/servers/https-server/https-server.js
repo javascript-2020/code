@@ -22,7 +22,7 @@
         var host          = argv('h','host','127.0.0.1');
         var port          = argv('p','port',3002);
         
-        setup();
+        var {key,cert}    = setup();
         
         var server        = require('https').createServer({key,cert},request);
         server.on('error',err=>{
@@ -165,7 +165,7 @@
         
         function setup(){
         
-              cert    =
+              var cert    =
                     '-----BEGIN CERTIFICATE-----\n'                                       +
                     'MIIDcjCCAlqgAwIBAgIBATANBgkqhkiG9w0BAQUFADAlMSMwIQYDVQQDExpsb2Nh\n'  +
                     'bGhvc3QgdGVzdCBjZXJ0aWZpY2F0ZTAeFw0yNTA2MjYxNzQ5MDBaFw0yNjA2MjYx\n'  +
@@ -189,7 +189,7 @@
                     '-----END CERTIFICATE-----\n'
               ;
               
-              key   =
+              var key   =
                     '-----BEGIN RSA PRIVATE KEY-----\n'                                   +
                     'MIIEpAIBAAKCAQEAqWZ5x4R8GVoRKeXe++SN54MzUD1BD/eNfmELIedKeof0m/Cx\n'  +
                     'XQZn2KyxYzvPmCKM6qv0Y458sadmaG0HQGUb55lmox6T7U5LjF3C7HM2PZjuQw5Z\n'  +
@@ -219,6 +219,7 @@
                     '-----END RSA PRIVATE KEY-----\n'
               ;
               
+              return {key,cert};
               
         }//setup
         
