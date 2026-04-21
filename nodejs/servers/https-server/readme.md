@@ -10,7 +10,9 @@
 
 ## Description
 
-the https server is a nodejs script that allows serving files from the file system.
+the https server is a simple nodejs script that allows serving files from a directory file system over https.  
+It has a built in https certificate and key or they can be loaded from the same directory as the script itself.
+It restricts access to only serving files within the docroot directory.
 
 
 its use is fairly simple
@@ -23,9 +25,7 @@ its use is fairly simple
 
 ## requires
 
-- getmime.js
 - keys.js
-- server-cert.js
 - argv.js
 
 
