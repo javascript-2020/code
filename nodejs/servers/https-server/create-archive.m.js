@@ -16,6 +16,7 @@
                                                       'keys.js'             : {file:{github:{repo:'libs',path:'/nodejs/keys/keys.js'}}},
                                                       'argv.js'             : {file:{github:{repo:'libs',path:'/nodejs/argv/argv.js'}}},
                                                       'server-cert.js'      : {file:{github:{repo:'libs',path:'/nodejs/server-cert/server-cert.js'}}},
+                                                      'resolve.js'          : {file:{github:{repo:'libs',path:'/nodejs/resolve/resolve.js'}}},
                                                 }}
                     }}
               };
