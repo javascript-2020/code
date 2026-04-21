@@ -22,9 +22,6 @@
       
       var host          = argv('h','host','127.0.0.1');
       var port          = argv('p','port',3002);
-      var url           = argv('url','');
-      var dir           = argv('d','dir',root);
-      var list          = [{url,dir}];
       
       var server        = require('https').createServer({key,cert},request);
       server.listen({host,port});
@@ -42,17 +39,6 @@
             }
             
             var abs   = root+url;
-            
-            var n   = list.length;
-            for(var j=0;j<n;j++){
-            
-                  var o   = list[j];
-                  if(url.startsWith(o.url)){
-                        abs   = o.dir+url.slice(o.url.length);
-                        break;
-                  }
-                  
-            }//for
                                                                                 console.log(abs);
             if(!fs.existsSync(abs)){
                   notfound(req,res);
