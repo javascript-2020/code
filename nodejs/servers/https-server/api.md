@@ -19,40 +19,16 @@ it supports the following command line arguments
                                    
 ```
 
-node file-server -p 3001 -auth my-password -d /work/tmp
+node https-server -p 3001 
 
 ```
 
 
-the auth parameter is the way of securing the server, it specifies the value of a HTTP header 'auth' that must be included with the request
 
 
 
 
 
-
-
-### mkfile
-
-creates a file on the server
-
-#### parameters
-      
-      
-      
-
-
-load → retrieve file contents
-
-save → write or overwrite file data
-
-file delete → remove a file
-
-dir read → list directory contents
-
-dir create → make a new directory
-
-dir delete → remove a directory
 
 
 
