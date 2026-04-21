@@ -14,7 +14,6 @@
       var fs            = require('fs');
       
       var keys          = require('keys.js');
-      //keys.keypressed   = keypressed;
       var {key,cert}    = require('server-cert.js');
       var getmime       = require('getmime.js');
       var argv          = require('argv.js');
@@ -99,11 +98,6 @@
       }//cmd
       
       
-      function keypressed(key){
-      
-            console.log('keypressed',key);
-            
-      }//keypressed
       
       
       
