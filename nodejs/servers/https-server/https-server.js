@@ -14,7 +14,7 @@
       var fs            = require('fs');
       
       var keys          = require('keys.js');
-      keys.keypressed   = keypressed;
+      //keys.keypressed   = keypressed;
       var {key,cert}    = require('server-cert.js');
       var getmime       = require('getmime.js');
       var argv          = require('argv.js');
