@@ -27,6 +27,11 @@ its use is fairly simple
 
 - keys.js
 - argv.js
+- getmime.js
+- server-cert.js
+- resolve.js
+
+
 
 
 
