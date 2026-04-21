@@ -26,7 +26,8 @@
       var dir           = argv('d','dir',root);
       var list          = [{url,dir}];
       
-      require('https').createServer({key,cert},request).listen({host,port});
+      var server        = require('https').createServer({key,cert},request);
+      server.listen({host,port});
                                                                                 console.log(`listening https://localhost:${port}`);
                                                                                 
                                                                                 
