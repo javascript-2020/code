@@ -12,7 +12,7 @@
               }
               
               ({create_archive,jszip}    = await import('https://libs.ext-code.com/js/io/create-archive/create-archive.m.js'));
-              
+              console.log('https-server',jszip);
               
               var zip   = {
                     'https-server'   :{directory:{
