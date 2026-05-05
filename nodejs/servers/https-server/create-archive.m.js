@@ -14,8 +14,15 @@
               ({create_archive,jszip}    = await import('https://libs.ext-code.com/js/io/create-archive/create-archive.m.js'));
               console.log('https-server',jszip);
               
+              var txt   = {};
+              txt['packahe.json']   = `
+                    "dependencies": {
+                      "libs": "*"
+                    }
+              `;
               var zip   = {
                     'https-server'   :{directory:{
+                          'package.json'      : {file:{contents:txt['package.json']}},
                           'https-server.js'   : {file:{github:{repo:'code',path:'/nodejs/servers/https-server/https-server.js'}}},
                           
                           'node_modules'      : {directory:{
