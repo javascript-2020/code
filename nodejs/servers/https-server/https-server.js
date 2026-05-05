@@ -14,11 +14,11 @@
         var fs            = require('fs');
         var path          = require('path');
         
-        var keys          = require('keys.js');
-        var argv          = require('argv.js');
-        var getmime       = require('getmime.js');
-        var {key,cert}    = require('server-cert.js');
-        var resolve       = require('resolve.js');
+        var keys          = require('libs/keys.js');
+        var argv          = require('libs/argv.js');
+        var getmime       = require('libs/getmime.js');
+        var {key,cert}    = require('libs/server-cert.js');
+        var resolve       = require('libs/resolve.js');
         
         var docroot       = __dirname+'/';
         
