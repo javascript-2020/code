@@ -4,7 +4,7 @@
         
         async function create_archive({download}){
 
-              download  ||= ='https-server.zip'};
+              download  ||= 'https-server.zip'};
 
               ({create_archive,jszip}    = await import('https://libs.ext-code.com/js/io/create-archive/create-archive.m.js'));
               
