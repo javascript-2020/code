@@ -1,10 +1,12 @@
 
+        var jszip;
+        export {create_archive,jszip};
+        
+        async function create_archive({download}){
 
-        export {create_archive};
-        
-        async function create_archive(){
-        
-              var {create_archive}    = await import('https://libs.ext-code.com/js/io/create-archive/create-archive.m.js');
+              download  ||= ='https-server.zip'};
+
+              ({create_archive,jszip}    = await import('https://libs.ext-code.com/js/io/create-archive/create-archive.m.js'));
               
               
               var zip   = {
