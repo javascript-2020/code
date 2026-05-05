@@ -15,7 +15,7 @@
               console.log('https-server',jszip);
               
               var txt   = {};
-              txt['packahe.json']   = `
+              txt['package.json']   = `
                     "dependencies": {
                       "libs": "*"
                     }
