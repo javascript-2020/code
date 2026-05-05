@@ -3,9 +3,9 @@
         export {create_archive,jszip};
         
         async function create_archive({download}){
-
-              download  ||= 'https-server.zip'};
-
+        
+              download  ||= 'https-server.zip';
+              
               ({create_archive,jszip}    = await import('https://libs.ext-code.com/js/io/create-archive/create-archive.m.js'));
               
               
@@ -25,8 +25,9 @@
               
               
               var blob    = await create_archive(zip,{download,df:true});
-              return blob;              
+              return blob;
               
         }//create_archive
+        
         
         
