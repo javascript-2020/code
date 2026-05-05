@@ -1,8 +1,8 @@
 
 
         var jszip;
-        
-        export {create_archive,jszip};
+        var mod   = {create_archive,jszip};
+        export mod;
         
         
         async function create_archive({download}={}){
