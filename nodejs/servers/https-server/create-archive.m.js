@@ -24,8 +24,8 @@
               };
               
               
-              create_archive(zip,{download:'https-server.zip',df:true});
-              
+              var blob    = await create_archive(zip,{download:'https-server.zip',df:true});
+              return blob;              
               
         }//create_archive
         
