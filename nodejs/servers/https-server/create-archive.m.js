@@ -16,28 +16,25 @@
               
               var txt   = {};
               txt['package.json']   = `
-                    "dependencies": {
-                      "libs": "*"
-                    }
-              `;
-              txt['package.json']   = `
-                    "dependencies": {
-                          "libs"    : "file:node_modules/libs"
-                    }
-              `;
+                                            {
+                                                "dependencies": {
+                                                    "libs": "file:./libs",
+                                                }
+                                            }
+                                      `;
               var zip   = {
                     'https-server'   :{directory:{
                           'package.json'      : {file:{contents:txt['package.json']}},
                           'https-server.js'   : {file:{github:{repo:'code',path:'/nodejs/servers/https-server/https-server.js'}}},
                           
+                          libs                : {directory:{
+                                                      'getmime.js'          : {file:{github:{repo:'libs',path:'/js/string/getmime/getmime.js'}}},
+                                                      'keys.js'             : {file:{github:{repo:'libs',path:'/nodejs/keys/keys.js'}}},
+                                                      'argv.js'             : {file:{github:{repo:'libs',path:'/nodejs/argv/argv.js'}}},
+                                                      'server-cert.js'      : {file:{github:{repo:'libs',path:'/nodejs/server-cert/server-cert.js'}}},
+                                                      'resolve.js'          : {file:{github:{repo:'libs',path:'/nodejs/resolve/resolve.js'}}},
+                                                }},
                           'node_modules'      : {directory:{
-                                                      libs  : {directory:{
-                                                            'getmime.js'          : {file:{github:{repo:'libs',path:'/js/string/getmime/getmime.js'}}},
-                                                            'keys.js'             : {file:{github:{repo:'libs',path:'/nodejs/keys/keys.js'}}},
-                                                            'argv.js'             : {file:{github:{repo:'libs',path:'/nodejs/argv/argv.js'}}},
-                                                            'server-cert.js'      : {file:{github:{repo:'libs',path:'/nodejs/server-cert/server-cert.js'}}},
-                                                            'resolve.js'          : {file:{github:{repo:'libs',path:'/nodejs/resolve/resolve.js'}}},
-                                                      }}
                                                 }}
                     }}
               };
