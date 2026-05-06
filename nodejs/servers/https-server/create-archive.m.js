@@ -18,7 +18,7 @@
               file['package.json']    = `
                                               {
                                                   "dependencies": {
-                                                      "libs": "file:./libs",
+                                                      "libs": "file:./libs"
                                                   }
                                               }
                                         `;
