@@ -15,20 +15,24 @@
               console.log('https-server',jszip);
               
               var file   = {};
-              file['package.json']    = `
-                                              {
-                                                  "dependencies": {
-                                                      "libs": "file:./libs"
+              file['package.json']        = `
+                                                  {
+                                                      "dependencies": {
+                                                          "libs": "file:./libs"
+                                                      }
                                                   }
-                                              }
-                                        `;
+                                            `;
               file['libs-package.json']   = `
-              {
-                    "name"      : "libs",
-                    "version    : "1.0.0"
-              }
-              `;
-              
+                                                  {
+                                                        "name"      : "libs",
+                                                        "version    : "1.0.0"
+                                                  }
+                                            `;
+                                            
+              for(var key in file)
+                    file[key]=norm(file[key]);
+                    
+                    
               var zip   = {
                     'https-server'   :{directory:{
                           'package.json'      : {file:{contents:file['package.json']}},
@@ -52,6 +56,9 @@
               return blob;
               
         }//create_archive
+        
+        
+        var norm    = txt=>txt.split('\n').map(line=>'        '+line.trimStart()).join('\n');
         
         
         
