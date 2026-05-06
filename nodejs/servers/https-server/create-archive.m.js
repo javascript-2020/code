@@ -20,6 +20,11 @@
                       "libs": "*"
                     }
               `;
+              txt['package.json']   = `
+                    "dependencies": {
+                          "libs"    : "file:node_modules/libs"
+                    }
+              `;
               var zip   = {
                     'https-server'   :{directory:{
                           'package.json'      : {file:{contents:txt['package.json']}},
