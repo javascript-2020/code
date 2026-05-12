@@ -26,6 +26,7 @@
         
         var cwd           = process.cwd();
         var docroot       = path.resolve(cwd,dir);
+        docroot          += '/';
         
         if(!fs.existsSync(docroot) || !fs.statSync(docroot).isDirectory()){
                                                                                 console.error(`Error: ${docroot} is not a valid directory.`);
