@@ -38,8 +38,8 @@
                                                                                 console.log(err.message)
         });
         server.listen({host,port});
-                                                                                console.log(`listening https://${host}:${port}`);
-                                                                                console.log('serving',docroot);
+                                                                                console.log('    serving :',docroot);
+                                                                                console.log(`  listening : https://${host}:${port}`);
         function request(req,res){
                                                                                 console.log(req.method,req.url);
               if(cors(req,res)){
