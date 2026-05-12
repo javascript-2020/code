@@ -20,22 +20,29 @@
         var {key,cert}    = require('libs/server-cert.js');
         var resolve       = require('libs/resolve.js');
         
-        var docroot       = __dirname+'/';
-        
         var host          = argv('h','host','127.0.0.1');
         var port          = argv('p','port',3002);
+        var dir           = argv('d','dir','.');
+        
+        var cwd           = process.cwd();
+        var docroot       = path.resolve(cwd,dir);
+        
+        if(!fs.existsSync(docroot) || !fs.statSync(docroot).isDirectory()){
+                                                                                console.error(`Error: ${docroot} is not a valid directory.`);
+              process.exit(1);
+        }
         
         
         var server        = require('https').createServer({key,cert},request);
         server.on('error',err=>{
-                                                                                  console.log(err.message)
+                                                                                console.log(err.message)
         });
         server.listen({host,port});
-                                                                                  console.log(`listening https://${host}:${port}`);
-                                                                                  
-                                                                                  
+                                                                                console.log(`listening https://${host}:${port}`);
+                                                                                
+                                                                                
         function request(req,res){
-                                                                                  console.log(req.method,req.url);
+                                                                                console.log(req.method,req.url);
               if(cors(req,res)){
                     return;
               }
@@ -45,7 +52,7 @@
                     badrequest(req,res);
                     return;
               }
-                                                                                  console.log(abs);
+                                                                                console.log(abs);
               if(!fs.existsSync(abs)){
                     notfound(req,res);
                     return;
