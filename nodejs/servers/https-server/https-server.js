@@ -40,8 +40,6 @@
         server.listen({host,port});
                                                                                 console.log(`listening https://${host}:${port}`);
                                                                                 console.log('serving',docroot);
-                                                                                
-                                                                                
         function request(req,res){
                                                                                 console.log(req.method,req.url);
               if(cors(req,res)){
