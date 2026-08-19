@@ -51,7 +51,9 @@
                     return;
               }
               
-              var {abs,error}   = resolve(req.url,docroot);
+              var url   = req.url;
+              
+              var {abs,error}   = resolve(url,docroot);
               if(error){
                     badrequest(req,res);
                     return;
