@@ -27,6 +27,7 @@
         var cwd           = process.cwd();
         var docroot       = path.resolve(cwd,dir);
         docroot          += '/';
+
         
         if(!fs.existsSync(docroot) || !fs.statSync(docroot).isDirectory()){
                                                                                 console.error(`Error: ${docroot} is not a valid directory.`);
@@ -41,8 +42,11 @@
         server.listen({host,port});
                                                                                 console.log('    serving :',docroot);
                                                                                 console.log(`  listening : https://${host}:${port}`);
+  //:
+  
+  
         function request(req,res){
-                                                                                console.log(req.method,req.url);
+          
               if(cors(req,res)){
                     return;
               }
@@ -52,7 +56,7 @@
                     badrequest(req,res);
                     return;
               }
-                                                                                console.log(abs);
+                                                                                console.log(req.method,req.url,'=>',abs);
               if(!fs.existsSync(abs)){
                     notfound(req,res);
                     return;
@@ -71,7 +75,10 @@
               
         }//request
         
-        
+
+  //:
+  
+  
         cors.headers   = function(res){
         
               res.setHeader('access-control-allow-origin','*');
@@ -87,7 +94,7 @@
               if(req.method!=='OPTIONS'){
                     return;
               }
-              
+                                                                                console.log(req.method,req.url);
               res.writeHead(200);
               res.end();
               
@@ -96,10 +103,8 @@
         }//cors
         
         
-        
-        
         function notfound(req,res){
-        
+                                                                                console.log(req.method,req.url,'=> 404 not found');
               res.writeHead(404);
               res.end(`${req.url} not found`);
               
@@ -107,7 +112,7 @@
         
         
         function badrequest(req,res){
-        
+                                                                                console.log(req.method,req.url,'=> 400 bad request');
               res.writeHead(400);
               res.end(`${req.url} bad request`);
               
