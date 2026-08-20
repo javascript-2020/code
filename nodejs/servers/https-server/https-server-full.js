@@ -15,9 +15,7 @@
         var path          = require('path');
         
         var keys          = keysmod();
-        var argv          = require('libs/argv.js');
-        var {key,cert}    = require('libs/server-cert.js');
-        var resolve       = require('libs/resolve.js');
+        var {key,cert}    = server_cert();
         
         var host          = argv('h','host','127.0.0.1');
         var port          = argv('p','port',3002);
