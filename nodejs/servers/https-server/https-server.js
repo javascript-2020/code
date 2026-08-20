@@ -34,7 +34,10 @@
               process.exit(1);
         }
         
-        
+
+  //:
+  
+  
         var server        = require('https').createServer({key,cert},request);
         server.on('error',err=>{
                                                                                 console.log(err.message)
@@ -47,29 +50,30 @@
   
         function request(req,res){
           
-              if(cors(req,res)){
-                    return;
-              }
-              
-              var url   = req.url;
+              var url   = transform(req.url);
               
               var {abs,error}   = resolve(url,docroot);
               if(error){
                     badrequest(req,res);
                     return;
               }
-                                                                                console.log(req.method,req.url,'=>',abs);
+
+              if(cors(req,res,abs)){
+                    return;
+              }
+              
+
               if(!fs.existsSync(abs)){
-                    notfound(req,res);
+                    notfound(req,res,abs);
                     return;
               }
               
               var stat    = fs.statSync(abs);
               if(!stat.isFile()){
-                    badrequest(req,res);
+                    badrequest(req,res,abs);
                     return;
               }
-              
+                                                                                console.log(req.method,req.url,'=>',abs,':','200 ok');
               var mime      = getmime(abs);
               var stream    = fs.createReadStream(abs);
               res.writeHead(200,{'content-type':mime});
@@ -78,6 +82,19 @@
         }//request
         
 
+        function transform(url){
+          
+              switch(url){
+                
+                case '/'    : url   = '/index.html';        break;
+                
+              }//switch
+              
+              return url;
+              
+        }//transform
+        
+        
   //:
   
   
@@ -89,14 +106,14 @@
         }//header
         
         
-        function cors(req,res){
+        function cors(req,res,abs){
         
               cors.headers(res);
               
               if(req.method!=='OPTIONS'){
                     return;
               }
-                                                                                console.log(req.method,req.url);
+                                                                                console.log(req.method,req.url,'=>',abs,':','200 ok');
               res.writeHead(200);
               res.end();
               
@@ -105,16 +122,16 @@
         }//cors
         
         
-        function notfound(req,res){
-                                                                                console.log(req.method,req.url,'=> 404 not found');
+        function notfound(req,res,abs){
+                                                                                console.log(req.method,req.url,'=>',abs,':','404 not found');
               res.writeHead(404);
               res.end(`${req.url} not found`);
               
         }//notfound
         
         
-        function badrequest(req,res){
-                                                                                console.log(req.method,req.url,'=> 400 bad request');
+        function badrequest(req,res,abs){
+                                                                                console.log(req.method,req.url,'=>',abs,':','400 bad request');
               res.writeHead(400);
               res.end(`${req.url} bad request`);
               
