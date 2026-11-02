@@ -23,7 +23,7 @@
         var port              = argv('p','port',3002);
         
         var keys              = keysmod();
-        keys.keypressed       = key=>key=='i' && info();
+        keys.keypressed       = key=>{if(key=='i')info()}
         
                                 }//keypressed
         var {key,cert}        = server_cert();
