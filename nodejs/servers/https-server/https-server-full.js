@@ -15,16 +15,16 @@
                                                                                 console.log();
                                                                                 console.json=(...args)=>args.forEach(v=>console.log(JSON.stringify(v,null,4)));
                                                                                 //console.json(process.argv);
+        var fs            = require('fs');
+        var path          = require('path');
+        
         var dir           = argv('d','dir','.');
         var host          = argv('h','host','127.0.0.1');
         var port          = argv('p','port',3002);
         
-        
-        var fs            = require('fs');
-        var path          = require('path');
-        
         var keys          = keysmod();
         var {key,cert}    = server_cert();
+        load_cert();
         
         var cwd           = process.cwd();
         var docroot       = path.resolve(cwd,dir);
@@ -45,7 +45,7 @@
         });
         server.listen({host,port});
         
-                                                                                console.log(`listening https://${host}:${port}/`);
+                                                                                console.log(`listening : https://${host}:${port}/`);
                                                                                 console.log();
                                                                                 console.log('serving :',docroot);
                                                                                 console.log();
@@ -195,7 +195,14 @@
   //:
   //libs:
   
-  
+/*
+        require           = (require=>(path,mod)=>{
+                                  try{return require(path)}catch(err){if(err.code!=='MODULE_NOT_FOUND')throw err}
+                                  try{return require('./'+path)}catch(err)if(err.code!=='MODULE_NOT_FOUND')throw err}
+                                  return mod;
+                            })(require);
+*/
+
 /*
 
 //argv:d
