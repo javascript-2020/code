@@ -11,33 +11,34 @@
 */
 
 
+        var dir           = argv('d','dir','.');
+        var host          = argv('h','host','127.0.0.1');
+        var port          = argv('p','port',3002);
+        
+        
         var fs            = require('fs');
         var path          = require('path');
         
         var keys          = keysmod();
         var {key,cert}    = server_cert();
         
-        var host          = argv('h','host','127.0.0.1');
-        var port          = argv('p','port',3002);
-        var dir           = argv('d','dir','.');
-        
         var cwd           = process.cwd();
         var docroot       = path.resolve(cwd,dir);
         docroot          += '/';
-
+        
         
         if(!fs.existsSync(docroot) || !fs.statSync(docroot).isDirectory()){
                                                                                 console.error(`Error: ${docroot} is not a valid directory.`);
               process.exit(1);
         }
         
-
+        
   //:
   
   
         var server        = require('https').createServer({key,cert},request);
         server.on('error',err=>{
-                                                                                console.log(err.message)
+                                                                                console.error(err);
         });
         server.listen({host,port});
                                                                                 console.log('    serving :',docroot);
@@ -46,7 +47,7 @@
   
   
         function request(req,res){
-          
+        
               var url   = transform(req.url);
               
               var {abs,error}   = resolve(url,docroot);
@@ -54,12 +55,12 @@
                     badrequest(req,res);
                     return;
               }
-
+              
               if(cors(req,res,abs)){
                     return;
               }
               
-
+              
               if(!fs.existsSync(abs)){
                     notfound(req,res,abs);
                     return;
@@ -78,11 +79,11 @@
               
         }//request
         
-
+        
         function transform(url){
-          
+        
               switch(url){
-                
+              
                 case '/'    : url   = '/index.html';        break;
                 
               }//switch
@@ -137,13 +138,13 @@
         
         
   //libs:
-
-
-
-
-
-
-
+  
+  
+  
+  
+  
+  
+  
 /*
 
 //argv:d
@@ -154,9 +155,6 @@
 */
 
 
-        module.exports    = argv;
-        
-        
         function argv(id0,def){
         
               var args    = [...arguments];
@@ -175,10 +173,10 @@
                           
                             case id         :
                             case '-'+id     :
-                            case '--'+id    : 
+                            case '--'+id    :
                                               var v   = process.argv[k+1];
                                               return v;
-                            
+                                              
                           }//switch
                           
                     }///for
@@ -187,8 +185,8 @@
               return def;
               
         }//argv
-
-
+        
+        
 /*
 
 //keys:d
@@ -297,9 +295,9 @@ getmime
 
 
 function getmime(filename){
-  
+
       var list    = {
-        
+      
             // Text
             
             'txt': 'text/plain',
@@ -310,8 +308,8 @@ function getmime(filename){
             'json': 'application/json',
             'csv': 'text/csv',
             'xml': 'application/xml',
-
-        
+            
+            
             // Images
             
             'jpg': 'image/jpeg',
@@ -323,16 +321,16 @@ function getmime(filename){
             'ico': 'image/x-icon',
             'bmp': 'image/bmp',
             'tiff': 'image/tiff',
-
-        
+            
+            
             // Audio
             
             'mp3': 'audio/mpeg',
             'wav': 'audio/wav',
             'ogg': 'audio/ogg',
             'm4a': 'audio/mp4',
-
-        
+            
+            
             // Video
             
             'mp4': 'video/mp4',
@@ -340,16 +338,16 @@ function getmime(filename){
             'mov': 'video/quicktime',
             'avi': 'video/x-msvideo',
             'mkv': 'video/x-matroska',
-
-        
+            
+            
             // Fonts
             
             'woff': 'font/woff',
             'woff2': 'font/woff2',
             'ttf': 'font/ttf',
             'otf': 'font/otf',
-
-        
+            
+            
             // Docs
             
             'pdf': 'application/pdf',
@@ -359,8 +357,8 @@ function getmime(filename){
             'xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             'ppt': 'application/vnd.ms-powerpoint',
             'pptx'      : 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-
-        
+            
+            
             // Archives
             
             'zip'       : 'application/zip',
@@ -377,7 +375,7 @@ function getmime(filename){
       var def     = 'application/octet-stream';
       var mime    = list[ext]||def
       
-      return mime;              
+      return mime;
       
 }//getmime
 
@@ -393,7 +391,7 @@ server-cert
 
 
 function server_cert(){
-  
+
         var key    = `
 -----BEGIN RSA PRIVATE KEY-----
 MIIEpAIBAAKCAQEAqvD7kk47a6sNWjX47x7ZuT5aIgQI+W2NaFPJhdsbDw9JkF0k
@@ -448,11 +446,11 @@ oz1EuTyR1PdxBTtvjjb5jGs6uynAtRzBJjoWYcwZWRRJtcpd9Rdhshe1VBo0Fn+L
 R59dH9TiW6uixGS88c3LslTRbW57qw==
 -----END CERTIFICATE-----
         `;
-
+        
       return {key,cert};
       
 }//server_cert
-        
+
 
 /*
 
@@ -511,7 +509,7 @@ function resolve(requrl,docroot='.'){
       
       if(abs.length>root.length){
             if(abs[root.length]!=path.sep){
-                                                                        resolve.df && console.log('error .... : ','invlaid docroot-2');
+                                                                        resolve.df && console.log('error .... : ','invalid docroot-2');
                   var error   = 'invalid docroot-2';
                   return {error};
             }
@@ -527,4 +525,3 @@ function resolve(requrl,docroot='.'){
       
 }//resolve
 
-        
