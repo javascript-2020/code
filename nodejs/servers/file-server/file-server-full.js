@@ -58,7 +58,8 @@ file-server-full:d
         
                                                                                 console.log(`listening : https://${host}:${port}/`);
                                                                                 console.log();
-                                                                                console.log('serving :',docroot);
+                                                                                console.log(docroot);
+                                                                                serve.enabled && console.log('serve.enabled');
                                                                                 console.log();
                                                                                 console.log('===');
                                                                                 console.log();
