@@ -298,74 +298,99 @@ function getmime(filename){
 
       var list    = {
       
-            // Text
-            
-            'txt': 'text/plain',
-            'html': 'text/html',
-            'htm': 'text/html',
-            'css': 'text/css',
-            'js': 'application/javascript',
-            'json': 'application/json',
-            'csv': 'text/csv',
-            'xml': 'application/xml',
-            
-            
-            // Images
-            
-            'jpg': 'image/jpeg',
-            'jpeg': 'image/jpeg',
-            'png': 'image/png',
-            'gif': 'image/gif',
-            'webp': 'image/webp',
-            'svg': 'image/svg+xml',
-            'ico': 'image/x-icon',
-            'bmp': 'image/bmp',
-            'tiff': 'image/tiff',
+          // text
+          
+            'txt'       : 'text/plain',
+            'html'      : 'text/html',
+            'htm'       : 'text/html',
+            'css'       : 'text/css',
+            'js'        : 'text/javascript',
+            'json'      : 'application/json',
+            'csv'       : 'text/csv',
+            'xml'       : 'application/xml',
+            'mjs'       : 'text/javascript',
+            'cjs'       : 'text/javascript',
+            'map'       : 'application/json',
+            'wasm'      : 'application/wasm',
+            'manifest'  : 'application/manifest+json',
             
             
-            // Audio
-            
-            'mp3': 'audio/mpeg',
-            'wav': 'audio/wav',
-            'ogg': 'audio/ogg',
-            'm4a': 'audio/mp4',
-            
-            
-            // Video
-            
-            'mp4': 'video/mp4',
-            'webm': 'video/webm',
-            'mov': 'video/quicktime',
-            'avi': 'video/x-msvideo',
-            'mkv': 'video/x-matroska',
-            
-            
-            // Fonts
-            
-            'woff': 'font/woff',
-            'woff2': 'font/woff2',
-            'ttf': 'font/ttf',
-            'otf': 'font/otf',
+          // images
+          
+            'jpg'       : 'image/jpeg',
+            'jpeg'      : 'image/jpeg',
+            'png'       : 'image/png',
+            'gif'       : 'image/gif',
+            'webp'      : 'image/webp',
+            'svg'       : 'image/svg+xml',
+            'ico'       : 'image/x-icon',
+            'bmp'       : 'image/bmp',
+            'tiff'      : 'image/tiff',
+            'avif'      : 'image/avif',
+            'heic'      : 'image/heic',
+            'heif'      : 'image/heif',
             
             
-            // Docs
+          // audio
+          
+            'mp3'       : 'audio/mpeg',
+            'wav'       : 'audio/wav',
+            'oga'       : 'audio/ogg',
+            'm4a'       : 'audio/mp4',
+            'flac'      : 'audio/flac',
+            'aac'       : 'audio/aac',
+            'opus'      : 'audio/opus',
+            'm3u8'      : 'application/x-mpegURL',
             
-            'pdf': 'application/pdf',
-            'doc': 'application/msword',
-            'docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-            'xls': 'application/vnd.ms-excel',
-            'xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            'ppt': 'application/vnd.ms-powerpoint',
+            
+            
+          // video
+          
+            'mp4'       : 'video/mp4',
+            'webm'      : 'video/webm',
+            'mov'       : 'video/quicktime',
+            'avi'       : 'video/x-msvideo',
+            'mkv'       : 'video/x-matroska',
+            'ogg'       : 'video/ogg',
+            'ogv'       : 'video/ogg',
+            
+            
+          // fonts
+          
+            'woff'      : 'font/woff',
+            'woff2'     : 'font/woff2',
+            'ttf'       : 'font/ttf',
+            'otf'       : 'font/otf',
+            
+            
+          // docs
+          
+            'pdf'       : 'application/pdf',
+            'doc'       : 'application/msword',
+            'docx'      : 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'xls'       : 'application/vnd.ms-excel',
+            'xlsx'      : 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'ppt'       : 'application/vnd.ms-powerpoint',
             'pptx'      : 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+            'md'        : 'text/markdown',
+            'odt'       : 'application/vnd.oasis.opendocument.text',
+            'ods'       : 'application/vnd.oasis.opendocument.spreadsheet',
             
             
-            // Archives
-            
+          // archives
+          
             'zip'       : 'application/zip',
-            'tar': 'application/x-tar',
-            'gz': 'application/gzip',
-            'rar': 'application/vnd.rar',
-            '7z': 'application/x-7z-compressed'
+            'tar'       : 'application/x-tar',
+            'gz'        : 'application/gzip',
+            'rar'       : 'application/vnd.rar',
+            '7z'        : 'application/x-7z-compressed',
+            
+          // binary
+          
+            'bin'       : 'application/octet-stream',
+            'exe'       : 'application/octet-stream',
+            'dmg'       : 'application/x-apple-diskimage'
+            
             
       };
       
