@@ -15,26 +15,25 @@ file-server-full:d
                                                                                 console.log();
                                                                                 console.json=(...args)=>args.forEach(v=>console.log(JSON.stringify(v,null,4)));
                                                                                 //console.json(process.argv);
-        var path          = require('path');
-        var fs            = require('fs');
-        var fsp           = fs.promises;
-        var {O_CREAT}     = fs.constants;
+        var path              = require('path');
+        var fs                = require('fs');
+        var fsp               = fs.promises;
+        var {O_CREAT}         = fs.constants;
         
-        var auth          = argv('auth','matt-123');
-        var dir           = argv('d','dir','');
-        var host          = argv('h','host','127.0.0.1');
-        var port          = argv('p','port',3000);
-        serve.enabled     = argv('s','serve',false)
+        var auth              = argv('auth','matt-123');
+        var dir               = argv('d','dir','');
+        var host              = argv('h','host','127.0.0.1');
+        var port              = argv('p','port',3000);
+        serve.enabled         = argv_has('s','serve')
         
-        var keys          = keysmod();
-        var {key,cert}    = server_cert();
+        var keys              = keysmod();
+        keys.keypressed       = key=>{if(key=='i')info()}
+        var {key,cert}        = server_cert();
         load_cert();
         
-        var cwd           = process.cwd();
-        var docroot       = path.resolve(cwd,dir);
-        if(!docroot.endsWith('/')){
-              docroot    += '/';
-        }
+        var cwd               = process.cwd();
+        var docroot           = path.resolve(cwd,dir);
+        docroot             += '/';
         
         if(!fs.existsSync(docroot) || !fs.statSync(docroot).isDirectory()){
                                                                                 console.error(`Error: ${docroot} is not a valid directory.`);
@@ -55,7 +54,10 @@ file-server-full:d
                                                                                 console.error(err);
         });
         server.listen({host,port});
+        info();
         
+        
+        function info(){
                                                                                 console.log(`listening : https://${host}:${port}/`);
                                                                                 console.log();
                                                                                 console.log(docroot);
@@ -63,14 +65,25 @@ file-server-full:d
                                                                                 console.log();
                                                                                 console.log('===');
                                                                                 console.log();
+        }//info
+        
+        
         async function request(req,res){
         
               res.setHeader('cache-control','no-store');
               res.setHeader('access-control-allow-origin','*');
               res.setHeader('access-control-allow-headers','auth,mode,content-type');
+              res.setHeader('access-control-expose-headers','content-range,accept-ranges,content-length');
               
               if(cors(req,res)){
                                                                                 request.log(req);
+                    return;
+              }
+              
+              var mode      = req.headers.mode;
+              
+              if(mode==='ping'){
+                    ping(req,res);
                     return;
               }
               
@@ -83,11 +96,9 @@ file-server-full:d
                     return;
               }
               
-              var mode      = req.headers.mode;
               
               if(serve.enabled){
                     if(!mode){
-                                                                                request.log(req,'serve',abs);
                           serve(req,res,abs);
                           return;
                     }
@@ -138,6 +149,14 @@ file-server-full:d
                                                                           break;
                                                                           
                                                                           
+                case 'readdir'            :
+                case 'dir.read'           :
+                                            dir.read(req,res,abs);
+                                                                          break;
+                case 'readdir'            :
+                case 'dir.read.full'      :
+                                            dir.read.full(req,res,abs);
+                                                                          break;
                 case 'mkdir'              :
                 case 'dir.create'         :
                                             dir.create(req,res,abs);
@@ -145,10 +164,6 @@ file-server-full:d
                 case 'rmdir'              :
                 case 'dir.delete'         :
                                             dir.delete(req,res,abs);
-                                                                          break;
-                case 'readdir'            :
-                case 'dir.read'           :
-                                            dir.read(req,res,abs);
                                                                           break;
                 case 'dir-clear'          :
                 case 'dir.clear'          :
@@ -167,10 +182,14 @@ file-server-full:d
         
         request.log   = function(req,mode,abs){
         
-              var spc   = [10,20,10,20];
-              var str   = [req.method,req.url];
+              var spc   = [10,20,20,20];
+              var str   = [req.method];
               if(mode){
-                    str.push(mode,abs);
+                    str.splice(1,0,mode);
+              }
+              str.push(req.url);
+              if(abs){
+                    str.push(abs);
               }
               str   = str.map((str,i)=>str.padEnd(spc[i]));
               str   = str.join(' ');
@@ -180,13 +199,20 @@ file-server-full:d
         }//log
         
         
+        function ping(req,res){
+        
+              res.end('pong');
+              
+        }//ping
+        
+        
         function transform(url){
         
               switch(url){
               
                 /*
                 case '/'    :
-                              url   = 'index.html';
+                              url   = '/index.html';
                                                             break;
                 */
                 
@@ -238,6 +264,14 @@ file-server-full:d
               res.end(reason);
               
         }//badreq
+        
+        
+        function range_not_satisfiable(req,res){
+        
+              req.writeHead(416);
+              res.end(req.url+' range not satisfiable');
+              
+        }//range_not_satisfiable
         
         
         function unknown(req,res,mode){
@@ -528,6 +562,49 @@ file-server-full:d
         }//dir.read
         
         
+        dir.read.full    = function(req,res,fn){
+        
+              if(!fs.existsSync(fn)){
+                    notfound(req,res);
+                    return;
+              }
+              
+              var dirs    = [];
+              var files   = [];
+              
+              var list    = fs.readdirSync(fn,{withFileTypes:true});
+              list.forEach(file=>{
+              
+                    if(file.name=='.' || file.name=='..'){
+                          return;
+                    }
+                    
+                    var stat    = fs.statSync(fn+file.name);
+                    
+                    if(file.isDirectory()){
+                          var o   = {
+                                name    : file.name,
+                          };
+                          dirs.push(o);
+                    }
+                    if(file.isFile()){
+                          var o   = {
+                                name    : file.name,
+                                size    : stat.size,
+                          };
+                          files.push(o);
+                    }
+                    
+              });
+              
+              var str   = JSON.stringify({files,dirs});
+              
+              res.writeHead(200);
+              res.end(str);
+              
+        }//dir.read.full
+        
+        
         dir.clear   = async function(req,res,fn){
                                                                                 //console.log('dir.clear',fn);
               var err;
@@ -599,6 +676,13 @@ file-server-full:d
                     return;
               }
               
+              
+              if(req.headers.range){
+                    serve.range(req,res,fn);
+                    return;
+              }
+              
+                                                                                request.log(req,'200',fn);
               var err;
               try{
               
@@ -622,6 +706,46 @@ file-server-full:d
               stream.pipe(res);
               
         }//serve
+        
+        
+        serve.range   = function(req,res,fn){
+        
+              var range         = req.headers.range;
+              
+              var stat          = fs.statSync(fn);
+              var size          = stat.size;
+              
+              var [start,end]   = range.replace(/bytes=/,'').split('-');
+              
+              start             = parseInt(start);
+              end               = parseInt(end);
+              
+              if(isNaN(start)){
+                    start       = size-end;
+                    end         = size-1;
+              }
+              
+              if(isNaN(end)){
+                    end         = size-1;
+              }
+              
+              if((start>=size)||(end>=size)){
+                    range_not_satisfiable(req,res);
+                    return;
+              }
+                                                                                request.log(req,'206',fn);
+                                                                                
+              var hdrs    = {
+                    'content-range'     : `bytes ${start}-${end}/${size}`,
+                    'accept-ranges'     : 'bytes',
+                    'content-length'    : end - start + 1,
+              };
+              res.writeHead(206,hdrs);
+              
+              var stream    = fs.createReadStream(fn,{start,end});
+              stream.pipe(res);
+              
+        }//range
         
         
   //:
@@ -788,6 +912,36 @@ file-server-full:d
               return def;
               
         }//argv
+        
+        
+        function argv_has(id0){
+        
+              var ids   = [...arguments];
+              
+              var nj    = ids.length;
+              for(var j=0;j<nj;j++){
+              
+                    var id    = ids[j];
+                    
+                    var nk    = process.argv.length;
+                    for(var k=0;k<nk;k++){
+                    
+                          switch(process.argv[k]){
+                          
+                            case id         :
+                            case '-'+id     :
+                            case '--'+id    :
+                                              return true;
+                                              
+                          }//switch
+                          
+                    }///for
+                    
+              }//for
+              
+              return false;
+              
+        }//argv_has
         
         
         
