@@ -211,9 +211,23 @@
                   <button id=dir-list>Dir List</button>
             </div>
             
+            
+            <div id=server-root>
+                  <label>
+                        server
+                  </label>
+                  <div class=hldr>
+                        <img class='copy icon'>
+                        <img class='paste icon'>
+                        <input id=server class=value autocomplete=on spellcheck=false>
+                  </div>
+            </div>
+            
+            
             <div id=rule-id-root>
                   <input id=rule-id>
             </div>
+            
             
             <div id=url-root class=field>
                   <label>
@@ -226,6 +240,7 @@
                         <input id=url class=value autocomplete=on spellcheck=false>
                   </div>
             </div>
+            
             
             <div id=redirect-root class=field>
                   <label>
@@ -311,8 +326,8 @@
                         <div class=upper>
                               <div class=index></div>
                               <div class=url></div>
-                              <img class='edit icon'>
-                              <img class='view icon'>
+                              <img class='edit icon' title='edit rule'>
+                              <img class='view icon' title='view rule'>
                               <img class='del icon' title='delete rule'>
                               <img class='del-all icon' title='delete rule / file'>
                         </div>
@@ -387,7 +402,7 @@
                                                                                 console.log();
                                                                                 console.json=(...args)=>args.forEach(v=>console.log(JSON.stringify(v,null,4)));
         var url           = new URL(window.location.toString());
-        var cache_url     = url.origin+'/cache/';
+        var server_url    = url.origin+'/cache/';
         
         var auth          = 'matt-123';
         
@@ -474,6 +489,12 @@
               $('#reload-ext').onclick                    = btn['reload-ext'];
               $('#ping-server').onclick                   = btn['ping-server'];
               $('#dir-list').onclick                      = btn['dir-list'];
+              
+              $('#server-root .copy').onclick             = btn.server.copy;
+              $('#server-root .paste').onclick            = btn.server.paste;
+              input.server                                = $('#server');
+              input.server.onfocus                        = ()=>input.server.select();
+              input.server.value                          = server_url;
               
               input['rule-id']                            = $('#rule-id');
               
@@ -860,7 +881,9 @@
                     log.error('no redirect filename');
                     return;
               }
-              var redirect_url      = cache_url+redirect;
+              
+              var server_url        = input.server.value;
+              var redirect_url      = server_url+redirect;
               
               var resourceTypes     = resource.read();
               
@@ -1431,7 +1454,8 @@
                     signal    = AbortSignal.timeout(time)
               }
               
-              var url         = cache_url;
+              var server_url    = input.server.value;
+              var url           = server_url;
               if(name){
                     url      +=name;
               }
