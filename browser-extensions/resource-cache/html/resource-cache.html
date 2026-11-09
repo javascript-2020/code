@@ -1,0 +1,1774 @@
+
+
+<!DOCTYPE html>
+
+<html lang=en>
+
+      <head>
+      
+            <title>
+                  Resource Cache
+            </title>
+            <link rel=icon href='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAMAAAAM7l6QAAABQVBMVEVHcEyoqLWNof0hMFKBlfl9kviMnfOXqPaOovuarPoqPW+ImPF6kPqNovyVp/iPofmHmveis/ceLVA4Rm2KnPEwP2UzQm0wQ3iNoPWisfqbq/SRo/mjsPCks/mBk/gpOF8jMVIxQnRxh/QvO1kcLE8zRnt8kftSZ7MxQ3eRo/l+kvmPo/qDlvegr/JRWHBXabGWqPYyRHGmsO9uhO+TpfmAlv5EU3tRatt+jeU1R3dTbNtRattUXXGUpvN9kvuVo/JYZ5+Mof55j/4uQnd6kP4bK0+dr/x4jv6fsf2WqfyarPw+WdWQpP2Tpv18kv05VdIwRHpDXtiJnvuCl/tpgfF+lP1IY9pvhvdxh+58kvRbdOSGmvc1SYZyifpOZ91heepjeM9AV693je1XcOZUbuAhMVtSa+M8UJFcccxqgN93iszvuERlAAAAQXRSTlMAAv2qk6osSeWY/iLs9XJhqankRz9gdPk5gzLDEJKJuJ3N4Cn339zz7LTKy28UCaFRqwvQjpAm6Ric3+wG/sANJb9UnPMAAAHHSURBVCjPZZNpW9owAIBL1RZhgBNBps77mu7e3H01DQlND+hJuRXw2v//AUuKa1N8vzRP3xzP2z4RhP+82pBLxWKxJEtbwjxbb5fPswWRUchufpTf8zIjb4oKT+FFjdNyVplDzG4kell5zLNk76faI0ueJ3pFQ2ZKmkhbTPQSdFADaabBMDXUIA7kNcDQFTWCGEQTXYhBooVtCADGGFgUGI0AfJno/D6mEzgg/vAl0WvfbzwMKcxQsHfzTeK6x7YeTEZem+GNJoFud1Ldna7dbDZ1Bn3a3Y7GdxNkuOFoOgyCYDgdha6BCB9mGbRVMxTHcRSDdiPRSndbPYOgBgP97I3DEF/MdwNo+b5/f3Lb7/dvr968jrW0Dx664X1fnbFejXXt86SNo2x42XrQ6rtM3B3q+rDrtQeDwV2Loaq564VM3G2OpzrLtu0ruq6Vu67X64leQUTpeN1hMNPq3s4qr5d8o4GIqTi93iW1R5/KaQ2A75iEVf+l+mumcshp4QJE3TTbZav3ygv82YJ0Fv/oO6pPd+opLeS3j2ffJepezzG9y9+TfGnx1/ETysnRKdWHq7sHc/fsd16qrdWkP+VKtVo5+BG9+wdz2pJu5erN5gAAAABJRU5ErkJggg=='>
+            
+            <!--<base href='https://127.0.0.1:3010/html/index.html'>-->
+            
+            <style>
+  html
+    {height:100%;font-family:arial}
+  body
+    {max-width:1000px;margin:8px auto;height:calc(100% - 16px);
+      display:flex;flex-direction:column;gap:10px
+    }
+    
+  h3
+    {display:flex;align-items:center;justify-content:center;gap:20px;position:relative;border-bottom:1px solid lightgray;margin:20px;padding:20px}
+  h3 #reload
+    {width:30px;height:30px;padding:4px;position:absolute;left:0;top:0;
+      content:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAfCAMAAADHso01AAAAY1BMVEVHcEw0WpI2XJM4YJo5VYQ0Vos1VIY0VYk2VIU5X5c0VYo0VIg1WY80V40zVIc1V4w1WI81WpE0Voo2W5IzVYk0VIY5a6o3aKdBcK5IdrJLebU9baw1ZaVNerc2Yp5Fc7BAaqRgdsu5AAAAFnRSTlMA8uP3C4ghUxXtaEPDqjmautB421srql9iSQAAAYpJREFUKM91k9uCpCAMRBUEAW8gKqgI/P9XTqDpHp3dzpscg6mqWFW3Yus4jrT5PNPpl1ExKMQ515J0rzfGvn7DlSB32lSn8Vi28MKCfMGN0DHsIYSEz3NzeFpJ7dwLswmHPdGCz23zCLuCmynue8aZZbwZYwom8TgSjh4ppbHfHnjBe8IWD8vKGO0I8jfMVDgAR9UWwbS/4zlegM9+LRI7legbM7UDDmgsVCBzH63FF+A4FwNA7ZZHL3iygHdNC27J0CPsnSm4D9d12Zv3VUM7MUldew+moh1wFNWfaui4wEUVP+Dy2Fb/rabgpfpSOl8+f8MSRjvs8A2TmISh9e/xJEaWPOTZFvKkI8iq1dBVDIRDIvwxO+sd2OZqOBQ5EotunA4+meolZMikTe2Wk4+xKbPU3OUEeV6HEPW0dF0799jkxHyZR8C6pGWz0eOUxitQL1n51pwW9b2p9rWKXtLPLAKdz0U2eKB3nRKfv93Ga9E8s2kH7mJqjA6rmf4b3jjDP4h0T1r2OfwB3iEs2VwdKdAAAAAASUVORK5CYII=);
+    }
+  h3 #ext-icon
+    {width:30px;height:30px;
+      content:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAMAAAAM7l6QAAABQVBMVEVHcEyoqLWNof0hMFKBlfl9kviMnfOXqPaOovuarPoqPW+ImPF6kPqNovyVp/iPofmHmveis/ceLVA4Rm2KnPEwP2UzQm0wQ3iNoPWisfqbq/SRo/mjsPCks/mBk/gpOF8jMVIxQnRxh/QvO1kcLE8zRnt8kftSZ7MxQ3eRo/l+kvmPo/qDlvegr/JRWHBXabGWqPYyRHGmsO9uhO+TpfmAlv5EU3tRatt+jeU1R3dTbNtRattUXXGUpvN9kvuVo/JYZ5+Mof55j/4uQnd6kP4bK0+dr/x4jv6fsf2WqfyarPw+WdWQpP2Tpv18kv05VdIwRHpDXtiJnvuCl/tpgfF+lP1IY9pvhvdxh+58kvRbdOSGmvc1SYZyifpOZ91heepjeM9AV693je1XcOZUbuAhMVtSa+M8UJFcccxqgN93iszvuERlAAAAQXRSTlMAAv2qk6osSeWY/iLs9XJhqankRz9gdPk5gzLDEJKJuJ3N4Cn339zz7LTKy28UCaFRqwvQjpAm6Ric3+wG/sANJb9UnPMAAAHHSURBVCjPZZNpW9owAIBL1RZhgBNBps77mu7e3H01DQlND+hJuRXw2v//AUuKa1N8vzRP3xzP2z4RhP+82pBLxWKxJEtbwjxbb5fPswWRUchufpTf8zIjb4oKT+FFjdNyVplDzG4kell5zLNk76faI0ueJ3pFQ2ZKmkhbTPQSdFADaabBMDXUIA7kNcDQFTWCGEQTXYhBooVtCADGGFgUGI0AfJno/D6mEzgg/vAl0WvfbzwMKcxQsHfzTeK6x7YeTEZem+GNJoFud1Ldna7dbDZ1Bn3a3Y7GdxNkuOFoOgyCYDgdha6BCB9mGbRVMxTHcRSDdiPRSndbPYOgBgP97I3DEF/MdwNo+b5/f3Lb7/dvr968jrW0Dx664X1fnbFejXXt86SNo2x42XrQ6rtM3B3q+rDrtQeDwV2Loaq564VM3G2OpzrLtu0ruq6Vu67X64leQUTpeN1hMNPq3s4qr5d8o4GIqTi93iW1R5/KaQ2A75iEVf+l+mumcshp4QJE3TTbZav3ygv82YJ0Fv/oO6pPd+opLeS3j2ffJepezzG9y9+TfGnx1/ETysnRKdWHq7sHc/fsd16qrdWkP+VKtVo5+BG9+wdz2pJu5erN5gAAAABJRU5ErkJggg==);
+    }
+  #version
+    {color:green}
+    
+  #hdr
+    {display:flex;gap:10px;align-items:center}
+    
+  .field
+    {display:flex;flex-direction:column;gap:5px;padding:10px;border:1px solid blue;border-radius:5px}
+  .field label
+    {font-weight:bold;color:blue}
+  .field .hldr
+    {display:flex;gap:5px;align-items:center}
+  .field .value
+    {flex:1}
+    
+  #rule-id-root
+    {display:none}
+    
+    
+  #url-root
+    {margin-top:10px}
+  #resource-root
+    {margin-bottom:0px}
+  #add
+    {}
+    
+  #btns
+    {display:flex;gap:20px;margin-bottom:10px}
+  #btns button
+    {flex:1}
+    
+  #resource-root>label
+    {display:flex;align-items:center;gap:10px}
+  #resource-hldr
+    {display:flex;flex-wrap:wrap;gap:10px}
+  .resource
+    {display:flex;align-items:center;gap:10px;border:1px solid lightgray;padding:5px 10px;cursor:pointer}
+    
+  .title
+    {font-size:12px;font-weight:bold;color:blue}
+    
+  #list
+    {flex:1;display:flex;flex-direction:column;gap:5px;border:1px solid blue;padding:10px;overflow:auto;
+      border-radius:5px}
+  #empty
+    {text-align:center;color:lightgray;font-weight:bold;margin-top:30px}
+  .item
+    {display:flex;flex-direction:column;padding:5px}
+  .item>div
+    {display:flex;align-items:center;gap:10px}
+  .item .lower, .item .initiator, .item .excluded
+    {font-size:12px}
+  .item:nth-of-type(odd)
+    {background:hsl(195,53%,97%)}
+  .item:nth-of-type(even)
+    {background:hsl(0,0%,97%)}
+  .item .index, .item .indent, .item label
+    {width:50px;text-align:right;margin-right:10px}
+  .item .url
+    {flex:1;font-weight:bold}
+  .item .edit
+    {width:25px;height:25px;padding:2px;background:white;
+      content:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAMAAAAM7l6QAAAAwFBMVEVHcExJSUlJSUlMTEtJSUlKSkpMS0tYWFhMTExKSkpHT1ZGSEpZWVlIR0Y5T2IWZadHR0dPT09ERERKSUlJSUlPT09HR0c1d65MTExHR0c0dq1LS0tHR0dZdItDQ0NDQ0M0d69jfJJCSE5GRkY9Tl2xsbF9fX2pqqp0dHSBgYGFhYVBQUEDjf8AddcrmfYonf8AivwfmP3NzcwBfOSFhYZSUlKRuNlhkbnDw8MSetIBfeQQgeAPj/h8fHwaY6Bvmr7btjvCAAAAK3RSTlMAaDAWZnpQBU4wRUACIV3tgla/XS4Pjd/3deA2quXw293Spip2+6D2i8zds3cBXQAAARxJREFUKM+N02tXgjAYB/CNwRw3C1HC8pJ2b4pFhpha3/9bBcPB07YX/Xc4B87v7MozhP4bgmW8nkGTieW6VtXc8Y2ul5ETnN8Z1dUnjhyTsruYKIo6ZsmcD8K/CthOOQcutGN/uv0E3mjL3m32A/yskivdZDvhY7HfiIhEsdCrbPO+OtY+Y9U3njhN4lGrq7fDbpva9TlgK+iJIKAf6/1UDIaw222w0/VFH6nsXTf61SlgqaAvYKO2TBatft8jjb2nIjv3XTKdn8u8ODarojqTlzzPi4OYl4JywFbzm9JTWfm+XpWBE85Pefmw6ItqUZkMOE9fH6MQGdmfzZdxGMhaUzlsTeWhVtQMMLWHlhJ4DUYUY9uuHxnjJTLmF8IdJPZjqSTTAAAAAElFTkSuQmCC);
+    }
+  .item .view
+    {width:25px;height:25px;padding:2px;background:white;
+      content:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAMAAAAM7l6QAAAApVBMVEVHcEzWcmbXcWWj1NvUcGXWcWbVdGnUc2jUcmfWcWbXcWbVcmnWcWXWcmbLeGzSdGrWcWbScGW+a2KRYFvVc2m3ioarrq+2aWHNbmPJbmOZamekzNKj1t6l2eCl1dym1dyk1dzTdGm3aWGlZl7VcmfSb2OxvsHWcmaYbmqn196fur6m197XcWWk196k1t1QUVOHp61rfH9XWlxrb3F2dnhsfYCHqK39Ee6DAAAALHRSTlMAeff+4q1KIC2M1xqqmgMQvs3BJSWlvzf38Qp/43GgeOYQrmRk/tW6TC7TL21iccgAAAExSURBVCjPlVOJcoIwFAwEoiCHhkMQPKqi1oZw9Pj/T2tICFBKh+nOMAOzybJv33sA/IDjgL+wQoptWbaCVhPk0jBVwqGaxnJEuopGBtAUd8gudDKCvhiwa/IL6453dTIBXeorZBJK67l3pTL0/oR/Q3L3ILzdwuAuTxg8DVOQOkpSypAmSBcHzCYfxN+1624PKYXNs99d+f9UJI1ttuDtRGFZVSWkp1ew3UhzdlOkD8CR0rIu6vcvSo8A+E0UNuuRxe4yFhworIqi/viE9MA+fXbfcgTtdXRRVIL2BM3FsSfFi7rk4h4W4sIaHlvD0lpb2GVY2KUvrI0lOj9YLHmep8njHPWxdKHGOAifzzDA8TDUviVZFsVxlI1aMtPQuXGYGaa5UZwY5Jf/rMHsEk2v4DeoNVEZ0uhJygAAAABJRU5ErkJggg==);
+    }
+  .item .del
+    {width:25px;height:25px;padding:3px;background:white;
+      content:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAiCAMAAAB/VplGAAAAq1BMVEVHcEzUAADXAADUAADVAADPAADYAADWAADLAADLAADbAADVAADXAADRAADKAADJAADVAADOAADkAADMAADiAADZAADUAADpAADoAADfAADJAADOAADrAADQAADbAADZAADWAADQAADIAADJAADsAADqAADHAADpAADwAADfAADTAAD2AADnAADiAADcAADWAADZAADPAADtAADlAAD6AADzAADMAADsAADJAAAFz1VZAAAAJnRSTlMACA8fA2MsfPdMGFZAtu3nv23t0q2Gj+KY9ng3xsrP/N2j3K+wzYD17h4AAAGhSURBVDjLdZPngoIwEIQJXRSRptjbXSgHoSn4/k92G7hQ5Jx/4QvJ7uyE41ohxdZn3EfNVIyXpth/EHbXWb808auqVKnfbsP2ebeUqirPc2PfrkRziUFHjeGFmkdRlOp8W4j6otiQu6suUZqm2Zkej9w8r4Avd4hhpKdZRgg5aRxanyPKB1dznAIwBClAsxS4ag47W2xJmIA2TkgI5WtxiPlTmJSNkjAEvtLGxnhJGce+H8fASbZcvPk2L2O/Lorab7jybqts+UUAKmrgK/4d899F8AQFhV9ai8lQxK/g+QN6BnXsiVPsAX48KN7I05FqhwAo8KBwpxR5BcP//Cwqfs0OP0zK5qRtXLPSNsIkS1ZS+l1j8ze6v4Dhcc1scdCICseMUM5MHbvC61HacjaS4e9onTc4TKzD30C3g9sltWo42ZqaA4GgcTh1xe8NDBmm3BU5zQnbsLCB8ncML4DyK3VD0ElGo7RjVd9wy//SI6xSoHZ3+A433GZGy0eIqTRoi/Jb36psV8OwQG3YGD5e+T56ypJqjF1Go7AgV/r07H8BUMxF2szPw1wAAAAASUVORK5CYII=);
+    }
+  .item .del-all
+    {width:25px;height:25px;padding:3px;background:white;
+      content:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAYCAMAAADat72NAAAAbFBMVEVHcEwAAAAZGRkBAQEAAAABAQH0QjYAAADzQzbyQzf0Qjb0QjbxRDgAAAACAgL0QjbyQzfzQzfzQzbvRTntRDnxQzjxRDjyQzfzQjbtSDzxRDfzQjbqSEADAwMAAAADAwMDAwMBAQH0QjYAAADWs/o7AAAAInRSTlMAdwSy/R3838Fz9OItxQvsi5qvGhJYO2fRCEakBFTuSyiadtHdlQAAAPRJREFUKM+tkm1zgyAQhLfGUFASQAR8iUlL/v9/7MG0FVo/5plxRlnO2z1Ae8jzckXmecxr5LdjtgYvoKlIKzKY1Qg/Z/lUsgFW9zHRDf6v88sZkscfelfL9wfsrsaolko+NdCpyqgYh4HeuC17PyCpb7/AqXW0pDOBynagEkMd/Qg4RuV1SpMsh1uON6XutbzmSOQIY/bIyplfc3Vcx7QzqLRzd97ePyBoaSB1pP8H6j0VwdoNvstpJBe4aZJ1mfsTc07rptgJQTt7ifcdmqlPA2fpYTk2zgV0Q5z6nSnT8/8DXjj7PhExH10AK7hi3aRl+vgCNjwqpwyicrMAAAAASUVORK5CYII=);
+    }
+  #dir
+    {flex:1;display:flex;flex-direction:column;gap:5px;border:1px solid blue;padding:10px;overflow:auto;
+      border-radius:5px
+    }
+  #dir .file
+    {display:flex;gap:10px;align-items:center;padding:5px}
+  #dir .file:nth-of-type(odd)
+    {background:hsl(195,53%,97%)}
+  #dir .file:nth-of-type(even)
+    {background:hsl(0,0%,97%)}
+    
+  #dir .file .index
+    {width:50px;text-align:right;margin-right:10px}
+  #dir .file .name
+    {flex:1;font-weight:bold}
+  #dir .file .size
+    {width:100px}
+  #dir .file .del
+    {width:25px;height:25px;padding:3px;background:white;
+      content:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAiCAMAAAB/VplGAAAAq1BMVEVHcEzUAADXAADUAADVAADPAADYAADWAADLAADLAADbAADVAADXAADRAADKAADJAADVAADOAADkAADMAADiAADZAADUAADpAADoAADfAADJAADOAADrAADQAADbAADZAADWAADQAADIAADJAADsAADqAADHAADpAADwAADfAADTAAD2AADnAADiAADcAADWAADZAADPAADtAADlAAD6AADzAADMAADsAADJAAAFz1VZAAAAJnRSTlMACA8fA2MsfPdMGFZAtu3nv23t0q2Gj+KY9ng3xsrP/N2j3K+wzYD17h4AAAGhSURBVDjLdZPngoIwEIQJXRSRptjbXSgHoSn4/k92G7hQ5Jx/4QvJ7uyE41ohxdZn3EfNVIyXpth/EHbXWb808auqVKnfbsP2ebeUqirPc2PfrkRziUFHjeGFmkdRlOp8W4j6otiQu6suUZqm2Zkej9w8r4Avd4hhpKdZRgg5aRxanyPKB1dznAIwBClAsxS4ag47W2xJmIA2TkgI5WtxiPlTmJSNkjAEvtLGxnhJGce+H8fASbZcvPk2L2O/Lorab7jybqts+UUAKmrgK/4d899F8AQFhV9ai8lQxK/g+QN6BnXsiVPsAX48KN7I05FqhwAo8KBwpxR5BcP//Cwqfs0OP0zK5qRtXLPSNsIkS1ZS+l1j8ze6v4Dhcc1scdCICseMUM5MHbvC61HacjaS4e9onTc4TKzD30C3g9sltWo42ZqaA4GgcTh1xe8NDBmm3BU5zQnbsLCB8ncML4DyK3VD0ElGo7RjVd9wy//SI6xSoHZ3+A433GZGy0eIqTRoi/Jb36psV8OwQG3YGD5e+T56ypJqjF1Go7AgV/r07H8BUMxF2szPw1wAAAAASUVORK5CYII=);
+    }
+    
+  #output-root
+    {height:200px;display:flex;flex-direction:column;gap:10px}
+  #output-hdr
+    {display:flex;gap:10px}
+  #output
+    {flex:1;border:1px solid lightblue;white-space:pre;padding:10px;overflow:auto}
+  #output>div
+    {display:flex}
+    
+  #output .log
+    {}
+    
+  #output .ok
+    {color:green}
+    
+  #output .error
+    {color:red}
+    
+  #output .file
+    {}
+    
+  #output .dnr
+    {display:flex;gap:10px;padding:5px 10px;border:1px solid lightgray;border-radius:6px}
+  #output .dnr .method
+    {width:50px}
+  #output .dnr .type
+    {width:100px}
+  #output .dnr .initiator
+    {flex:1;text-overflow:elipsis}
+  #output .dnr .url
+    {flex:1;text-overflow:elipsis}
+    
+    
+  .spc
+    {flex:1}
+  .icon
+    {border:1px solid gray;border-radius:3px;box-sizing:border-box;width:30px;height:30px;cursor:pointer}
+  .paste
+    {padding:2px;
+      content:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAAXNSR0IArs4c6QAAAVlJREFUSEvtlj1ug0AQhcdIW6RLeiQy6XKElLRIlOlp6LmBlRsgtzTUOQAtcZMzpMpInAGlQSjRWl7LxrM/dlhZUbwtu/PNvH07zAIutBYX4oIzGBG/95MkIuezXHFOh6MoegqC4F0GEELAMAybWL+BG8GI+AwArypjRFTAgyLOSeAIHIbhjRDii5NHgcdxhK7rWHu4JnEEnt6ljK6AUxIRcfAPInq0mVYL/lwSrNa3UL7d2WKA3CvXw8vuKqzeMYKtxMmGK9ik2FVq+XQ2rVE5VSeXMpLNgLp3fZbUrlCVFAc/GaygbdvaioU4jrU9/W+CVUVc6U3TQJIkfio2geVV/C+pi6KAsiz9SN33PaRpyrrbu9R1XbPgLMv83bHJXHmeQ1VVp0tt6w6zN5DtqHMwynJJeAGbqkVEOefc2xTZ/+7Uq10CcgOh7pzz38kFPMce6zQ4B4SL8QNf7+YfCGbtNAAAAABJRU5ErkJggg==);
+    }
+  .copy
+    {padding:2px;
+      content:url(data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAMAAAC7IEhfAAABSlBMVEVHcEwnz/4C8P4g1P4L6P43wf5Mr/4a2v4Y3P4/uv5PrP4+vf5Auv4ozv5KsP4vyv45wP5Jsf5Auf49vP5Mrv4zxf44wf5Lr/46wP4h1P5Lr/46vv5Jsv4R5P5Hs/5Etv44wf5Hs/41w/4uyv47vv49vP5Ftf5GtP4c2f4rzP4tyv4m0f5Etv5Nrv4xxv4xxv4xx/4W3/5KsP5Mr/4/u/4uyv5Isv4K6f4l0f4qzv4W3/4V3/5Nrv5Mrv5Mrv5Mr/4W3v4e2P5BuP5Hsv4N5v4K6f4O5v42w/5Dt/4E7/4uyf4C8P4nz/4M5/4K6v4oz/4P5f4k0v4b2v5Gs/4E7v4I6/5Nrf4e1/4H7P4E7v5Auv5Dtv4sy/5Isv5GtP4wx/49vP4zxf47vv44wP42w/5LsP5Jsf4i1P4n0P4N5v4k0v4a2v4S4v4X3v6OfcqkAAAAVnRSTlMACo7CjQWN/VczjgIJMfIXJzHtjj5iVekR71Hvtz7CjelXjre2wiJj2PCFIWbR7+fEnXaodz3544/USfOC22Tm7CXOnqfUZ+/3VTV9bsTzqGDahpb2tyRB6bIAAAIDSURBVDjLrZVpV9pAFIYntdFiQkZsLCQECtJSlqAsFRBU3Kuta1sncYGuJEDt///aISkkkyHo6enzLTlP5s5758wNAC526pd3d1++/fzx/evNze1tp210wxURUMTWBz2v2EWtLc7jBTPmoJfNrqy8i0ajixgB00VISJIeW9JMKbcWDAYDNiFMQN1EqAAJcUfSBif0fsQWQjLxpjGnXUJa5CoIbTiP8KJ0OqfNMLQIZhGad/Ke3t///vWwGKv1+yPxfW55+TnmJWZW5ggxcqX3m6WSVTpSdPcxHCLExmf97AI8e1j8cK1f8X9Fq/Sotrf0k2v9KRiJ08L8mwhf2CQx8oK/yJyPw3Q67ULaV4Tr7tRCwFfkllLF4ushccwGPyUMzwzhMQz/X1Kz+QVMmh2LcjgsTxDZ3OpqIpFYfDu+KGwoxE5JvTtpF9NX9BEB792jn0gD4eNEsVAQHyXOO7fQFmNNLZOnPV5BqEyI+Yxm1qkluS0BCWRp8FEze6mTJQtVVd8MUfcEhBSGFOGMOWmaoc0AmRoXP5cmiHEReEXANOopzCsLRYlXjWolGXE2jK/r/ujEWAdOFIxWGrjO8ljXazG6MeynthEn2gAP9P7B4XCE2thzdG2v2jbK5LfHZ3hINbclSco6o/kIh1Einq4e1qxp5m2PkqZ/CPvbXvFot+xe7w/EpaiUrJ24NAAAAABJRU5ErkJggg==);
+    }
+    
+  button
+    {font-size:16px;font-weight:bold;cursor:pointer;padding:5px 10px;border:none;border-radius:5px;background:#0066cc;color:white}
+  button:hover
+    {background:#0055b3}
+  input
+    {font-size:16px;padding:5px 10px;box-sizing:border-box}
+  input[type=button]
+    {cursor:pointer}
+  input[type=checkbox]
+    {width:20px;height:20px;margin:0;box-sizing:border-box;vertical-align:middle;margin-right:10px}
+    
+            </style>
+            
+            
+      </head>
+      
+      
+      <body>
+      
+            <h3>
+                  <img id=reload class=icon>
+                  <img id=ext-icon>
+                  Resource Cache
+                  <span id=version>v1.0</span>
+            </h3>
+            
+            <div id=hdr>
+                  <button id=update>Update</button>
+                  <button id=delete-all>Delete All Caches</button>
+                  <div class=spc></div>
+                  <button id=ping-ext>Ping Ext</button>
+                  <button id=reload-ext>Reload Ext</button>
+                  <button id=ping-server>Ping Server</button>
+                  <button id=dir-list>Dir List</button>
+            </div>
+            
+            <div id=rule-id-root>
+                  <input id=rule-id>
+            </div>
+            
+            <div id=url-root class=field>
+                  <label>
+                        <input type=checkbox checked>
+                        url
+                  </label>
+                  <div class=hldr>
+                        <img class='copy icon'>
+                        <img class='paste icon'>
+                        <input id=url class=value autocomplete=on spellcheck=false>
+                  </div>
+            </div>
+            
+            <div id=redirect-root class=field>
+                  <label>
+                        redirect
+                  </label>
+                  <div class=hldr>
+                        <button id=redirect-file>local file</button>
+                        <button id=redirect-fetch>fetch url</button>
+                        <img class='copy icon'>
+                        <img class='paste icon'>
+                        <input id=redirect class=value>
+                        <button id=redirect-save>save</button>
+                  </div>
+            </div>
+            
+            
+            <div id=regex-root class=field style='display:none'>
+                  <label>
+                        <input type=checkbox>
+                        regexFilter
+                  </label>
+                  <div class=hldr>
+                        <img class='copy icon'>
+                        <img class='paste icon'>
+                        <input id=regex class=value autocomplete=on spellcheck=false>
+                  </div>
+            </div>
+            
+            
+            <div id=initiator-root class=field>
+                  <label>
+                        initiatorDomains
+                  </label>
+                  <div class=hldr>
+                        <img class='copy icon'>
+                        <img class='paste icon'>
+                        <input id=initiator class=value autocomplete=on spellcheck=false>
+                  </div>
+            </div>
+            
+            <div id=excluded-root class=field>
+                  <label>
+                        excludedInitiatorDomains
+                  </label>
+                  <div class=hldr>
+                        <img class='copy icon'>
+                        <img class='paste icon'>
+                        <input id=excluded class=value autocomplete=on spellcheck=false>
+                  </div>
+            </div>
+            
+            <div id=resource-root class=field>
+                  <label>
+                        resourceTypes
+                        <div class=spc></div>
+                        <button id=resource-none>none</button>
+                        <button id=resource-all>all</button>
+                  </label>
+                  <div id=resource-hldr>
+                        <label class=resource>
+                              <input type=checkbox>
+                              <div class=resource-name>
+                              </div>
+                        </label>
+                  </div>
+            </div>
+            
+            <div id=btns>
+                  <button id=clear>Clear</button>
+                  <button id=add>Add</button>
+            </div>
+            
+            
+            <div class=title>
+                  rules
+            </div>
+            
+            <div id=list>
+                  <div id=empty>
+                        [ Empty ]
+                  </div>
+                  <div class=item style='display:none'>
+                        <div class=upper>
+                              <div class=index></div>
+                              <div class=url></div>
+                              <img class='edit icon'>
+                              <img class='view icon'>
+                              <img class='del icon' title='delete rule'>
+                              <img class='del-all icon' title='delete rule / file'>
+                        </div>
+                        <div class=initiator>
+                              <label>
+                                    initiator
+                              </label>
+                        </div>
+                        <div class=excluded>
+                              <label>
+                                    excluded
+                              </label>
+                        </div>
+                        <div class=lower>
+                              <label>
+                                    file
+                              </label>
+                              <div class=file></div>
+                        </div>
+                  </div>
+            </div>
+            
+            
+            <div class=title>
+                  files
+            </div>
+            
+            <div id=dir>
+                  <div class=file style='display:none'>
+                        <div class=index></div>
+                        <div class=name></div>
+                        <div class=size></div>
+                        <img class='del icon' title='delete file'>
+                  </div>
+            </div>
+            
+            
+            <div id=output-root>
+                  <div id=output-hdr>
+                        <div class=spc></div>
+                        <input type=button value=clear>
+                  </div>
+                  <div id=output style='display:none'>
+                        <div class=log></div>
+                        <div class=ok></div>
+                        <div class=error></div>
+                        <div class=file>
+                              <div class=name></div>
+                              <img class='del icon'>
+                        </div>
+                        <div class=dnr>
+                              <div class=method></div>
+                              <div class=type></div>
+                              <div class=initiator></div>
+                              <div class=url></div>
+                        </div>
+                  </div>
+            </div>
+            
+            
+      </body>
+      
+      
+      <script>
+      
+        var version   = 'v1.0';
+                                                                                console.clear();
+                                                                                var url=new URL(window.location.toString());
+                                                                                var i=url.pathname.lastIndexOf('/');
+                                                                                var name=url.pathname.slice(i+1);
+                                                                                console.log(name,version);
+                                                                                console.log();
+                                                                                console.json=(...args)=>args.forEach(v=>console.log(JSON.stringify(v,null,4)));
+        var url           = new URL(window.location.toString());
+        var cache_url     = url.origin+'/cache/';
+        
+        var auth          = 'matt-123';
+        
+        var from          = 'cache-webpage';
+        var ext_from      = 'cache-extension';
+        
+        var rules;
+        edit.cur          = null;
+        
+        var file;
+        
+        var input         = {};
+        var chk           = {};
+        chk.click         = {};
+        var resource      = {};
+        resource.list     = ['main_frame','sub_frame','stylesheet','script','image','font','object',
+                                  'xmlhttprequest','ping','csp_report','media','websocket','other'
+                                ];
+                                
+                                
+        var empty;
+        var list;
+        var item;
+        var dir_list;
+        var dir_file;
+        
+        
+        var output;
+        log.ui            = {};
+        
+        
+        var btn           = {};
+        btn.url           = {};
+        btn.redirect      = {};
+        btn.regex         = {};
+        btn.initiator     = {};
+        btn.excluded      = {};
+        btn.resource      = {};
+        btn.output        = {};
+        var send          = {};
+        
+        
+//  https://cdn.jsdelivr.net/npm/ace-builds/src-min-noconflict/ace.js
+
+
+  //:
+  
+  
+        window.addEventListener('message',onmessage);
+        
+        window.onload     = init;
+        
+        async function init(){
+        
+        
+              await initdom();
+              
+              
+              var {pong,error}    = await send.ext.ping();
+              if(error)return;
+              
+              var {pong,error}    = await send.server.ping();
+              if(error)return;
+              
+              
+              update.start();
+              
+              
+        }//init
+        
+        
+  //:
+  
+  
+        async function initdom(){
+        
+              $('#reload').onclick                        = e=>window.location.reload();
+              $('#version').textContent                   = version;
+              
+              $('#clear').onclick                         = btn.clear;
+              $('#update').onclick                        = btn.update;
+              $('#delete-all').onclick                    = btn['delete-all'];
+              $('#ping-ext').onclick                      = btn['ping-ext'];
+              $('#reload-ext').onclick                    = btn['reload-ext'];
+              $('#ping-server').onclick                   = btn['ping-server'];
+              $('#dir-list').onclick                      = btn['dir-list'];
+              
+              input['rule-id']                            = $('#rule-id');
+              
+              chk.url                                     = $('#url-root [type=checkbox]');
+              chk.url.onclick                             = chk.click.url;
+              $('#url-root .copy').onclick                = btn.url.copy;
+              $('#url-root .paste').onclick               = btn.url.paste;
+              input.url                                   = $('#url');
+              input.url.onfocus                           = ()=>input.url.select();
+              input.url.value                             = 'https://cdn.jsdelivr.net/npm/ace-builds/src-min-noconflict/ace.js';
+              
+              $('#redirect-file').onclick                 = btn.file;
+              $('#redirect-fetch').onclick                = btn.fetch;
+              $('#redirect-root .copy').onclick           = btn.redirect.copy;
+              $('#redirect-root .paste').onclick          = btn.redirect.paste;
+              input.redirect                              = $('#redirect');
+              input.redirect.onfocus                      = ()=>input.redirect.select();
+              $('#redirect-save').onclick                 = btn.save;
+              
+              chk.regex                                   = $('#regex-root [type=checkbox]');
+              chk.regex.onclick                           = chk.click.regex;
+              $('#regex-root .copy').onclick              = btn.regex.copy;
+              $('#regex-root .paste').onclick             = btn.regex.paste;
+              input.regex                                 = $('#regex');
+              input.regex.onfocus                         = ()=>input.regex.select();
+              input.regex.value                           = '';
+              
+              //chk.intiator                                = $('#initiator-root [type=checkbox]');
+              //chk.intiator.onclick                        = chk.click.initiator;
+              $('#initiator-root .copy').onclick          = btn.initiator.copy;
+              $('#initiator-root .paste').onclick         = btn.initiator.paste;
+              input.initiator                             = $('#initiator');
+              input.initiator.onfocus                     = ()=>input.initiator.select();
+              input.initiator.value                       = '';
+              
+              //chk.excluded                                = $('#excluded-root [type=checkbox]');
+              //chk.excluded.onclick                        = chk.click.excluded;
+              $('#excluded-root .copy').onclick           = btn.excluded.copy;
+              $('#excluded-root .paste').onclick          = btn.excluded.paste;
+              input.excluded                              = $('#excluded');
+              input.excluded.onfocus                      = ()=>input.excluded.select();
+              input.excluded.value                        = '';
+              
+              var root                                    = $('#resource-root');
+              $(root,'#resource-none').onclick            = btn.resource.none;
+              $(root,'#resource-all').onclick             = btn.resource.all;
+              resource.hldr                               = $(root,'#resource-hldr');
+              resource.item                               = $(resource.hldr,'.resource');
+              resource.item.remove();
+              resource.list.forEach(type=>{
+              
+                    var nitem                             = resource.item.cloneNode(true);
+                    nitem.setAttribute('for',type+'-chk');
+                    nitem.id                              = type;
+                    $(nitem,'[type=checkbox]').id         = type+'-chk';
+                    var div                               = $(nitem,'.resource-name');
+                    div.textContent                       = type;
+                    resource.hldr.append(nitem);
+                    
+              });
+              root.style.display                          = '';
+              
+              $('#add').onclick                           = btn.add;
+              
+              msg                                         = $('#msg');
+              
+              
+              list                                        = $('#list');
+              empty                                       = $(list,'#empty');
+              
+              item                                        = $(list,'.item');
+              item.remove();
+              item.style.display                          = '';
+              
+              dir_list                                    = $('#dir');
+              dir_file                                    = $(dir_list,'.file');
+              dir_file.remove();
+              dir_file.style.display                      = '';
+              
+              
+              var hdr                                     = $('#output-hdr');
+              $(hdr,'[value=clear]').onclick              = btn.output.clear;
+              
+              output                                      = $('#output');
+              
+              log.ui.log                                  = $(output,'.log');
+              log.ui.ok                                   = $(output,'.ok');
+              log.ui.error                                = $(output,'.error');
+              log.ui.file                                 = $(output,'.file');
+              log.ui.dnr                                  = $(output,'.dnr');
+              
+              output.replaceChildren();
+              output.style.display                        = '';
+              
+              
+        }//initdom
+        
+        
+  //:
+  
+  
+        btn.url.copy    = async function(){
+        
+              var txt   = input.url.value;
+              await navigator.clipboard.writeText(txt);
+              log('url copied');
+              
+        }//copy
+        
+        
+        btn.url.paste   = async function(){
+        
+              var txt       = await navigator.clipboard.readText();
+              input.url.value   = txt;
+              
+        }//paste
+        
+        
+        btn.redirect.copy    = async function(){
+        
+              var txt   = input.redirect.value;
+              await navigator.clipboard.writeText(txt);
+              log('redirect copied');
+              
+        }//copy
+        
+        
+        btn.redirect.paste   = async function(){
+        
+              var txt       = await navigator.clipboard.readText();
+              input.redirect.value   = txt;
+              
+        }//paste
+        
+        
+        btn.regex.copy    = async function(){
+        
+              var txt   = input.regex.value;
+              await navigator.clipboard.writeText(txt);
+              log('regex copied');
+              
+        }//copy
+        
+        
+        btn.regex.paste   = async function(){
+        
+              var txt   = await navigator.clipboard.readText();
+              input.regex.value   = txt;
+              
+        }//regex.paste
+        
+        
+        btn.initiator.copy    = async function(){
+        
+              var txt   = input.initiator.value;
+              await navigator.clipboard.writeText(txt);
+              log('initiatorDomains copied');
+              
+        }//copy
+        
+        
+        btn.initiator.paste   = async function(){
+        
+              var txt                 = await navigator.clipboard.readText();
+              input.initiator.value   = txt;
+              
+        }//paste
+        
+        
+        btn.excluded.copy   = async function(){
+        
+              var txt   = input.excluded.value;
+              await navigator.clipboard.writeText(txt);
+              log('excludedDomains copied');
+              
+        }//copy
+        
+        
+        btn.excluded.paste    = async function(){
+        
+              var txt   = await navigator.clipboard.readText();
+              input.excluded.value    = txt;
+              
+        }//paste
+        
+        
+  //:
+  
+  
+        chk.click.url   = function(e){
+        
+              chk.url.checked   = true;
+              return;
+              
+              if(chk.url.checked){
+                    chk.regex.checked   = false;
+              }else{
+                    chk.regex.checked   = true;
+              }
+              
+        }//url
+        
+        
+        chk.click.regex   = function(e){
+        
+              if(chk.regex.checked){
+                    chk.url.checked     = false;
+              }else{
+                    chk.url.checked     = true;
+              }
+              
+        }//regex
+        
+        
+  //:
+  
+  
+        btn.clear   = function(){
+                                                                                console.log('btn.clear');
+              reset();
+              
+        }//clear
+        
+        
+        btn.update    = async function(){
+                                                                                console.log('btn.update');
+              log('update ...');
+              
+              update();
+              
+              log.ok.append();
+              
+        }//update
+        
+        
+        btn['delete-all']    = async function(){
+                                                                                console.log('btn.delete-all');
+              log('delete all caches ...');
+              
+              var {ok,error}      = await send.ext['delete-all']();
+              if(error)return;
+              
+              var {files,error}   = await send.server.dir.read();
+              if(error)return;
+              
+              await Promise.all(files.map(async name=>{
+              
+                    var {error}   = await send.server.file.delete(name);
+                    if(error)return;
+                    
+              }));
+              
+              log.ok.append();
+              update();
+              
+        }//delete
+        
+        
+  //:
+  
+  
+        btn.file    = function(){
+        
+              var finput        = document.createElement('input');
+              finput.type       = 'file';
+              finput.onchange   = onchange;
+              finput.click();
+              
+              
+              function onchange(){
+              
+                    file                    = finput.files[0];
+                    input.redirect.value    = file.name;
+                    
+              }//onchange
+              
+        }//file
+        
+        
+        btn.fetch   = async function(){
+        
+              var url   = input.url.value.trim();
+              if(!url){
+                    log.error('no url given');
+                    return;
+              }
+              
+              log('fetching ... ');
+              
+              var {blob,error}      = await get(url);
+              if(error)return;
+              
+              file    = blob;
+              
+              url                     = new URL(url);
+              var i                   = url.pathname.lastIndexOf('/');
+              var name                = url.pathname.slice(i+1);
+              input.redirect.value    = name;
+              
+              log.ok.append();
+              
+        }//fetch
+        
+        
+        btn.save    = async function(){
+        
+              var name    = input.redirect.value;
+              if(!name){
+                    log.error('no redirect filename given');
+                    return;
+              }
+              if(!file){
+                    log.error('no file');
+                    return;
+              }
+              
+              log('saving',name,'... ');
+              
+              var {ok,error}    = await send.server.file.save(name,file);
+              if(error)return;
+              
+              log.ok.append();
+              
+              update.files();
+              
+        }//save
+        
+        
+        btn.add   = async function(){
+                                                                                console.log('btn.cache');
+              log('Add');
+              
+              var id    = input['rule-id'].value.trim();
+              if(id){
+                    log('delete existing rule ...');
+                    var {ok,error}   = await send.ext.delete(id);
+                    if(error){
+                          log.error(error);
+                    }
+                    log.ok.append();
+              }else{
+                    id    = new_id();
+              }
+              
+              var url;
+              if(chk.url.checked){
+                    url   = input.url.value.trim();
+                    if(!url){
+                          log.error('no url given');
+                          return;
+                    }
+              }
+              /*
+              var regex;
+              if(chk.regex.checked){
+                    regex   = input.regex.value.trim();
+                    if(!regex){
+                          log.error('no regex given');
+                          return;
+                    }
+              }
+              */
+              
+              var initiatorDomains            = input.initiator.value.trim();
+              if(initiatorDomains){
+                    initiatorDomains          = to_arr(initiatorDomains);
+              }
+              var excludedInitiatorDomains    = input.excluded.value.trim();
+              if(excludedInitiatorDomains){
+                    excludedInitatorDomains   = to_arr(excludedInitiatorDomains);
+              }
+              
+              log(url);
+              
+              var hex               = await file_hash(url);
+              /*
+              var t                 = new URL(url);
+              var i                 = t.pathname.lastIndexOf('/');
+              var filename          = t.pathname.slice(i+1).replaceAll('.','_');
+              filename              = filename+'---'+hex
+              */
+              var redirect          = $('#redirect').value;
+              if(!redirect){
+                    log.error('no redirect filename');
+                    return;
+              }
+              var redirect_url      = cache_url+redirect;
+              
+              var resourceTypes     = resource.read();
+              
+              var rule    = {
+              
+                    id,
+                    
+                    priority    : 1,
+                    action      : {
+                                        type        : 'redirect',
+                                        redirect    : {
+                                                            url   : redirect_url
+                                                            
+                                                            //  \1 captures the dynamic wildcard content from the regexFilter below
+                                                            //  and safely appends it to your local server route
+                                                            //  url: "http://localhost:3000/proxy?url=\\1"
+                                                      }
+                                  },
+                    condition   : {
+                                        urlFilter   : url,
+                                        
+                                        //  Matches any jsDelivr URL and captures everything after the domain into group 1 (\1)
+                                        //  regexFilter: "^https?://cdn\\.jsdelivr\\.net/(.+$)",
+                                        
+                                        resourceTypes,
+                                  }
+              }//rule
+              
+              if(initiatorDomains){
+                    rule.condition.initiatorDomains           = initiatorDomains;
+              }
+              if(excludedInitiatorDomains){
+                    rule.condition.excludedInitiatorDomains   = excludedInitiatorDomains;
+              }
+              
+              log.json(rule);
+              
+/*
+              log('fetching ... ');
+              var {blob,error}      = await get(url);
+              if(error)return;
+              log.ok.append();
+*/
+
+              log('caching ... ');
+              var {error}           = await send.ext.add(rule);
+              if(error)return;
+              log.ok.append();
+              
+/*
+              var {error}           = await send.server.file.save(filename,blob);
+              if(error)return;
+*/
+
+              log.ok('successfully cached');
+              reset();
+              
+              update();
+              
+        }//cache
+        
+        
+        btn['dir-list']   = async function(){
+        
+              log('list dir ... ');
+              
+              await update.files();
+              
+              log.ok.append();
+              
+        }//dir-list
+        
+        
+        btn['ping-ext']   = async function(){
+        
+              await send.ext.ping();
+              
+        }//ping-ext
+        
+        
+        btn['reload-ext']   = async function(){
+        
+              log('reload extension');
+              await send.ext.reload();
+              
+        }//reload-ext
+        
+        
+        btn['ping-server']    = async function(){
+        
+              await send.server.ping();
+              
+        }//ping-server
+        
+        
+        btn.output.clear    = function(){
+        
+              output.replaceChildren();
+              
+        }//clear
+        
+  //:
+  
+  
+        btn.resource.none   = function(){
+        
+              resource.list.forEach(type=>{
+              
+                    var chk       = $(`#resource-hldr #${type} [type=checkbox]`);
+                    chk.checked   = false;
+                    
+              });
+              
+        }//none
+        
+        
+        btn.resource.all    = function(){
+        
+              resource.list.forEach(type=>{
+              
+                    var chk       = $(`#resource-hldr #${type} [type=checkbox]`);
+                    chk.checked   = true;
+                    
+              });
+              
+        }//all
+        
+        
+        resource.read   = function(){
+        
+              var types   = [];
+              resource.list.forEach(type=>{
+              
+                    var chk   = $(resource.hldr,`#${type} [type=checkbox]`);
+                    if(chk.checked){
+                          types.push(type);
+                    }
+                    
+              });
+              return types;
+              
+        }//read
+        
+        
+        resource.write    = function(types){
+        
+              types   ||= [];
+              resource.list.forEach(type=>{
+              
+                    var chk   = $(resource.hldr,`#${type} [type=checkbox]`);
+                    chk.checked   = types.includes(type);
+                    
+              });
+              
+        }//write
+        
+        
+        resource.reset    = function(){
+        
+              resource.list.forEach(type=>{
+              
+                    var chk       = $(resource.hldr,`#${type} [type=checkbox]`);
+                    chk.checked   = false;
+                    
+              });
+              
+        }//reset
+        
+        
+  //:
+  
+  
+        function reset(){
+                                                                                console.log('reset');
+              input['rule-id'].value        = '';
+              input.url.value               = '';
+              input.redirect.value          = '';
+              input.initiator.value         = '';
+              input.excluded.value          = '';
+              resource.reset();
+              $('#add').textContent         = 'Add';
+              edit.cur                      = null;
+              file                          = null;
+              
+        }//reset
+        
+        
+        function edit(rule){
+        
+              edit.cur                      = rule;
+              
+              input['rule-id'].value        = rule.id;
+              
+              input.url.value               = rule.condition.urlFilter
+              
+              var url                       = new URL(rule.action.redirect.url);
+              var i                         = url.pathname.lastIndexOf('/');
+              var name                      = url.pathname.slice(i+1);
+              input.redirect.value          = name;
+              
+              var str   = '';
+              var initiator                 = rule.condition.initiatorDomains;
+              if(initiator){
+                    str                     = initiator.join(', ');
+              }
+              input.initiator.value         = str;
+              
+              var str                       = '';
+              var excluded                  = rule.condition.excludedInitiatorDomains;
+              if(excluded){
+                    str                     = excluded.join(', ');
+              }
+              input.excluded.value          = str;
+              
+              resource.write(rule.condition.resourceTypes);
+              
+              $('#add').textContent         = 'Edit';
+              
+        }//edit
+        
+        
+  //:
+  
+  
+        update.start    = async function(){
+                                                                                console.log('update.start');
+              log('update ... ');
+              
+              var {error}   = await update();
+              if(error){
+                    log.error(error);
+                    return;
+              }
+              
+              log.ok.append();
+              
+        }//start
+        
+        
+        async function update(disp=true){
+                                                                                console.log('update');
+              var rules   = update.rules(disp);
+              var files   = update.files(disp);
+              
+              return {rules,files};
+              
+        }//update
+        
+        
+        update.rules    = async function(disp=true){
+        
+              var error;
+              ({rules,error}   = await send.ext.read());
+              if(error)return {error};
+              
+              if(disp){
+                    display(rules);
+              }
+              
+        }//rules
+        
+        
+        update.files    = async function(disp=true){
+        
+              var {files}   = await send.server.dir.read.full();
+              if(disp){
+                    display.files(files);
+              }
+              
+        }//files
+        
+        
+        function display(rules){
+        
+              list.replaceChildren();
+              
+              if(rules.length==0){
+                    list.append(empty.cloneNode(true));
+              }
+              
+              rules.forEach((rule,i)=>{
+              
+                    var nitem                             = item.cloneNode(true);
+                    
+                    $(nitem,'.index').textContent         = i;
+                    $(nitem,'.url').textContent           = rule.condition.urlFilter;
+                    
+                    $(nitem,'.edit').onclick              = e=>edit(rule);
+                    $(nitem,'.view').onclick              = e=>view(rule);
+                    $(nitem,'.del').onclick               = e=>del(nitem,rule);
+                    $(nitem,'.del-all').onclick           = e=>del_all(nitem,rule);
+                    
+                    var url                               = new URL(rule.action.redirect.url);
+                    var i                                 = url.pathname.lastIndexOf('/');
+                    var filename                          = url.pathname.slice(i+1);
+                    $(nitem,'.file').textContent          = filename;
+                    
+                    var node                              = $(nitem,'.initiator');
+                    if(rule.condition.initiatorDomains){
+                          var str                         = rule.condition.initiatorDomains.join(', ');
+                          var div                         = document.createElement('div');
+                          div.textContent                 = str;
+                          node.append(div);
+                    }else{
+                          node.remove();
+                    }
+                    
+                    var node                              = $(nitem,'.excluded');
+                    if(rule.condition.excludedInitiatorDomains){
+                          var str                         = rule.condition.excludedInitiatorDomains.join(', ');
+                          var div                         = document.createElement('div');
+                          div.textContent                 = str;
+                          node.append(div);
+                    }else{
+                          node.remove();
+                    }
+                    
+                    list.append(nitem);
+                    
+              });
+              
+              
+              function view(rule){
+              
+                    log.json(rule);
+                    
+              }//view
+              
+              
+              async function del(item,rule){
+              
+                    log('delete',rule.condition.urlFilter,'... ');
+                    
+                    var {error}     = await send.ext.delete(rule.id);
+                    if(error)return;
+                    
+                    item.remove();
+                    
+                    if(edit.cur===rule){
+                          reset();
+                    }
+                    
+                    log.ok.append();
+                    
+              }//del
+              
+              
+              async function del_all(item,rule){
+              
+                    var p   = log('delete all ... ');
+                    
+                    log(rule.condition.urlFilter,'... ');
+                    
+                    var {error}     = await send.ext.delete(rule.id);
+                    if(error)return;
+                    
+                    log.ok.append();
+                    
+                    var url     = new URL(rule.action.redirect.url);
+                    var i       = url.pathname.lastIndexOf('/');
+                    var name    = url.pathname.slice(i+1);
+                    
+                    log(name,'... ');
+                    
+                    var {error}   = await send.server.file.delete(name);
+                    if(error)return;
+                    
+                    log.ok.append();
+                    
+                    if(edit.cur===rule){
+                          reset();
+                    }
+                    
+                    log.ok.append(p);
+                    
+                    update.rules();
+                    
+              }//del_all
+              
+        }//display
+        
+        
+        display.files   = function(files){
+        
+              dir_list.replaceChildren();
+              
+              if(files.length==0){
+                    dir_list.append(empty.cloneNode(true));
+              }
+              
+              files.forEach((file,i)=>{
+              
+                    var nitem                           = dir_file.cloneNode(true);
+                    
+                    $(nitem,'.index').textContent       = i;
+                    $(nitem,'.name').textContent        = file.name;
+                    $(nitem,'.size').textContent        = hs(file.size);
+                    $(nitem,'.del').onclick             = e=>del(nitem,file);
+                    
+                    dir_list.append(nitem);
+                    
+              })//files
+              
+              
+              async function del(item,file){
+              
+                    log('deleting',file.name,'... ');
+                    
+                    var {error}   = await send.server.file.delete(file.name);
+                    if(error)return;
+                    
+                    log.ok.append();
+                    
+                    update.files();
+                    
+              }//del
+              
+        }//files
+        
+        
+  //:
+  
+        send.ext    = function(action,payload={},time=250){
+        
+              var resolve,promise=new Promise(res=>resolve=res);
+              
+              var id      = window.crypto.randomUUID();
+              
+              var timer;
+              if(time!==null){
+                    timer   = setTimeout(timeout,time);
+              }
+              
+              window.addEventListener('message',response);
+              window.postMessage({from,id,action,payload},'*');
+              
+              return promise;
+              
+              
+              function response(event){
+              
+                    if(event.source===window && event.data && event.data.from===ext_from && event.data.id===id){
+                                                                                console.log(event);
+                          if(timer===null){
+                                                                                console.error('timeout miss',event.data);
+                                return;
+                          }
+                          
+                          clearTimeout(timer);
+                          window.removeEventListener('message',response);
+                          resolve(event.data.payload);
+                    }
+                    
+              }//response
+              
+              
+              function timeout(){
+              
+                    timer       = null;
+                    var error   = 'timeout';
+                    resolve({error});
+                    
+              }//timeout
+              
+        }//send.ext
+        
+        
+        send.ext.ping   = async function(){
+                                                                                console.log('send.ext.ping');
+              log('ping ext ... ');
+              
+              var {pong,error}    = await send.ext('ping');
+              if(error){
+                                                                                console.error(error);
+                    log.error('unable to reach the resource cache extension');
+                    log.error(error);
+                    return {error};
+              }
+              
+              log.ok.append();
+              
+              return {pong};
+              
+        }//ping
+        
+        
+        send.ext.reload   = async function(){
+        
+              log('reload ext');
+              
+              var {pong,error}    = await send.ext('reload',{},null);
+              if(error){
+                                                                                console.error(error);
+                    log.error('unable to reach the resource cache extension');
+                    log.error(error);
+                    return {error};
+              }
+              
+        }//reload
+        
+        
+        send.ext.read   = async function(){
+                                                                                console.log('send.ext.read');
+              var {rules,error}   = await send.ext('read');
+              if(error){
+                                                                                console.error(error);
+                    log.error(error);
+                    return {error};
+              }
+                                                                                console.log(rules);
+              return {rules};
+              
+        }//read
+        
+        
+        send.ext.add    = async function(rule){
+                                                                                console.log('send.ext.add');
+                                                                                console.json(rule);
+              var result    = await send.ext('add',rule);
+              var {error}   = result;
+              if(error){
+                                                                                console.error(error);
+                    log.error(error);
+              }
+              return result;
+              
+        }//add
+        
+        
+        send.ext.delete   = async function(id){
+                                                                                console.log('send.ext.delete');
+              var result    = await send.ext('delete',{id});
+              var {error}   = result;
+              if(error){
+                                                                                console.error(error);
+                    log.error(error);
+              }
+              return result;
+              
+        }//delete
+        
+        
+        send.ext['delete-all']    = async function(){
+                                                                                console.log('send.ext.delete-all');
+              var result    = await send.ext('delete-all');
+              var {error}   = result;
+              if(error){
+                                                                                console.error(error);
+                    log.error(error);
+              }
+              return result;
+              
+        }//delete-all
+        
+        
+  //:
+  
+  
+        send.server   = async function({name,mode,body},time=null){
+        
+              if(typeof arguments[0]=='string'){
+                    mode      = arguments[0];
+              }
+              
+              var ctrl        = new AbortController();
+              var {signal}    = ctrl;
+              if(time){
+                    signal    = AbortSignal.timeout(time)
+              }
+              
+              var url         = cache_url;
+              if(name){
+                    url      +=name;
+              }
+              var method      = 'get';
+              if(body){
+                    method    = 'post';
+              }
+              
+              var res;
+              var error;
+              var err;
+              
+              try{
+              
+                    res   = await fetch(url,{headers:{auth,mode},method,body,signal});
+                    
+              }//try
+              catch(err2){
+              
+                    err   = err2;
+                    
+              }//catch
+              
+              if(err){
+                                                                                console.error(err);
+                    if(err.name=='TimeoutError'){
+                          error   = 'timeout';
+                          return {error};
+                    }
+                    error   = err.message;
+                    return {error};
+              }
+              if(!res.ok){
+                    error       = await res.text();
+                    return {error};
+              }
+              
+              var blob    = await res.blob();
+              return {blob};
+              
+        }//server
+        
+        
+        send.server.ping    = async function(){
+        
+              var par    = log('ping server ... ');
+              
+              var {blob,error}   = await send.server('ping',500);
+              if(error){
+                    log.error('unable to reach file-server');
+                    log.error(error);
+                    return {error};
+              }
+              var pong   = await blob.text();
+              if(pong!=='pong'){
+                    error   = 'invalid response';
+                    log.error('unable to reach file-server');
+                    log.error(error);
+                    return {error};
+              }
+              
+              var node    = log.ok();
+              par.append(node);
+              
+              return {pong};
+              
+        }//ping
+        
+        
+        send.server.file    = {};
+        
+        send.server.file.save   = async function(name,blob){
+        
+              var body        = blob;
+              var result      = await send.server({name,body,mode:'file.save'});
+              var {error}     = result;
+              if(error){
+                    log.error(error);
+              }
+              return result;
+              
+        }//create
+        
+        
+        send.server.file.delete   = async function(name){
+                                                                                console.log('send.server.file.delete',name);
+              var result    = await send.server({name,mode:'file.delete'});
+              var {error}   = result;
+              if(error){
+                    log.error(error);
+              }
+              return result;
+              
+        }//delete
+        
+        
+        send.server.dir   = {};
+        
+        send.server.dir.read    = async function(){
+        
+              var {blob,error}   = await send.server('dir.read');
+              if(error){
+                    log.error(error);
+                    return {error};
+              }
+              
+              var txt       = await blob.text();
+              var json      = JSON.parse(txt);
+              var {files}   = json;
+              return {files};
+              
+        }//read
+        
+        
+        send.server.dir.read.full    = async function(){
+        
+              var {blob,error}   = await send.server('dir.read.full');
+              if(error){
+                    log.error(error);
+                    return {error};
+              }
+              
+              var txt       = await blob.text();
+              var json      = JSON.parse(txt);
+              var {files}   = json;
+              return {files};
+              
+        }//read.full
+        
+        
+  //:
+  
+  
+        function onmessage(e){
+        
+              if(e.source!==window || !e.data || !e.data.from===ext_from){
+                    return;
+              }
+              
+              var {action,payload}    = e.data;
+              
+              switch(action){
+              
+                case 'dnr'    :
+                                onmessage.dnr(payload);
+                                                                break;
+              }//switch
+              
+        }//onmessage
+        
+        
+        onmessage.dnr   = function(payload){
+                                                                                console.log('onmessage.dnr');
+                                                                                console.log(payload);
+              var {request,rule,timestamp}    = payload;
+              
+              var node                                = log.ui.dnr.cloneNode(true);
+              
+              $(node,'.method').textContent           = request.method;
+              $(node,'.type').textContent             = request.type;
+              $(node,'.initiator').textContent        = request.initiator;
+              $(node,'.url').textContent              = request.url;
+              
+              output.append(node);
+              output.scrollTop                = 999_999;
+              
+        }//dnr
+        
+        
+  //:
+  
+  
+        function log(...args){
+        
+              var str             = args.join(' ');
+              var node            = log.ui.log.cloneNode(true);
+              node.textContent    = str;
+              output.append(node);
+              output.scrollTop    = 999_999;
+              log.cur             = node;
+              return node;
+              
+        }//log
+        
+        
+        log.json    = function(...args){
+        
+              var node    = [];
+              args.forEach(v=>{
+              
+                    node.push(log(JSON.stringify(v,null,4)));
+                    
+              });
+              if(node.length==1){
+                    return node[0];
+              }
+              return node;
+              
+        }//json
+        
+        
+        log.error   = function(...args){
+        
+              var str             = args.join(' ');
+              var node            = log.ui.error.cloneNode(true);
+              node.textContent    = str;
+              output.append(node);
+              output.scrollTop    = 999_999;
+              return node;
+              
+        }//error
+        
+        
+        log.error.append    = function(...args){
+        
+              var par     = args[0]||log.cur;
+              var node    = log.error(...args.slice(1));
+              par.append(node);
+              return node;
+              
+        }//error.append
+        
+        
+        log.ok    = function(...args){
+        
+              var str             = args.join(' ');
+              str               ||= 'ok';
+              var node            = log.ui.ok.cloneNode(true);
+              node.textContent    = str;
+              output.append(node);
+              output.scrollTop    = 999_999;
+              return node;
+              
+        }//ok
+        
+        
+        log.ok.append   = function(...args){
+        
+              var par     = args[0]||log.cur;
+              var node    = log.ok(...args.slice(1));
+              par.append(node);
+              return node;
+              
+        }//ok.append
+        
+        
+  //:
+  
+  
+        async function file_hash(url) {
+        
+              var buf     = new TextEncoder().encode(url);
+              var hash    = await crypto.subtle.digest('SHA-256',buf);
+              var uint8   = new Uint8Array(hash);
+              var hex     = uint8.toHex().slice(0,10);
+              return hex;
+              
+        }//file_hash
+        
+        
+        async function get(url){
+        
+              var res;
+              var err;
+              try{
+              
+              
+                    res         = await fetch(url,{cache:'no-store'});
+                    
+              }//try
+              catch(err2){
+              
+                    err         = err2;
+                    
+              }//catch
+              if(err){
+                                                                                console.error(err);
+                    var error   = `Error: ${err.message}`;
+                    log.error(error);
+                    return {error};
+              }
+              if(!res.ok){
+                    var txt     = await res.text();
+                    var error   = `Network response failed : ${txt}`;
+                    log.error(error);
+                    return {error};
+              }
+              
+              var blob          = await res.blob();
+              return {blob};
+              
+        }//get
+        
+        
+        function new_id(){
+        
+              var uint32    = new Uint32Array(1);
+              self.crypto.getRandomValues(uint32);
+                                                                                //  keep values bound
+              var int       = (uint32[0]%100_000)+1;
+              return int;
+              
+        }//new_id
+        
+        
+        function to_arr(str){
+        
+              var arr   = str.trim().split(',').map(s=>s.trim()).filter(s=>s!='');
+              return arr;
+              
+        }//_arr
+        
+        
+        function hs(size){
+        
+              size    = Number(size);
+              var i   = size==0 ? 0 : Math.floor(Math.log(size)/Math.log(1000));
+              var s   = ((size/Math.pow(1000,i)).toFixed(2))*1+' '+['B','kB','MB','GB','TB'][i];
+              return s;
+              
+        }//hs
+        
+        
+        function $(root,sel){return (!sel && (sel=root,root=document),root.querySelector(sel))}
+        
+        
+        
+        
+      </script>
+      
+</html>
+
+
+
+
+
+
+
+
+
