@@ -17,8 +17,9 @@ the server requires nodejs and should be run with command
 node file-server-full.js -s -p 3010
 ```
 
--s : tells the server to serve files also
--p : specifies the port the server runs on, this is required in the redirect url
+-s : tells the server to serve files also, required for cached resources
+
+-p : specifies the port the server runs on ( note: this will be required in the redirect url )
 
 see [file-server [ext-code.com](https://ext-code.com/code/nodejs/servers/file-server/file-server.html) for full details
 
