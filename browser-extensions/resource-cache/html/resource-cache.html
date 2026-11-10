@@ -435,6 +435,7 @@
         
         
         var btn           = {};
+        btn.server        = {};
         btn.url           = {};
         btn.redirect      = {};
         btn.regex         = {};
@@ -596,6 +597,23 @@
   //:
   
   
+        btn.server.copy    = async function(){
+        
+              var txt   = input.server.value;
+              await navigator.clipboard.writeText(txt);
+              log('server url copied');
+              
+        }//copy
+        
+        
+        btn.server.paste   = async function(){
+        
+              var txt       = await navigator.clipboard.readText();
+              input.server.value   = txt;
+              
+        }//paste
+        
+        
         btn.url.copy    = async function(){
         
               var txt   = input.url.value;
