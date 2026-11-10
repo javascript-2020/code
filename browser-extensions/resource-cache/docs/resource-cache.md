@@ -31,16 +31,25 @@ navigate to page
 
 - check the server_url
 
-this is where the cached resource will be saved
+this is where the cached resource will be served
 
+```
+https://127.0.0.1:3010/cache/
+```
 
 - Add a url 
 
 this is the url that will be redirected
 
-
+```
+https://cdn.jsdelivr.net/npm/ace-builds/src-min-noconflict/ace.js
+```
 
 - Add a redirect url
+
+```
+ace.js
+```
 
 if this is a networked resource `fetch url` will load the resource, edit the filename and click save
 
