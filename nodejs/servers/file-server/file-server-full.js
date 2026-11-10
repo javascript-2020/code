@@ -36,7 +36,7 @@ file-server-full:d
         docroot             += '/';
         
         if(!fs.existsSync(docroot) || !fs.statSync(docroot).isDirectory()){
-                                                                                console.error(`Error: ${docroot} is not a valid directory.`);
+                                                                                console.error(`Error: not a valid directory [${docroot}]`);
               process.exit(1);
         }
         
@@ -58,7 +58,7 @@ file-server-full:d
         
         
         function info(){
-                                                                                console.log(`listening : https://${host}:${port}/`);
+                                                                                console.log(`https://${host}:${port}/`);
                                                                                 console.log();
                                                                                 console.log(docroot);
                                                                                 serve.enabled && console.log('serve.enabled');
@@ -87,8 +87,7 @@ file-server-full:d
                     return;
               }
               
-              var url   = transform(req.url);
-              
+              var url           = transform(req.url);
               var {abs,error}   = resolve(url,docroot);
               if(error){
                                                                                 request.log(req);
@@ -182,18 +181,10 @@ file-server-full:d
         
         request.log   = function(req,mode,abs){
         
-              var spc   = [10,20,20,20];
-              var str   = [req.method];
-              if(mode){
-                    str.splice(1,0,mode);
-              }
-              str.push(req.url);
-              if(abs){
-                    str.push(abs);
-              }
-              str   = str.map((str,i)=>str.padEnd(spc[i]));
-              str   = str.join(' ');
-              
+              var spc   = [10,20,20,5,20];
+              var str   = [req.method,mode||'',req.url,(abs && '=>')||'',abs||''];
+              str       = str.map((str,i)=>str.padEnd(spc[i]));
+              str       = str.join(' ');
               console.log(str);
               
         }//log
