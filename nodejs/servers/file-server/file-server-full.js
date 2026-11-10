@@ -75,10 +75,8 @@ file-server-full:d
               res.setHeader('access-control-allow-headers','auth,mode,content-type');
               res.setHeader('access-control-expose-headers','content-range,accept-ranges,content-length');
               
-              if(cors(req,res)){
-                                                                                request.log(req);
-                    return;
-              }
+              if(cors(req,res))return;
+              
               
               var mode      = req.headers.mode;
               
@@ -90,7 +88,6 @@ file-server-full:d
               var url           = transform(req.url);
               var {abs,error}   = resolve(url,docroot);
               if(error){
-                                                                                request.log(req);
                     badreq(req,res,error);
                     return;
               }
@@ -104,97 +101,96 @@ file-server-full:d
               }
               
               if(!mode){
-                                                                                request.log(req);
                     badreq(req,res,'mode not set');
                     return;
               }
               
               if(mode && auth){
                     if(req.headers.auth!==auth){
-                                                                                request.log(req);
                           unauthorised(req,res);
                           return;
                     }
               }
               
-                                                                                request.log(req,mode,abs);
+              
               var handled   = true;
+              var error;
               switch(mode){
               
               
                 case 'mkfile'             :
                 case 'file.create'        :
-                                            file.create(req,res,abs);
-                                                                          break;
+                                            ({error}    = file.create(req,res,abs))
+                                            break;
                 case 'rmfile'             :
                 case 'file.delete'        :
-                                            file.delete(req,res,abs);
-                                                                          break;
-                case 'load'               :
-                case 'file.load'          :
-                                            file.load(req,res,abs);
-                                                                          break;
-                case 'save'               :
-                case 'file.save'          :
-                                            file.save(req,res,abs);
-                                                                          break;
+                                            ({error}    = file.delete(req,res,abs));
+                                            break;
                 case 'upload'             :
                 case 'file.upload'        :
-                                            file.upload(req,res,abs);
-                                                                          break;
+                case 'load'               :
+                case 'file.load'          :
+                                            ({error}    = file.load(req,res,abs));
+                                            break;
                 case 'download'           :
                 case 'file.download'      :
-                                            file.download(req,res,abs);
-                                                                          break;
-                                                                          
-                                                                          
+                case 'save'               :
+                case 'file.save'          :
+                                            ({error}    = file.save(req,res,abs));
+                                            break;
+                                            
+                                            
                 case 'readdir'            :
                 case 'dir.read'           :
-                                            dir.read(req,res,abs);
-                                                                          break;
+                                            ({error}    = dir.read(req,res,abs));
+                                            break;
                 case 'readdir'            :
                 case 'dir.read.full'      :
-                                            dir.read.full(req,res,abs);
-                                                                          break;
+                                            ({error}    = dir.read.full(req,res,abs));
+                                            break;
                 case 'mkdir'              :
                 case 'dir.create'         :
-                                            dir.create(req,res,abs);
-                                                                          break;
+                                            ({error}    = dir.create(req,res,abs));
+                                            break;
                 case 'rmdir'              :
                 case 'dir.delete'         :
-                                            dir.delete(req,res,abs);
-                                                                          break;
+                                            ({error}    = dir.delete(req,res,abs));
+                                            break;
                 case 'dir-clear'          :
                 case 'dir.clear'          :
-                                            dir.clear(req,res,abs);
-                                                                          break;
-                                                                          
+                                            ({error}    = dir.clear(req,res,abs));
+                                            break;
+                                            
                 default                   :
                                             handled   = false;
-                                            unknown(req,res,mode);
+                                            unknown_mode(req,res,mode);
                                             
               }//switch
               
               
+              if(handled && !error){
+                                                                                request.log(200,req,mode,abs);
+              }
+              
         }//request
         
         
-        request.log   = function(req,mode,abs){
+        request.log   = function(code,req,mode,abs){
         
-              var spc   = [10,20,20,5,20];
-              var str   = [req.method,mode||'',req.url,(abs && '=>')||'',abs||''];
+              var spc   = [5,10,20,20,5,20];
+              var str   = [
+                                code,
+                                req.method,
+                                req.url,
+                                mode||'',
+                                (abs && '=>')||'',
+                                abs||''
+                          ];
               str       = str.map((str,i)=>str.padEnd(spc[i]));
               str       = str.join(' ');
               console.log(str);
               
         }//log
-        
-        
-        function ping(req,res){
-        
-              res.end('pong');
-              
-        }//ping
         
         
         function transform(url){
@@ -214,6 +210,13 @@ file-server-full:d
         }//transform
         
         
+        function ping(req,res){
+        
+              res.end('pong');
+              
+        }//ping
+        
+        
   //:
   
   
@@ -222,7 +225,7 @@ file-server-full:d
               if(req.method!=='OPTIONS'){
                     return;
               }
-              
+                                                                                request.log(200,req);
               res.writeHead(200);
               res.end();
               return true;
@@ -234,7 +237,7 @@ file-server-full:d
   
   
         function notfound(req,res){
-        
+                                                                                request.log(404,req);
               res.writeHead(404);
               res.end(req.url+' not found');
               
@@ -242,7 +245,7 @@ file-server-full:d
         
         
         function unauthorised(req,res){
-        
+                                                                                request.log(401,req);
               res.writeHead(401);
               res.end('unauthorised');
               
@@ -250,7 +253,7 @@ file-server-full:d
         
         
         function badreq(req,res,reason){
-        
+                                                                                request.log(400,req);
               res.writeHead(400);
               res.end(reason);
               
@@ -258,19 +261,109 @@ file-server-full:d
         
         
         function range_not_satisfiable(req,res){
-        
+                                                                                request.log(416,req);
               req.writeHead(416);
               res.end(req.url+' range not satisfiable');
               
         }//range_not_satisfiable
         
         
-        function unknown(req,res,mode){
-        
+        function unknown_mode(req,res,mode){
+                                                                                request.log(400,req,mode);
               res.writeHead(400);
               res.end(`unknown mode : ${mode}`);
               
         }//unknown
+        
+        
+  //:
+  
+  
+        function serve(req,res,fn){
+        
+              if(!fs.existsSync(fn)){
+                    notfound(req,res);
+                    return;
+              }
+              
+              var stat    = fs.statSync(fn);
+              
+              if(!stat.isFile()){
+                    badreq(req,res,'not file');
+                    return;
+              }
+              
+              
+              if(req.headers.range){
+                    serve.range(req,res,fn);
+                    return;
+              }
+              
+              var err;
+              try{
+              
+                    var stream    = fs.createReadStream(fn);
+                    
+              }//try
+              catch(err2){
+              
+                    err   = err2;
+                    
+              }//catch
+              if(err){
+                    var error   = err.toString();
+                    badreq(req,res,error);
+                    return;
+              }
+              
+              var mime      = getmime(fn);
+              var hdrs      = {'content-type':mime};
+                                                                                request.log(200,req);
+              res.writeHead(200,hdrs);
+              stream.pipe(res);
+              
+        }//serve
+        
+        
+        serve.range   = function(req,res,fn){
+        
+              var range         = req.headers.range;
+              
+              var stat          = fs.statSync(fn);
+              var size          = stat.size;
+              
+              var [start,end]   = range.replace(/bytes=/,'').split('-');
+              
+              start             = parseInt(start);
+              end               = parseInt(end);
+              
+              if(isNaN(start)){
+                    start       = size-end;
+                    end         = size-1;
+              }
+              
+              if(isNaN(end)){
+                    end         = size-1;
+              }
+              
+              if((start>=size)||(end>=size)){
+                    range_not_satisfiable(req,res);
+                    return;
+              }
+              
+                                                                                request.log(206,req);
+              var hdrs    = {
+                    'content-range'     : `bytes ${start}-${end}/${size}`,
+                    'accept-ranges'     : 'bytes',
+                    'content-length'    : end-start+1,
+              };
+              res.writeHead(206,hdrs);
+              
+              var stream    = fs.createReadStream(fn,{start,end});
+              stream.pipe(res);
+              
+        }//range
+        
         
         
   //:
@@ -292,7 +385,7 @@ file-server-full:d
               if(err){
                     var error   = err.toString();
                     badreq(req,res,error);
-                    return;
+                    return {error};
               }
               
               fs.closeSync(file);
@@ -318,7 +411,7 @@ file-server-full:d
               if(err){
                     var error   = err.toString();
                     badreq(req,res,error);
-                    return;
+                    return {error};
               }
               
               res.end('ok');
@@ -330,12 +423,13 @@ file-server-full:d
         
               if(!fs.existsSync(abs)){
                     notfound(req,res);
-                    return;
+                    return {error:true};
               }
               
-              if(!fs.statSync(fn).isFile()){
+              var stat    = fs.statSync(fn);
+              if(!stat.isFile()){
                     badreq(req,res,'not file');
-                    return;
+                    return {error:true};
               }
               
               var err;
@@ -352,7 +446,7 @@ file-server-full:d
               if(err){
                     var error   = err.toString();
                     badreq(req,res,error);
-                    return;
+                    return {error};
               }
               
               var mime      = getmime(abs);
@@ -365,13 +459,6 @@ file-server-full:d
         
         file.save   = function(req,res,abs){
         
-              /*
-              if(!fs.existsSync(abs)){
-                    notfound(req,res);
-                    return;
-              }
-              */
-              
               var err;
               try{
               
@@ -386,7 +473,7 @@ file-server-full:d
               if(err){
                     var error   = 'invalid filename : '+abs+'\n'+err.toString();
                     badrequest(req,res,error)
-                    return;
+                    return {error};
               }
               
               req.pipe(stream);
@@ -416,7 +503,7 @@ file-server-full:d
               if(err){
                     var error   = err.toString();
                     badreq(req,res,error);
-                    return;
+                    return {error};
               }
               
               req.pipe(stream);
@@ -434,12 +521,12 @@ file-server-full:d
         
               if(!fs.existsSync(abs)){
                     notfound(req,res);
-                    return;
+                    return {error:true};
               }
               
               if(!fs.statSync(fn).isFile()){
                     badreq(req,res,'not file');
-                    return;
+                    return {error:true};
               }
               
               var err;
@@ -456,7 +543,7 @@ file-server-full:d
               if(err){
                     var error   = err.toString();
                     badreq(req,res,error);
-                    return;
+                    return {error};
               }
               
               var mime      = getmime(abs);
@@ -486,7 +573,7 @@ file-server-full:d
               if(err){
                     var error   = err.toString();
                     badreq(req,res,error);
-                    return;
+                    return {error};
               }
               
               res.end('ok');
@@ -510,7 +597,7 @@ file-server-full:d
               if(err){
                     var error   = err.toString();
                     badreq(req,res,error);
-                    return;
+                    return {error};
               }
               
               res.writeHead(200);
@@ -523,7 +610,12 @@ file-server-full:d
         
               if(!fs.existsSync(fn)){
                     notfound(req,res);
-                    return;
+                    return {error:true};
+              }
+              
+              if(!fs.statSync(fn).isDirectory()){
+                    badreq(req,res,'not directory');
+                    return {error:true};
               }
               
               var dirs    = [];
@@ -557,7 +649,12 @@ file-server-full:d
         
               if(!fs.existsSync(fn)){
                     notfound(req,res);
-                    return;
+                    return {error:true};
+              }
+              
+              if(!fs.statSync(fn).isDirectory()){
+                    badreq(req,res,'not directory');
+                    return {error:true};
               }
               
               var dirs    = [];
@@ -612,7 +709,7 @@ file-server-full:d
               if(err){
                     var error   = err.toString();
                     badreq(req,res,error);
-                    return;
+                    return {error};
               }
               
               
@@ -643,100 +740,13 @@ file-server-full:d
               if(errors.length){
                     var error   = errors.join('\n');
                     badreq(req,res,error);
-                    return;
+                    return {error};
               }
               
               res.end('ok');
               
               
         }//dir.clear
-        
-        
-  //:
-  
-  
-        function serve(req,res,fn){
-        
-              if(!fs.existsSync(fn)){
-                    notfound(req,res);
-                    return;
-              }
-              
-              if(!fs.statSync(fn).isFile()){
-                    badreq(req,res,'not file');
-                    return;
-              }
-              
-              
-              if(req.headers.range){
-                    serve.range(req,res,fn);
-                    return;
-              }
-              
-                                                                                request.log(req,'200',fn);
-              var err;
-              try{
-              
-                    var stream    = fs.createReadStream(fn);
-                    
-              }//try
-              catch(err2){
-              
-                    err   = err2;
-                    
-              }//catch
-              if(err){
-                    var error   = err.toString();
-                    badreq(req,res,error);
-                    return;
-              }
-              
-              var mime      = getmime(fn);
-              
-              res.writeHead(200,{'content-type':mime});
-              stream.pipe(res);
-              
-        }//serve
-        
-        
-        serve.range   = function(req,res,fn){
-        
-              var range         = req.headers.range;
-              
-              var stat          = fs.statSync(fn);
-              var size          = stat.size;
-              
-              var [start,end]   = range.replace(/bytes=/,'').split('-');
-              
-              start             = parseInt(start);
-              end               = parseInt(end);
-              
-              if(isNaN(start)){
-                    start       = size-end;
-                    end         = size-1;
-              }
-              
-              if(isNaN(end)){
-                    end         = size-1;
-              }
-              
-              if((start>=size)||(end>=size)){
-                    range_not_satisfiable(req,res);
-                    return;
-              }
-                                                                                request.log(req,'206',fn);
-                                                                                
-              var hdrs    = {
-                    'content-range'     : `bytes ${start}-${end}/${size}`,
-                    'accept-ranges'     : 'bytes',
-                    'content-length'    : end - start + 1,
-              };
-              res.writeHead(206,hdrs);
-              
-              var stream    = fs.createReadStream(fn,{start,end});
-              stream.pipe(res);
-              
-        }//range
         
         
   //:
