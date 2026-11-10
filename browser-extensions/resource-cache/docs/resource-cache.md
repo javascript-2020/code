@@ -9,7 +9,12 @@ Cache resources locally and redirect to them through the extension instead of hi
 A lightweight, cross-browser Manifest V3 extension.  It provides a real-time management dashboard, dynamic local
 network routing, and fine-grained resource cache control for local development.                                    
 
+It does so through the use of a local server to serve the resource and redirecting webpage network network requests
+to the local resource
+
+
 ---
+
 
 - **server**
 
@@ -30,7 +35,9 @@ navigate to resource cache dashboard, such as
 
 [https://127.0.0.1:3010/html/resource-cache.html](https://127.0.0.1:3010/html/resource-cache.html)
 
+
 ---
+
 
 - **server_url**
 
@@ -81,4 +88,6 @@ google.com, youtube.com
 this is the type of resource that a redirect will apply to, these can be determined from `dev tools / network / type`
 
 or see [declarativeNetRequest.ResourceType [mdn]](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/declarativeNetRequest/ResourceType)
+
+
 
