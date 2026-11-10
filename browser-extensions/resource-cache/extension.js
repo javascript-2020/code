@@ -37,21 +37,7 @@ cache.js
   //:
   
   
-        chrome.action.onClicked.addListener(async tab=>{
-        
-              var existing    = await browser.tabs.query({url:urls});
-              
-              if(existing.length>0){
-                                                                                console.log(existing[0]);
-                    browser.tabs.update(existing[0].id,{active:true});
-                    browser.windows.update(existing[0].windowId,{focused:true});
-              }else{
-                    //browser.tabs.create({url:urls[0]});
-              }
-              
-        });
-        
-        
+  
         setup();
         
         async function setup(){
@@ -92,6 +78,21 @@ cache.js
         browser.tabs.onRemoved.addListener(tabId=>{
                                                                                 console.log('tab closed',tabId);
               tabs.delete(tabId);
+              
+        });
+        
+        
+        chrome.action.onClicked.addListener(async tab=>{
+        
+              var existing    = await browser.tabs.query({url:urls});
+              
+              if(existing.length>0){
+                                                                                console.log(existing[0]);
+                    browser.tabs.update(existing[0].id,{active:true});
+                    browser.windows.update(existing[0].windowId,{focused:true});
+              }else{
+                    //browser.tabs.create({url:urls[0]});
+              }
               
         });
         
