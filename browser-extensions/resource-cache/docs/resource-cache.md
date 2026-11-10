@@ -26,7 +26,7 @@ node file-server-full.js -s -p 3010
 see [file-server [ext-code.com]](https://ext-code.com/code/nodejs/servers/file-server/file-server.html) for full details
 
 
-navigate to page
+navigate to resource cache dashboard, such as
 
 [https://127.0.0.1:3010/html/resource-cache.html](https://127.0.0.1:3010/html/resource-cache.html)
 
