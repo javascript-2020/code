@@ -23,7 +23,7 @@ node file-server-full.js -s -p 3010
 
 -p : specifies the port the server runs on ( note: this will be required in the redirect url )
 
-see [file-server [ext-code.com](https://ext-code.com/code/nodejs/servers/file-server/file-server.html) for full details
+see [file-server [ext-code.com]](https://ext-code.com/code/nodejs/servers/file-server/file-server.html) for full details
 
 
 navigate to page
