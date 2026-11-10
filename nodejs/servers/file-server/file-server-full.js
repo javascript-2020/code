@@ -351,14 +351,15 @@ file-server-full:d
                     return;
               }
               
+              var mime      = getmime(fn);
+              var hdrs      = {
+                                    'content-range'     : `bytes ${start}-${end}/${size}`,
+                                    'accept-ranges'     : 'bytes',
+                                    'content-length'    : end-start+1,
+                                    'content-type'      : mime,
+                              };
                                                                                 request.log(206,req);
-              var hdrs    = {
-                    'content-range'     : `bytes ${start}-${end}/${size}`,
-                    'accept-ranges'     : 'bytes',
-                    'content-length'    : end-start+1,
-              };
               res.writeHead(206,hdrs);
-              
               var stream    = fs.createReadStream(fn,{start,end});
               stream.pipe(res);
               
