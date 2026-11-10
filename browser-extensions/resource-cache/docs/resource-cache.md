@@ -11,6 +11,8 @@ network routing, and fine-grained resource cache control for local development.
 
 ---
 
+- **server**
+
 the server requires nodejs and should be run with command
 
 ```
@@ -30,15 +32,15 @@ navigate to page
 
 ---
 
-- check the server_url
+- **server_url**
 
-this is where the cached resource will be served
+this is where the cached resource will be served, its auto populated based on the webpage
 
 ```
 https://127.0.0.1:3010/cache/
 ```
 
-- Add a url 
+- **url**
 
 this is the url that will be redirected
 
@@ -46,7 +48,7 @@ this is the url that will be redirected
 https://cdn.jsdelivr.net/npm/ace-builds/src-min-noconflict/ace.js
 ```
 
-- Add a redirect url
+- **redirect url**
 
 ```
 ace.js
@@ -57,7 +59,7 @@ if this is a networked resource `fetch url` will load the resource, edit the fil
 to use a local resource, select `localfile`, edit the filename and click save
 
 
-- enter initiatorDomains
+- **initiatorDomains**
 
 a comma seperated list, this is the list of domains the redirect will apply to.  if its left blank it will apply to all domains
 
@@ -66,7 +68,7 @@ example.com, test.com, 127.0.0.1
 ```
 
 
-- enter excludedInitiatorDomains
+- **excludedInitiatorDomains**
 
 a comma seperated list, a lis tof domains the redirect wont apply to
 
@@ -74,7 +76,7 @@ a comma seperated list, a lis tof domains the redirect wont apply to
 google.com, youtube.com
 ```
 
-- resourceTypes
+- **resourceTypes**
 
 this is the type of resource that a redirect will apply to, these can be determined from `dev tools / network / type`
 
