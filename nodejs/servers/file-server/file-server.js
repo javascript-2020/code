@@ -3,7 +3,8 @@
 
 /*
 
-file-server.js:d
+//file-server.js:d
+//version v2.0:
 
 https://github.com/javascript-2020/code/blob/main/nodejs/servers/file-server/file-server.js
 
@@ -260,20 +261,20 @@ https://github.com/javascript-2020/code/blob/main/nodejs/servers/file-server/fil
   //:
   
   
-        function notfound(req,res,error){
-                                                                                request.log(404,req);
-              res.writeHead(404);
-              res.end(error);
-              
-        }//notfound
-        
-        
         function unauthorised(req,res,error){
                                                                                 request.log(401,req);
               res.writeHead(401);
               res.end('unauthorised');
               
         }//unauthorised
+        
+        
+        function notfound(req,res,error){
+                                                                                request.log(404,req);
+              res.writeHead(404);
+              res.end(error);
+              
+        }//notfound
         
         
         function badreq(req,res,error){
@@ -853,8 +854,8 @@ https://github.com/javascript-2020/code/blob/main/nodejs/servers/file-server/fil
               var esc   = String.fromCharCode(27);
               var c7    = String.fromCharCode(7);
               var cmd   = `${esc}]0;${str}${c7}`;
-              process.stdout.write(cmd);
-              
+                                                                                process.stdout.write(cmd);
+                                                                                
         }//terminal_title
         
         
