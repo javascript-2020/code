@@ -275,6 +275,37 @@
   //:
   
   
+        function to_error(err,fn){
+        
+              var {name,message,file}   = err;
+              file                      = fn||file;
+              var error                 = JSON.stringify({name,message,file});
+              return error;
+              
+        }//to_error
+        
+        
+        function stat_sync(fn){
+        
+              var err;
+              try{
+              
+                    var stat    = fs.statSync(fn);
+                    
+              }//try
+              catch(err2){
+              
+                    err   = err2;
+                    
+              }//catch
+              if(err){
+                    return {err};
+              }
+              return {stat};
+              
+        }//stat_sync
+        
+        
         function terminal_title(str){
                                                                                 console.log(str);
               var esc   = String.fromCharCode(27);
