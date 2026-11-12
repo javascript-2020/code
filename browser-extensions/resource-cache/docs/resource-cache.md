@@ -21,7 +21,7 @@ to the local resource
 the server requires nodejs and should be run with command
 
 ```
-node file-server-full.js -s -p 3010
+node file-server.js -s -p 3010
 ```
 
 -s : tells the server to serve files also, required for cached resources
