@@ -39,6 +39,7 @@ file-server.js:d
         keys.keypressed             = key=>{
         
                                             if(key=='i')info();
+                                            if(key=='b')lib.build();
                                             
                                       }//keypressed
         var {key,cert}              = server_cert();
