@@ -5,13 +5,13 @@
 ## command line arguments
 
 
-it supports the following command line arguments
+the server supports the following command line arguments :
 
 |arg       | description                     | default   | example          |
 |----------|---------------------------------|-----------|------------------|
 |-p, -port | specify port                    | 3000      | -p 3001          |
 |          |                                 |           |                  |
-|-h, -host | specify hhost                   | 127.0.0.1 |-h 127.0.0.1      |
+|-h, -host | specify host                    | 127.0.0.1 | -h 127.0.0.1     |
 |          |                                 |           |                  |
 |-auth     | specify authorisation header    | auth-123  | -auth p455w0rd   |
 |          |                                 |           |                  |
@@ -21,11 +21,11 @@ it supports the following command line arguments
 |          |                                 |           |                  |
 
 
-during operation the server supports the folling keypresses
+during operation the server supports the folling keypresses :
 
 |arg       | description                     |
 |----------|---------------------------------|
-|   esc    | quit                            |
+|   esc / q /ctrl+c    | quit                            |
 |          |                                 |
 |  space   | clear screen                    |
 |          |                                 |
@@ -33,6 +33,9 @@ during operation the server supports the folling keypresses
 |          |                                 |
 |   i      | display the main server info    |
 |          |                                 |
+
+
+---
 
 
 ### to start the server
@@ -49,7 +52,7 @@ the auth parameter is the way of securing the server, it specifies the value of 
 
 
 
-
+---
 
 
 ### file.create
@@ -58,7 +61,7 @@ creates a file on the server, similar to touch
 
 ```
 
-        var res     = await fetch(`https://${host}:${port}/dir/touch.txt`,{headers:{auth,mode:'file.create'}});
+        var res     = await fetch(`https://${host}:${port}/dir/touch.txt`,{headers:{auth:'auth-123',mode:'file.create'}});
         var json    = await res.json();
       
 ```
@@ -69,7 +72,7 @@ creates a file on the server, similar to touch
 retrieve file contents
 
 ```
-        var res     = await fetch(`https://${host}:${port}/dir/test.txt`,{headers:{auth,mode:'file.load'}});
+        var res     = await fetch(`https://${host}:${port}/dir/test.txt`,{headers:{auth:'auth-123',mode:'file.load'}});
         var json    = await res.json();
 
 ```
@@ -80,7 +83,7 @@ retrieve file contents
 write or overwrite file data
 
 ```
-        var res     = await fetch(`https://${host}:${port}/dir/test.txt`,{headers:{auth,mode:'file.save'},body:'helloworld',method:'post'});
+        var res     = await fetch(`https://${host}:${port}/dir/test.txt`,{headers:{auth:'auth-123',mode:'file.save'},body:'helloworld',method:'post'});
         var json    = await res.json();
 
 ```
@@ -91,12 +94,12 @@ write or overwrite file data
 remove a file
 
 ```
-        var res     = await fetch(`https://${host}:${port}/dir/del.txt`,{headers:{auth,mode:'file.delete'}});
+        var res     = await fetch(`https://${host}:${port}/dir/del.txt`,{headers:{auth:'auth-123',mode:'file.delete'}});
         var json    = await res.json();
 ```
 
 
-
+---
 
 
 ### dir.read
@@ -104,7 +107,7 @@ remove a file
 list directory contents
 
 ```
-        var res   = await fetch(`https://${host}:${port}/dir/`,{headers:{auth,mode:'dir.read'}});
+        var res   = await fetch(`https://${host}:${port}/dir/`,{headers:{auth:'auth-123',mode:'dir.read'}});
         if(!res.ok){
               var json    = await res.json();
               console.log(json);
@@ -116,11 +119,10 @@ list directory contents
 
 ### dir.create
 
-make a new directory
+create a new directory
 
 ```
-                                                                                console.log('dir.create');
-        var res     = await fetch(`https://${host}:${port}/dir`,{headers:{auth,mode:'dir.create'}});
+        var res     = await fetch(`https://${host}:${port}/dir`,{headers:{auth:'auth-123',mode:'dir.create'}});
         var json    = await res.json();
 ```
 
@@ -130,7 +132,7 @@ make a new directory
 clear directory, it is created if it doesnt exist
 
 ```
-        var res     = await fetch(`https://${host}:${port}/dir/`,{headers:{auth,mode:'dir.clear'}});
+        var res     = await fetch(`https://${host}:${port}/dir/`,{headers:{auth:'auth-123',mode:'dir.clear'}});
         var json    = await res.json();
 ```
 
@@ -140,7 +142,7 @@ clear directory, it is created if it doesnt exist
 remove a directory
 
 ```
-        var res     = await fetch(`https://${host}:${port}/dir/`,{headers:{auth,mode:'dir.delete'}});
+        var res     = await fetch(`https://${host}:${port}/dir/`,{headers:{auth:'auth-123',mode:'dir.delete'}});
         var json    = await res.json();
 ```
 
