@@ -3,86 +3,84 @@
 
 /*
 
-file-server:d
+file-server-full:d
 
-25-04-25
 26-02-18
-
+25-04-25
+02-11-26
 
 */
                                                                                 console.clear();
                                                                                 terminal_title('file-server');
-                                                                                //console.log(process.argv);
                                                                                 console.log();
-                                                                                console.json=v=>console.log(JSON.stringify(v,null,4));
-        var auth          = argv('auth')||'matt-123';
-        var dir           = argv('d','dir')||'';
-        var port          = argv('p','port')||3000;
+                                                                                console.json=(...args)=>args.forEach(v=>console.log(JSON.stringify(v,null,4)));
+                                                                                //console.json(process.argv);
+        var path                    = require('node:path');
+        var fs                      = require('node:fs');
         
-        var path          = require('path');
-        var fs            = require('fs');
-        var fsp           = fs.promises;
-        var {O_CREAT}     = fs.constants;
-                                                                                if(0){
-                                                                                  var test   = process.argv[2];
-                                                                                  console.log('test :',test);
-                                                                                  resolve(test);
-                                                                                  
-                                                                                  process.exit();
-                                                                                }
+                                                                                lib.df=false;//lib.load=false;
+        var resolve                 = lib('resolve.js',resolve);
+        var {argv,argv_has}         = lib('argv.js','v2.0',{argv,argv_has});
+        var server_cert             = lib('server-cert.js','v2.0',server_cert);
+        var getmime                 = lib('getmime.js',getmime);
+        var keysmod                 = lib('keys',keysmod);
+                                                                                lib.df && console.log();
                                                                                 
-        var getmime       = require('getmime.js');
-        var keys          = require('keys.js');
+        var fsp                     = fs.promises;
+        var {O_CREAT}               = fs.constants;
         
-        var key;
-        var cert;
+        var auth                    = argv('auth','auth-123');
+        var dir                     = argv('d','dir','');
+        var host                    = argv('h','host','127.0.0.1');
+        var port                    = argv('p','port',3000);
+        serve.enabled               = argv_has('s','serve')
         
-        var abs           = path.resolve(__dirname,dir);
-        if(!abs.endsWith('/')){
-              abs  += '/';
+        var keys                    = keysmod();
+        keys.keypressed             = key=>{
+        
+                                            if(key=='i')info();
+                                            
+                                      }//keypressed
+        var {key,cert}              = server_cert();
+        
+        var cwd                     = process.cwd();
+        var docroot                 = path.resolve(cwd,dir);
+        docroot                    += '/';
+        
+        if(!fs.existsSync(docroot) || !fs.statSync(docroot).isDirectory()){
+                                                                                console.error(`Error: not a valid directory [${docroot}]`);
+              process.exit(1);
         }
         
         
-        resolve.df    = false;
+        var ok      = JSON.stringify({ok:'ok'});
+        var file    = {};
+        var dir     = {};
+        
         
         
   //:
   
-        setTimeout(init,50);
+  
+        var server    = require('https').createServer({key,cert},request)
+        server.on('error',err=>{
+                                                                                console.error(err);
+        });
+        server.listen({host,port});
+        info();
         
-        function init(){
         
-              load_cert();
-              
-              require('https').createServer({key,cert},request).listen(port,'localhost');
-                                                                                console.log(`listening https://localhost:${port}/`);
+        function info(){
+                                                                                console.log('===');
                                                                                 console.log();
-                                                                                console.log('serving :',abs);
+                                                                                console.log(`        file  :: ${__filename}`);
+                                                                                console.log(`   listening  :: https://${host}:${port}/`);
+                                                                                console.log(`     serving  :: ${docroot}`);
+                                                                                serve.enabled && console.log('     serve.enabled');
                                                                                 console.log();
                                                                                 console.log('===');
                                                                                 console.log();
-        }//init
-        
-        
-        function load_cert(){
-        
-              var load    = '';
-              if(fs.existsSync('key.pem')){
-                    key   = fs.readFileSync('key.pem','utf8');
-                    load += 'key.pem ';
-              }
-              if(fs.existsSync('cert.pem')){
-                    cert    = fs.readFileSync('cert.pem','utf8');
-                    if(load){
-                          load   += ',';
-                    }
-                    load += 'cert.pem';
-              }
-              if(load){
-                                                                                console.log('load',load);
-              }
-              
-        }//load_cert
+        }//info
         
         
   //:
@@ -90,70 +88,917 @@ file-server:d
   
         async function request(req,res){
         
-              if(cors(req,res)){
-                                                                                request.log(req);
-                    return;
-              }
+              res.setHeader('cache-control','no-store');
+              res.setHeader('access-control-allow-origin','*');
+              res.setHeader('access-control-allow-headers','auth,mode,content-type');
+              res.setHeader('access-control-expose-headers','content-range,accept-ranges,content-length');
               
-              if(auth){
-                    if(req.headers.auth!==auth){
-                                                                                request.log(req);
-                          unauthorised(req,res);
-                          return;
-                    }
-              }
+              if(cors(req,res))return;
+              if(ping(req,res))return;
               
-              var {abs:fn,error}   = resolve(req.url);
+              var url           = transform(req.url);
+              var {abs,error}   = resolve(url,docroot);
               if(error){
-                                                                                request.log(req);
-                    badreq(req,res,'invalid url');
+                                                                                badreq(req,res,error);
                     return;
               }
               
               var mode      = req.headers.mode;
-                                                                                request.log(req,mode,fn);
-              var handled   = true;
-              switch(mode){
               
-                case 'mkfile'       : mkfile(req,res,fn);         break;
-                case 'rmfile'       : rmfile(req,res,fn);         break;
-                case 'rmdir'        : rmdir(req,res,fn);          break;
-                case 'mkdir'        : mkdir(req,res,fn);          break;
-                case 'readdir'      : readdir(req,res,fn);        break;
-                case 'dir-clear'    : dirclear(req,res,fn);       break;
-                case 'load'         : load(req,res,fn);           break;
-                case 'save'         : save(req,res,fn);           break;
-                case 'upload'       : upload(req,res,fn);         break;
-                case 'download'     : download(req,res,fn);       break;
-                
-                default             : handled   = false;
-                
-              }//switch
-              
-              if(handled){
-                    return;
+              if(serve.enabled){
+                    if(!mode){
+                          serve(req,res,abs);
+                          return;
+                    }
               }
               
-              unknown(req,res,mode);
+              
+              if(auth){
+                    if(req.headers.auth!==auth){
+                          var error   = to_error({name:'not authorised',message:''});
+                                                                                unauthorised(req,res,error);
+                          return;
+                    }
+              }
+              
+              
+              var handled   = true;
+              var error;
+              
+              switch(mode){
+              
+              
+                case 'mkfile'             :
+                case 'file.create'        :
+                                            ({error}    = file.create(req,res,abs))
+                                            break;
+                case 'rmfile'             :
+                case 'file.delete'        :
+                                            ({error}    = file.delete(req,res,abs));
+                                            break;
+                case 'upload'             :
+                case 'file.upload'        :
+                case 'load'               :
+                case 'file.load'          :
+                                            ({error}    = file.load(req,res,abs));
+                                            break;
+                case 'download'           :
+                case 'file.download'      :
+                case 'save'               :
+                case 'file.save'          :
+                                            ({error}    = file.save(req,res,abs));
+                                            break;
+                                            
+                                            
+                case 'readdir'            :
+                case 'dir.read'           :
+                                            ({error}    = dir.read(req,res,abs));
+                                            break;
+                case 'readdir'            :
+                case 'dir.read.full'      :
+                                            ({error}    = dir.read.full(req,res,abs));
+                                            break;
+                case 'mkdir'              :
+                case 'dir.create'         :
+                                            ({error}    = dir.create(req,res,abs));
+                                            break;
+                case 'rmdir'              :
+                case 'dir.delete'         :
+                                            ({error}    = dir.delete(req,res,abs));
+                                            break;
+                case 'dir-clear'          :
+                case 'dir.clear'          :
+                                            ({error}    = dir.clear(req,res,abs));
+                                            break;
+                                            
+                                            
+                case undefined
+                                          :
+                                            handled   = false;
+                                            no_mode(req,res);
+                                            break;
+                                            
+                default                   :
+                                            handled   = false;
+                                            unknown_mode(req,res,mode);
+                                            
+              }//switch
+              
+              
+              if(handled && !error){
+                                                                                request.log(200,req,mode,abs);
+              }
               
         }//request
         
         
-        request.log   = function(req,mode,fn){
+        request.log   = function(code,req,mode,abs){
         
-              var spc   = [10,20,10,20];
-              var str   = [req.method,req.url];
-              if(mode){
-                    str.push(mode,fn);
-              }
-              str   = str.map((str,i)=>str.padEnd(spc[i]));
-              str   = str.join(' ');
-              
+              var spc   = [5,10,20,20,5,20];
+              var str   = [
+                                code,
+                                req.method,
+                                req.url,
+                                mode||'',
+                                (abs && '=>')||'',
+                                abs||''
+                          ];
+              str       = str.map((v,i)=>String(v).padEnd(spc[i]));
+              str       = str.join(' ');
               console.log(str);
               
         }//log
         
         
+        function transform(url){
+        
+              switch(url){
+              
+                /*
+                case '/'    :
+                              url   = '/index.html';
+                                                            break;
+                */
+                
+              }//switch
+              
+              return url;
+              
+        }//transform
+        
+        
+  //:
+  
+  
+        function cors(req,res){
+        
+              if(req.method!=='OPTIONS'){
+                    return;
+              }
+                                                                                request.log(200,req);
+              res.writeHead(200);
+              res.end();
+              return true;
+              
+        }//cors
+        
+        
+        function ping(req,res){
+        
+              if(req.headers.mode!=='ping'){
+                    return;
+              }
+                                                                                request.log(200,req,'ping');
+              res.end('pong');
+              
+        }//ping
+        
+        
+  //:
+  
+  
+        function notfound(req,res,error){
+                                                                                request.log(404,req);
+              res.writeHead(404);
+              res.end(error);
+              
+        }//notfound
+        
+        
+        function unauthorised(req,res,error){
+                                                                                request.log(401,req);
+              res.writeHead(401);
+              res.end('unauthorised');
+              
+        }//unauthorised
+        
+        
+        function badreq(req,res,error){
+                                                                                request.log(400,req);
+              res.writeHead(400);
+              res.end(error);
+              
+        }//badreq
+        
+        
+        function range_not_satisfiable(req,res,error){
+                                                                                request.log(416,req);
+              req.writeHead(416);
+              res.end(error);
+              
+        }//range_not_satisfiable
+        
+        
+        function no_mode(req,res){
+                                                                                request.log(400,req);
+              var error   = to_error({name:'mode not set',message:''});
+              res.writeHead(400);
+              res.end(error);
+              
+        }//no_mode
+        
+        
+        function unknown_mode(req,res,mode){
+                                                                                request.log(400,req,mode);
+              var error   = to_error({name:'unknown mode',message:mode});
+              res.writeHead(400);
+              res.end(error);
+              
+        }//unknown
+        
+        
+  //:
+  
+  
+        function serve(req,res,abs){
+        
+              if(!fs.existsSync(abs)){
+                    var error   = to_error({name:'not found',message:''},abs);
+                                                                                notfound(req,res,error);
+                    return {error};
+              }
+              
+              var {stat,err}    = stat_sync(abs);
+              if(err){
+                    var error   = to_error(err,abs);
+                                                                                badreq(req,res,error);
+                    return {error};
+              }
+              
+              if(!stat.isFile()){
+                    var error   = to_error({name:'not file',message:''},abs);
+                                                                                badreq(req,res,error);
+                    return {error};
+              }
+              
+              
+              if(req.headers.range){
+                    var result    = serve.range(req,res,abs,stat);
+                    return result;
+              }
+              
+              var err;
+              try{
+              
+                    var stream    = fs.createReadStream(abs);
+                    
+              }//try
+              catch(err2){
+              
+                    err   = err2;
+                    
+              }//catch
+              if(err){
+                    var error   = to_error(err,abs);
+                                                                                badreq(req,res,error);
+                    return {error};
+              }
+              
+              var mime      = getmime(abs);
+              var hdrs      = {'content-type':mime};
+                                                                                request.log(200,req);
+              res.writeHead(200,hdrs);
+              stream.pipe(res);
+              
+              return {ok};
+              
+        }//serve
+        
+        
+        serve.range   = function(req,res,abs,stat){
+        
+              var range         = req.headers.range;
+              var [start,end]   = range.replace(/bytes=/,'').split('-');
+              start             = parseInt(start);
+              end               = parseInt(end);
+              
+              var size          = stat.size;
+              
+              if(isNaN(start)){
+                    start       = size-end;
+                    end         = size-1;
+              }
+              
+              if(isNaN(end)){
+                    end         = size-1;
+              }
+              
+              if((start>=size)||(end>=size)){
+                    var error   = to_error({name:'not satisfiable',message:''},abs);
+                                                                                range_not_satisfiable(req,res,error);
+                    return {error};
+              }
+              
+              var err;
+              try{
+              
+                    var stream    = fs.createReadStream(abs,{start,end});
+                    
+              }//try
+              catch(err2){
+              
+                    err   = err2;
+                    
+              }//catch
+              if(err){
+                    var error   = to_error(err,abs);
+                                                                                badreq(req,res,error);
+                    return {error};
+              }
+              
+              var mime      = getmime(abs);
+              var hdrs      = {
+                                    'content-range'     : `bytes ${start}-${end}/${size}`,
+                                    'accept-ranges'     : 'bytes',
+                                    'content-length'    : end-start+1,
+                                    'content-type'      : mime,
+                              };
+                                                                                request.log(206,req);
+              res.writeHead(206,hdrs);
+              stream.pipe(res);
+              
+              return {ok};
+              
+        }//range
+        
+        
+        
+  //:
+  
+  
+        file.create   = function(req,res,abs){
+        
+              var err;
+              try{
+              
+                    var file    = fs.openSync(abs,O_CREAT);
+                    
+              }//try
+              catch(err2){
+              
+                    err   = err2;
+                    
+              }//catch
+              if(err){
+                    var error   = to_error(err,abs);
+                                                                                badreq(req,res,error);
+                    return {error};
+              }
+              
+              fs.closeSync(file);
+              
+              res.end(ok);
+              
+              return {ok};
+              
+        }//file.create
+        
+        
+        file.delete   = function(req,res,abs){
+        
+              var {stat,err}    = stat_sync(abs);
+              if(err){
+                    var error   = to_error(err,abs);
+                                                                                badreq(req,res,error);
+                    return {error};
+              }
+              
+              if(!stat.isFile()){
+                    var error   = to_error({name:'not file',message:''},abs);
+                                                                                badreq(req,res,error);
+                    return {error};
+              }
+              
+              var err;
+              try{
+              
+                    fs.rmSync(abs);
+                    
+              }//try
+              catch(err2){
+              
+                    err   = err2;
+                    
+              }//catch
+              if(err){
+                    var error   = to_error(err,abs);
+                                                                                badreq(req,res,error);
+                    return {error};
+              }
+              
+              res.end(ok);
+              
+              return {ok};
+              
+        }//file.delete
+        
+        
+        file.load   = function(req,res,abs){
+        
+              var err;
+              try{
+              
+                    var stream    = fs.createReadStream(abs);
+                    
+              }//try
+              catch(err2){
+              
+                    err   = err2;
+                    
+              }//catch
+              if(err){
+                    var error   = to_error(err,abs);
+                                                                                badreq(req,res,error);
+                    return {error};
+              }
+              
+              var mime      = getmime(abs);
+              
+              res.writeHead(200,{'content-type':mime});
+              stream.pipe(res);
+              
+              return {ok};
+              
+        }//file.load
+        
+        
+        file.save   = function(req,res,abs){
+        
+              var err;
+              try{
+              
+                    var stream    = fs.createWriteStream(abs);
+                    
+              }//try
+              catch(err2){
+              
+                    err   = err2;
+                    
+              }//catch
+              if(err){
+                    var error   = to_error(err,abs);
+                                                                                badrequest(req,res,error)
+                    return {error};
+              }
+              
+              req.pipe(stream);
+              req.on('end',()=>{
+              
+                    res.writeHead(200);
+                    res.end();
+                    
+              });
+              
+              return {ok};
+              
+        }//file.save
+        
+        
+  //:
+  
+  
+        dir.delete    = function(req,res,abs){
+        
+              if(!fs.existsSync(abs)){
+                    var error   = to_error({name:'not found',message:''},abs);
+                                                                                notfound(req,res,error);
+                    return;
+              }
+              
+              var {stat,err}    = stat_sync(abs);
+              if(err){
+                    var error   = to_error(err,abs);
+                                                                                badreq(req,res,error);
+                    return;
+              }
+              
+              if(!stat.isDirectory()){
+                    var error   = to_error({name:'not directory',message:''},abs);
+                                                                                badreq(req,res,error);
+                    return;
+              }
+              
+              var err;
+              try{
+              
+                    fs.rmSync(abs,{recursive:true,force:true});
+                    
+              }
+              catch(err2){
+              
+                    err   = err2;
+                    
+              }
+              if(err){
+                    var error   = to_error(err,abs);
+                                                                                badreq(req,res,error);
+                    return {error};
+              }
+              
+              res.end(ok);
+              
+              return {ok};
+              
+        }//dir.delete
+        
+        
+        dir.create    = function(req,res,abs){
+        
+              var err;
+              try{
+              
+                    fs.mkdirSync(abs,{recursive:true});
+                    
+              }//try
+              catch(err2){
+              
+                    err   = err2;
+                    
+              }//catch
+              if(err){
+                    var error   = to_error(err,abs);
+                                                                                badreq(req,res,error);
+                    return {error};
+              }
+              
+              res.end(ok);
+              
+              return {ok};
+              
+        }//dir.create
+        
+        
+        dir.read    = function(req,res,abs){
+        
+              var err;
+              try{
+              
+                    var list    = fs.readdirSync(abs,{withFileTypes:true});
+                    
+              }//try
+              catch(err2){
+              
+                    err   = err2;
+                    
+              }//catch
+              if(err){
+                    var error   = to_error(err,abs);
+                                                                                badreq(req,res,error);
+                    return {error};
+              }
+              
+              var dirs    = [];
+              var files   = [];
+              
+              list.forEach(file=>{
+              
+                    if(file.name=='.' || file.name=='..'){
+                          return;
+                    }
+                    
+                    if(file.isDirectory()){
+                          dirs.push(file.name);
+                    }
+                    if(file.isFile()){
+                          files.push(file.name);
+                    }
+                    
+              });
+              
+              var str   = JSON.stringify({files,dirs});
+              res.end(str);
+              
+              return {ok};
+              
+        }//dir.read
+        
+        
+        dir.read.full    = function(req,res,abs){
+        
+              var err;
+              try{
+              
+                    var list    = fs.readdirSync(abs,{withFileTypes:true});
+                    
+              }//try
+              catch(err2){
+              
+                    err   = err2;
+                    
+              }//catch
+              if(err){
+                    var error   = to_error(err,abs);
+                                                                                badreq(req,res,error);
+                    return {error};
+              }
+              
+              if(!abs.endsWith('/')){
+                    abs  += '/';
+              }
+              
+              var dirs    = [];
+              var files   = [];
+              
+              list.forEach(file=>{
+              
+                    if(file.name=='.' || file.name=='..'){
+                          return;
+                    }
+                    
+                    var {stat,err}    = stat_sync(abs+file.name);
+                    if(err)return;
+                    
+                    if(stat.isDirectory()){
+                          var o   = {
+                                name    : file.name,
+                          };
+                          dirs.push(o);
+                    }
+                    if(stat.isFile()){
+                          var o   = {
+                                name    : file.name,
+                                size    : stat.size,
+                          };
+                          files.push(o);
+                    }
+                    
+              });
+              
+              var str   = JSON.stringify({files,dirs});
+              res.end(str);
+              
+              return {ok};
+              
+        }//dir.read.full
+        
+        
+        dir.clear   = async function(req,res,abs){
+                                                                                //console.log('dir.clear',fn);
+              var err;
+              try{
+              
+                    fs.mkdirSync(abs,{recursive:true});
+                    
+              }//try
+              catch(err2){
+              
+                    err   = err2;
+                    
+              }//catch
+              if(err){
+                    var error   = to_error(err,abs);
+                                                                                badreq(req,res,error);
+                    return {error};
+              }
+              
+              
+              var err;
+              try{
+              
+                    var files     = await fsp.readdir(abs);
+                    
+              }//try
+              catch(err2){
+              
+                    err   = err2;
+                    
+              }//catch
+              if(err){
+                    var error   = to_error(err,abs);
+                                                                                badreq(req,res,error);
+                    return {error};
+              }
+              
+              if(!abs.endsWith('/')){
+                    abs  += '/';
+              }
+              
+              var errors    = [];
+              files.forEach((name,i)=>{
+              
+                    var err;
+                    try{
+                    
+                          var path    = abs+name;
+                                                                                //console.log(i,path);
+                          fs.rmSync(path,{recursive:true,force:true});
+                          
+                    }//try
+                    catch(err2){
+                    
+                          err   = err2;
+                          
+                    }//catch
+                    if(err){
+                                                                                console.error(err);
+                          var error   = to_error(err,path);
+                          errors.push(error);
+                    }
+                    
+              });
+              
+              if(errors.length){
+                    var error     = {name:'error',message:'error',errors};
+                    error         = JSON.stringify(error);
+                                                                                badreq(req,res,error);
+                    return {error};
+              }
+              
+              res.end(ok);
+              
+              return {ok};
+              
+        }//dir.clear
+        
+        
+  //:
+  
+  
+        function to_error(err,fn){
+        
+              var {name,message,file}   = err;
+              file                      = fn||file;
+              var error                 = JSON.stringify({name,message,file});
+              return error;
+              
+        }//to_error
+        
+        
+        function stat_sync(fn){
+        
+              var err;
+              try{
+              
+                    var stat    = fs.statSync(fn);
+                    
+              }//try
+              catch(err2){
+              
+                    err   = err2;
+                    
+              }//catch
+              if(err){
+                    return {err};
+              }
+              return {stat};
+              
+        }//stat_sync
+        
+        
+        function terminal_title(str){
+                                                                                console.log(str);
+              var esc   = String.fromCharCode(27);
+              var c7    = String.fromCharCode(7);
+              var cmd   = `${esc}]0;${str}${c7}`;
+              process.stdout.write(cmd);
+              
+        }//terminal_title
+        
+        
+        
+  //:
+  //:
+  
+  
+        lib.df        = true;
+        lib.enabled   = true;
+        
+        function lib(name,version,def){
+                                                                                lib.df && process.stdout.write(`load ${name} => `);
+              if(arguments.length==1){
+                    def       = name;
+                    name      = null;
+                    version   = null;
+              }
+              if(arguments.length==2){
+                    def       = version;
+                    version   = null;
+              }
+              
+              /*
+              var path    = require('node:path');
+              if(!lib.dir){
+              var dir     = path.dirname(require.main.filename);
+              */
+              
+              var abs;
+              var result;
+              
+              if(lib.load!==false && name){
+              
+                    (()=>{
+                    
+                          if(name.endsWith('.js')){
+                                name    = name.slice(0,-3);
+                          }
+                          
+                          try{
+                          
+                                abs             = `${name}.js`;
+                                if(version){
+                                      abs       = `${name}/${version}/${name}-${version}.js`;
+                                }
+                                result          = require(abs);
+                                return result;
+                                
+                          }//try
+                          catch(err){
+                          
+                                if(err.code!=='MODULE_NOT_FOUND')throw err;
+                                
+                          }//catch
+                          
+                          try{
+                          
+                                abs             = `./libs/${name}.js`;
+                                if(version){
+                                      abs       = `./libs/${name}/${version}/${name}-${version}.js`;
+                                }
+                                result          = require(abs);
+                                return result;
+                                
+                          }//try
+                          catch(err){
+                          
+                                if(err.code!=='MODULE_NOT_FOUND')throw err;
+                                
+                          }//catch
+                          if(result)return;
+                          
+                          
+                          try{
+                          
+                                abs             = `./${name}.js`;
+                                if(version){
+                                      abs       = `./${name}-${version}.js`;
+                                }
+                                result          = require(abs);
+                                return result;
+                                
+                          }//try
+                          catch(err){
+                          
+                                if(err.code!=='MODULE_NOT_FOUND')throw err;
+                                
+                          }//catch
+                          
+                    })();
+                    
+              }
+              
+              if(result){
+                                                                                lib.df && process.stdout.write(abs+'\n');
+                                                                                !lib.list && (lib.list=[]);
+                                                                                lib.list.push(abs);
+                    return result;
+              }
+              
+                                                                                lib.df && process.stdout.write('def\n');
+              return def;
+              
+        }//lib
+        
+        
+        lib.build   = function(){
+        
+              var fs          = require('node:fs');
+              var fn          = require.main.filename;
+              var txt         = fs.readFileSync(fn,'utf8');
+              var i           = txt.indexOf('/'+'/libs:');
+              i               = txt.indexOf('//:',i);
+              i               = txt.indexOf('\n\n\n',i);
+              txt             = txt.slice(i+1);
+              
+              lib.list.forEach(abs=>{
+              
+                    var js    = fs.readFileSync(abs,'utf8');
+                    var i     = js.indexOf('module.exports');
+                    js        = js.slice(0,i)+'//'+js.slice(i);
+                    txt      += js;
+                    
+              });
+              
+              var i   = fn.lastIndexOf('.');
+              fn      = fn.slice(0,i)+'-build'+fn.slice(i);
+              fs.writeFileSync(fn,txt);
+              
+        }//build
+        
+        
+  //:
+  //libs:
+  //:
+  
+  
+/*
+
+//resolve:
+
+20-08-26
+
+*/
+
+
         resolve.df    = false;
         //resolve.df    = true
         
@@ -161,6 +1006,9 @@ file-server:d
                                                                                 resolve.df && console.log('=== resolve v3.0 ===');
                                                                                 resolve.df && console.log('requrl ... : ',requrl);
                                                                                 resolve.df && console.log('docroot .. : ',docroot);
+        // ===
+        
+        
               var err;
               try{
               
@@ -180,12 +1028,22 @@ file-server:d
               
               var url   = requrl;
               
+              
+        // ===
+                                                                                /*
+                                                                                    theres some annoying errors with \ in the path
+                                                                                    windows supports /, so i restrict to only using /
+                                                                                */
               if(url.indexOf('\\')!=-1){
                                                                                 resolve.df && console.log('error .... : ','invalid url ( backslash )');
                     var error   = 'invalid url ( backslash )';
                     return {error};
               }
               
+              
+        // ===
+        
+        
               url         = url.slice(1);
                                                                                 resolve.df && console.log('url ...... : ',url);
               var root    = path.resolve(docroot);
@@ -194,6 +1052,9 @@ file-server:d
               var abs     = path.resolve(docroot,url);
                                                                                 resolve.df && console.log('abs ...... : ',abs);
                                                                                 
+        // ===
+        
+        
               if(!abs.startsWith(root)){
                                                                                 resolve.df && console.log('error .... : ','invalid docroot');
                     var error   = 'invalid docroot';
@@ -202,7 +1063,7 @@ file-server:d
               
               if(abs.length>root.length){
                     if(abs[root.length]!=path.sep){
-                                                                                resolve.df && console.log('error .... : ','invlaid docroot-2');
+                                                                                resolve.df && console.log('error .... : ','invalid docroot-2');
                           var error   = 'invalid docroot-2';
                           return {error};
                     }
@@ -213,472 +1074,431 @@ file-server:d
               }
               
               
+        // ===
+        
                                                                                 resolve.df && console.log('ok ....... : ',abs);
               return {abs};
+              
               
         }//resolve
         
         
         
+/*
+
+//argv:d
+
+18-04-25
+
+
+*/
+
+        function argv(id0,def){
         
-        
-        function cors(req,res){
-        
-              if(req.method!=='OPTIONS'){
-                    return;
-              }
+              var args    = [...arguments];
+              var ids     = [...arguments].slice(0,-1);
+              def         = args.at(-1);
               
-              cors.headers(res);
-              res.end();
+              var nj    = ids.length;
+              for(var j=0;j<nj;j++){
               
-              return true;
-              
-        }//cors
-        
-        
-        cors.headers   = function(res){
-        
-              res.setHeader('access-control-allow-origin','*');
-              res.setHeader('access-control-allow-headers','auth, mode,content-type');
-              
-        }//header
-        
-        
-        function notfound(req,res){
-        
-              cors.headers(res);
-              res.writeHead(404);
-              res.end(req.url+' not found');
-              
-        }//notfound
-        
-        
-        function unauthorised(req,res){
-        
-              cors.headers(res);
-              res.writeHead(401);
-              res.end('unauthorised');
-              
-        }//unauthorised
-        
-        
-        function badreq(req,res,reason){
-        
-              cors.headers(res);
-              res.writeHead(400);
-              res.end(reason);
-              
-        }//badreq
-        
-        
-        function unknown(req,res,mode){
-        
-              cors.headers(res);
-              res.writeHead(400);
-              res.end(`unknown mode : ${mode}`);
-              
-        }//unknown
-        
-        
-  //:
-  
-  
-        function mkfile(req,res,fn){
-        
-              var err;
-              try{
-              
-                    var file    = fs.openSync(fn,O_CREAT);
+                    var id    = ids[j];
                     
-              }
-              catch(err2){
-              
-                    err   = err2;
+                    var nk    = process.argv.length;
+                    for(var k=0;k<nk;k++){
                     
-              }
-              if(err){
-                    cors.headers(res);
-                    res.writeHead(400);
-                    res.end(err.toString());
-                    return;
-              }
-              
-              fs.closeSync(file);
-              
-              cors.headers(res);
-              res.end('ok');
-              
-        }//mkdir
-        
-        
-        function rmfile(req,res,fn){
-        
-              var err;
-              try{
-              
-                    fs.rmSync(fn,{recursive:true,force:true});
-                    
-              }
-              catch(err2){
-              
-                    err   = err2;
-                    
-              }
-              if(err){
-                    cors.headers(res);
-                    res.writeHead(400);
-                    res.end(err.toString());
-                    return;
-              }
-              
-              cors.headers(res);
-              res.end('ok');
-              
-        }//rmfile
-        
-        
-        function rmdir(req,res,fn){
-        
-              var err;
-              try{
-              
-                    fs.rmSync(fn,{recursive:true,force:true});
-                    
-              }
-              catch(err2){
-              
-                    err   = err2;
-                    
-              }
-              if(err){
-                    cors.headers(res);
-                    res.writeHead(400);
-                    res.end(err.toString());
-                    return;
-              }
-              
-              cors.headers(res);
-              res.end('ok');
-              
-        }//rmdir
-        
-        
-        function mkdir(req,res,fn){
-        
-              var err;
-              try{
-              
-                    fs.mkdirSync(fn,{recursive:true});
-                    
-              }
-              catch(err2){
-              
-                    err   = err2;
-                    
-              }
-              if(err){
-                    cors.headers(res);
-                    res.writeHead(400);
-                    res.end(err.toString());
-                    return;
-              }
-              
-              cors.headers(res);
-              res.writeHead(200);
-              res.end('ok');
-              
-        }//mkdir
-        
-        
-        function readdir(req,res,fn){
-        
-              if(!fs.existsSync(fn)){
-                    notfound(req,res);
-                    return;
-              }
-              
-              var dirs    = [];
-              var files   = [];
-              
-              var list    = fs.readdirSync(fn,{withFileTypes:true});
-              list.forEach(file=>{
-              
-                    if(file.name=='.' || file.name=='..'){
-                          return;
-                    }
-                    
-                    if(file.isDirectory()){
-                          dirs.push(file.name);
-                    }
-                    if(file.isFile()){
-                          files.push(file.name);
-                    }
-                    
-              });
-              
-              var str   = JSON.stringify({files,dirs});
-              
-              cors.headers(res);
-              res.writeHead(200);
-              res.end(str);
-              
-        }//readdir
-        
-        
-        async function dirclear(req,res,fn){
-                                                                                console.log('dirclear',fn);
-              var err;
-              try{
-              
-                    fs.mkdirSync(fn,{recursive:true});
-                    
-              }
-              catch(err2){
-              
-                    err   = err2;
-                    
-              }
-              if(err){
-                    cors.headers(res);
-                    res.writeHead(400);
-                    res.end(err.toString());
-                    return;
-              }
-              
-              
-              var list      = await fsp.readdir(fn);
-              var errors    = [];
-              list.forEach((name,i)=>{
-              
-                    var err;
-                    try{
-                    
-                          var abs   = fn+name;
-                                                                                console.log(i,abs);
-                          fs.rmSync(abs,{recursive:true,force:true});
+                          switch(process.argv[k]){
                           
-                    }
-                    catch(err2){
-                    
-                          err   = err2;
-                          
-                    }
-                    if(err){
-                                                                                console.log(err);
-                          errors.push(err.toString());
-                    }
-                    
-              });
-              
-              if(errors.length){
-                    var str   = errors.join('\n');
-                    cors.headers(res);
-                    res.writeHead(400);
-                    res.end(str);
-                    return;
-              }
-              
-              cors.headers(res);
-              res.end('ok');
-              
-              
-        }//dirclear
-        
-        
-        function load(req,res,fn){
-        
-              if(!fs.existsSync(fn)){
-                    notfound(req,res);
-                    return;
-              }
-              
-              var mime      = getmime(fn);
-              var stream    = fs.createReadStream(fn);
-              
-              cors.headers(res);
-              res.writeHead(200,{'content-type':mime});
-              stream.pipe(res);
-              
-        }//load
-        
-        
-        function save(req,res,fn){
-        
-              /*
-              if(!fs.existsSync(fn)){
-                    notfound(req,res);
-                    return;
-              }
-              */
-              
-              var err;
-              try{
-              
-                    var stream    = fs.createWriteStream(fn);
-                    
-              }//try
-              catch(err2){
-              
-                    err   = err2;
-                    
-              }//catch
-              if(err){
-                    var str   = 'invalid filename : '+fn+'\n'+err.toString();
-                    badrequest(req,res,str)
-                    return;
-              }
-              
-              req.pipe(stream);
-              req.on('end',()=>{
-              
-                    cors.headers(res);
-                    res.writeHead(200);
-                    res.end();
-                    
-              });
-              
-        }//save
-        
-        
-        function upload(req,res,fn){
-        
-              var stream    = fs.createWriteStream(fn);
-              req.pipe(stream);
-              req.on('end',()=>{
-              
-                    cors.headers(res);
-                    res.writeHead(200);
-                    res.end('ok');
-                    
-              });
-              
-        }//upload
-        
-        
-        function download(req,res,fn){
-        
-              if(!fs.existsSync(fn)){
-                    notfound(req,res);
-                    return;
-              }
-              
-              if(!fs.statSync(fn).isFile()){
-                    badreq(req,res,'not file');
-                    return;
-              }
-              
-              var mime      = getmime(fn);
-              var stream    = fs.createReadStream(fn);
-              
-              cors.headers(res);
-              res.writeHead(200,{'content-type':mime});
-              stream.pipe(res);
-              
-        }//download
-        
-        
-        
-        
-  //:
-  
-  
-        function argv(id0){
-        
-              var nj    = arguments.length;
-              
-              var ni   = process.argv.length;
-              for(var i=0;i<ni;i++){
-              
-                    var id2   = process.argv[i];
-                    for(var j=0;j<nj;j++){
-                    
-                          var id    = arguments[j];
-                          
-                          switch(id2){
-                          
-                            case id           :
-                            case `-${id}`     :
-                            case `--${id}`    : return process.argv[i+1];
-                            
+                            case id         :
+                            case '-'+id     :
+                            case '--'+id    :
+                                              var v   = process.argv[k+1];
+                                              return v;
+                                              
                           }//switch
                           
-                    }//forj
+                    }///for
                     
-              }//fori
-              
-              return null;
+              }//for
+              return def;
               
         }//argv
         
         
+        function argv_has(id0){
         
-          function terminal_title(str){
-                                                                                console.log(str);
-                                                                                console.log();
-                var esc   = String.fromCharCode(27);
-                var c7    = String.fromCharCode(7);
-                var cmd   = `${esc}]0;${str}${c7}`;
-                process.stdout.write(cmd);
+              var ids   = [...arguments];
+              
+              var nj    = ids.length;
+              for(var j=0;j<nj;j++){
+              
+                    var id    = ids[j];
+                    
+                    var nk    = process.argv.length;
+                    for(var k=0;k<nk;k++){
+                    
+                          switch(process.argv[k]){
+                          
+                            case id         :
+                            case '-'+id     :
+                            case '--'+id    :
+                                              return true;
+                                              
+                          }//switch
+                          
+                    }///for
+                    
+              }//for
+              
+              return false;
+              
+        }//argv_has
+        
+        
+        
+/*
+
+//server-cert:
+
+20-08-26
+
+*/
+
+
+        function server_cert(dir='./'){
+        
+              var key;
+              var cert;
+              
+              def();
+              load_cert();
+              
+              return {key,cert};
+              
+              
+              function trim(txt){
+              
+                    return txt.split('\n').map(line=>line.trim()).join('\n');
+                    
+              }//trim
+              
+              
+              function load_cert(){
+              
+                    var fs              = require('node:fs');
+                    var load            = '';
+                    
+                    var fn              = dir+'key.pem';
+                    if(fs.existsSync(fn)){
+                          key           = fs.readFileSync(fn,'utf8');
+                          load         += fn;
+                    }
+                    
+                    var fn              = dir+'cert.pem';
+                    if(fs.existsSync(fn)){
+                          cert          = fs.readFileSync(fn,'utf8');
+                          if(load){
+                                load   += ',';
+                          }
+                          load         += fn;
+                    }
+                    
+                    if(load){
+                                                                                      console.log('load_cert',load);
+                    }
+                    
+              }//load_cert
+              
+              
+              function def(){
+              
+                    key    = `
+                          -----BEGIN RSA PRIVATE KEY-----
+                          MIIEpAIBAAKCAQEAqvD7kk47a6sNWjX47x7ZuT5aIgQI+W2NaFPJhdsbDw9JkF0k
+                          QGo6aWFIedpX5cBUF1zrZK+P7ku4SCbI2Z+Cueg3b6bAzacQ9HUP6UMXaZHs9EXz
+                          2IeUXKnJmqjaPtah97Z1oazp5B07gPPYbUsf1YeUGyBj5UQqJU+HSOzhv3Hdfdkq
+                          RhtVwQmLZ0v16ayCLYvUBeVuCDm+7G7lLNHsr4+9J9fzip/avP4ZJl0Pz07MpLby
+                          tjqLUdgsL8iH2ObmP55NVaFqVxK0KuEhoM1p9p3JbP3QtxwKhtxNdKZGDk+iZ0Uo
+                          toH2GjjkHg2CHLPSMySD0+08yN+ZqToJEqO2QQIDAQABAoIBADZWI6F9/KVc2gGy
+                          5k4cIFkh2MS3Q6MFj8151LUX0KIY2elpsfxHyAl3QvJ41TfSyugiQTDgHYBB0XId
+                          4fpLGeK+TeDPwLmeQWVzUHt1OBv2prt/AOPzNNW/orXmtnkDALkc5oddz3sTT7bN
+                          zB3xo0zcq9dzlE1sPXlerkIgCiIwKpDi2y9c97L+SFxswvf0R0dpFPkhCyfAbXL5
+                          owHo7hYqLLl7tk+KnMcl+72mp1fNlpUbaMITp5vztry4OL/kCFUdDYd5OFCYClAT
+                          pLGBsLQiSAGh+KOWJVShhlkpkpriWhwQWsPp6fYej7FZ18oZ/UgbOebhWqT2n6RJ
+                          ZwUuIAECgYEA1gr5v2ITmPO+J3CVWNDTWfyZqk+Dy/RpGRnWjX1FdmYrXDwafjI4
+                          h/Y0H+RJ82wlxrRq+SUuRmqBaxa2/nG5Takrg3Qs8X/XHBeGDHrDK7QsQGKGxmOC
+                          I2EKCVZCndaKUUrufXQb2sf23uBVoxpkqvENGLsqiq0gCWIvZQpAnVECgYEAzHMZ
+                          3LTwDmZjb27JGnuozDnKGMagf8Hg50Fm6tAKfvL5YamSZqg4YFJbC01zABfLQUjy
+                          vEB6QfWNlBEFFRm/x9xhD23CVh1sBnoEUHb4IH+OShL+YrzO4YKKwgVrYJfbeT2i
+                          rV6nm4R872rS5HdGzfd3vN1wfVYhB+KnZ7AKjfECgYEAiFNTQDbqPne3/Ayzwm62
+                          vlCpWpTsX6GasrcHNPS9oixun39UbF32LXp9NnbDNvwBj25n16l7sLOzHA7KnIK4
+                          QCNoKIB9A4+l5SmCYj5qQlKuAJAAQSktwPTUXKAJK9hyHla4UUT7XLwRm2CMiqaL
+                          yWhgLAlBjjO3/OIBR7xg7RECgYEArWs8lq+LqEtFMPJB9wrJZWHngRiKb5Pe14ns
+                          aGTLYl9rFWIm4pjyKRHyVCX/1CZarCfabcArc+N7kgrVys4qlLbkRZgObclLJjs9
+                          iZtAYSCRa1etG8eXnEWEuYqrSCXHbpHPeUt+1DWPW+26sTxTfMXadQNINahnIC8r
+                          XJJAgaECgYB4ebF/2oodjZeM1QmKuUpABhBLKRwvVV0M/Eyor3b8muC+XpgbOR5q
+                          VmW3W2dGFtg91DApwpAdZWNM2LwkYxhSIigirP76F8ByBH+Ag0qLw7Dj1qZf0KZF
+                          owZ71DB9vdA02jynFiJVphYPeR/YJBkGMchrYtEdheSaoBhZLbcxcw==
+                          -----END RSA PRIVATE KEY-----
+                    `;
+                    
+                    
+                    cert   = `
+                          -----BEGIN CERTIFICATE-----
+                          MIIDcjCCAlqgAwIBAgIBATANBgkqhkiG9w0BAQUFADAlMSMwIQYDVQQDExpsb2Nh
+                          bGhvc3QgdGVzdCBjZXJ0aWZpY2F0ZTAeFw0yNTA4MDcxMzM0MDBaFw0yNjA4MDcx
+                          MzM0MDBaMCUxIzAhBgNVBAMTGmxvY2FsaG9zdCB0ZXN0IGNlcnRpZmljYXRlMIIB
+                          IjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqvD7kk47a6sNWjX47x7ZuT5a
+                          IgQI+W2NaFPJhdsbDw9JkF0kQGo6aWFIedpX5cBUF1zrZK+P7ku4SCbI2Z+Cueg3
+                          b6bAzacQ9HUP6UMXaZHs9EXz2IeUXKnJmqjaPtah97Z1oazp5B07gPPYbUsf1YeU
+                          GyBj5UQqJU+HSOzhv3HdfdkqRhtVwQmLZ0v16ayCLYvUBeVuCDm+7G7lLNHsr4+9
+                          J9fzip/avP4ZJl0Pz07MpLbytjqLUdgsL8iH2ObmP55NVaFqVxK0KuEhoM1p9p3J
+                          bP3QtxwKhtxNdKZGDk+iZ0UotoH2GjjkHg2CHLPSMySD0+08yN+ZqToJEqO2QQID
+                          AQABo4GsMIGpMAkGA1UdEwQCMAAwIAYDVR0RBBkwF4IJbG9jYWxob3N0hwR/AAAB
+                          hwR/AAACMB0GA1UdDgQWBBSHZcPoMBEl4CkjiDq3EA/JHX72BDALBgNVHQ8EBAMC
+                          AvQwOwYDVR0lBDQwMgYIKwYBBQUHAwIGCCsGAQUFBwMDBggrBgEFBQcDBAYIKwYB
+                          BQUHAwEGCCsGAQUFBwMIMBEGCWCGSAGG+EIBAQQEAwIA5zANBgkqhkiG9w0BAQUF
+                          AAOCAQEAEbQGZsY4maCkkCbpKTiO2sOZBLlbjVxGIt8/YPBTpA0pppfzRYIL0l+r
+                          qDcSIvd+oJx2ctQnxsIABJhwTo6ibOJXpB6g4O7jG1gWciajyQK8MwYVp/UrYfVF
+                          FM+JopxryEHzv3pZ6tLWPgZ/uKme9vJ2f62gDxKl+L7glW1OZqlzsgqes5yXIln9
+                          GevVRUeoxKO7dvV3oVdI8lauY2MFoTHahkY1TDV0L/ysuaWixulp4qw6sxIuk9Ij
+                          oz1EuTyR1PdxBTtvjjb5jGs6uynAtRzBJjoWYcwZWRRJtcpd9Rdhshe1VBo0Fn+L
+                          R59dH9TiW6uixGS88c3LslTRbW57qw==
+                          -----END CERTIFICATE-----
+                    `;
+                    
+                    key     = trim(key);
+                    cert    = trim(cert);
+                    
+              }//def
+              
+        }//server_cert
+        
+        
+        
+/*
+
+//getmime:
+
+20-08-26
+
+*/
+
+
+        function getmime(filename){
+        
+              var list    = {
+              
+                  // text
+                  
+                    'txt'       : 'text/plain',
+                    'html'      : 'text/html',
+                    'htm'       : 'text/html',
+                    'css'       : 'text/css',
+                    'js'        : 'text/javascript',
+                    'json'      : 'application/json',
+                    'csv'       : 'text/csv',
+                    'xml'       : 'application/xml',
+                    'mjs'       : 'text/javascript',
+                    'cjs'       : 'text/javascript',
+                    'map'       : 'application/json',
+                    'wasm'      : 'application/wasm',
+                    'manifest'  : 'application/manifest+json',
+                    
+                    
+                  // images
+                  
+                    'jpg'       : 'image/jpeg',
+                    'jpeg'      : 'image/jpeg',
+                    'png'       : 'image/png',
+                    'gif'       : 'image/gif',
+                    'webp'      : 'image/webp',
+                    'svg'       : 'image/svg+xml',
+                    'ico'       : 'image/x-icon',
+                    'bmp'       : 'image/bmp',
+                    'tiff'      : 'image/tiff',
+                    'avif'      : 'image/avif',
+                    'heic'      : 'image/heic',
+                    'heif'      : 'image/heif',
+                    
+                    
+                  // audio
+                  
+                    'mp3'       : 'audio/mpeg',
+                    'wav'       : 'audio/wav',
+                    'oga'       : 'audio/ogg',
+                    'm4a'       : 'audio/mp4',
+                    'flac'      : 'audio/flac',
+                    'aac'       : 'audio/aac',
+                    'opus'      : 'audio/opus',
+                    'm3u8'      : 'application/x-mpegURL',
+                    
+                    
+                    
+                  // video
+                  
+                    'mp4'       : 'video/mp4',
+                    'webm'      : 'video/webm',
+                    'mov'       : 'video/quicktime',
+                    'avi'       : 'video/x-msvideo',
+                    'mkv'       : 'video/x-matroska',
+                    'ogg'       : 'video/ogg',
+                    'ogv'       : 'video/ogg',
+                    
+                    
+                  // fonts
+                  
+                    'woff'      : 'font/woff',
+                    'woff2'     : 'font/woff2',
+                    'ttf'       : 'font/ttf',
+                    'otf'       : 'font/otf',
+                    
+                    
+                  // docs
+                  
+                    'pdf'       : 'application/pdf',
+                    'doc'       : 'application/msword',
+                    'docx'      : 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                    'xls'       : 'application/vnd.ms-excel',
+                    'xlsx'      : 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                    'ppt'       : 'application/vnd.ms-powerpoint',
+                    'pptx'      : 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                    'md'        : 'text/markdown',
+                    'odt'       : 'application/vnd.oasis.opendocument.text',
+                    'ods'       : 'application/vnd.oasis.opendocument.spreadsheet',
+                    
+                    
+                  // archives
+                  
+                    'zip'       : 'application/zip',
+                    'tar'       : 'application/x-tar',
+                    'gz'        : 'application/gzip',
+                    'rar'       : 'application/vnd.rar',
+                    '7z'        : 'application/x-7z-compressed',
+                    
+                  // binary
+                  
+                    'bin'       : 'application/octet-stream',
+                    'exe'       : 'application/octet-stream',
+                    'dmg'       : 'application/x-apple-diskimage'
+                    
+                    
+              };
+              
+              var i       = filename.lastIndexOf('.');
+              var ext     = filename.slice(i+1);
+              
+              var def     = 'application/octet-stream';
+              var mime    = list[ext]||def
+              
+              return mime;
+              
+        }//getmime
+        
+        
+/*
+
+//keys:d
+
+13-11-23
+
+*/
+
+
+        function keysmod(){
+        
+          var obj   = {};
+          
+          
+                if(!process.stdin.isTTY){
+                                                                                console.log('not tty');
+                      return;
+                }
                 
-          }//terminal_title
+                var ctrlc   = '\u0003';
+                var esc     = String.fromCharCode(27);
+                
+                process.stdout.setEncoding('utf8');
+                
+                process.stdin.setRawMode(true);
+                process.stdin.resume();
+                process.stdin.setEncoding('utf8');
+                process.stdin.on('data',keypressed);
+                
+                
+                function keypressed(key){
+                
+                      if(typeof obj.keypressed=='function'){
+                            var result    = obj.keypressed(key);
+                            if(result===false){
+                                  return;
+                            }
+                      }
+                      
+                      if(key==='r'){
+                            if(typeof obj.reload!=='function'){
+                                                                                console.log('reload not enabled');
+                                  return;
+                            }
+                            
+                            rem();
+                            clear();
+                                                                                console.log('reload');
+                            obj.reload();
+                      }
+                      
+                      if(
+                            (key===ctrlc)   ||
+                            (key==='q')     ||
+                            (key===esc)
+                      ){
+                            process.exit();
+                      }
+                      
+                      if(key===' '){
+                            clear();
+                                                                                console.log('---   clear   ---');
+                      }
+                      
+                      if(key==='-'){
+                                                                                console.log('---   ===    ---');
+                      }
+                      
+                }//keypressed
+                
+                
+                obj.rem=function(){return rem()}    //d
+                
+                function rem(){
+                
+                      process.stdin.off('data',keypressed);
+                      
+                }//rem
+                
+                
+                obj.clear=function(){return clear()}    //d
+                
+                function clear(){
+                
+                      var esc   = '\x1B';
+                      process.stdout.write(esc+'c');
+                      //process.stdout.write('\033c');
+                      console.clear();
+                      
+                }//clr
+                
+                
+                
+          return obj;
           
-          
-          
-  //:
-  
-        cert    =
-              '-----BEGIN CERTIFICATE-----\n'                                       +
-              'MIIDcjCCAlqgAwIBAgIBATANBgkqhkiG9w0BAQUFADAlMSMwIQYDVQQDExpsb2Nh\n'  +
-              'bGhvc3QgdGVzdCBjZXJ0aWZpY2F0ZTAeFw0yNTA2MjYxNzQ5MDBaFw0yNjA2MjYx\n'  +
-              'NzQ5MDBaMCUxIzAhBgNVBAMTGmxvY2FsaG9zdCB0ZXN0IGNlcnRpZmljYXRlMIIB\n'  +
-              'IjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqWZ5x4R8GVoRKeXe++SN54Mz\n'  +
-              'UD1BD/eNfmELIedKeof0m/CxXQZn2KyxYzvPmCKM6qv0Y458sadmaG0HQGUb55lm\n'  +
-              'ox6T7U5LjF3C7HM2PZjuQw5Z4nnCEcu/yEcqNU/a5b9noBY132v/0iIvOn5f4ptQ\n'  +
-              'Z8JslU6YmCdznt23rgHUjcOxLYdU8xT53HwEvxZoem8hVIYek+mX2nU8AIj0WMx+\n'  +
-              'piqaxtxFHv6PNmNe6M81ggxLTr7DvECS+Nl+s5ec7uOClsgafKt5ZxvYufsI7vxT\n'  +
-              'C47/Co2TYuNgpIVqmpykg1YxKyElGzSIpB7bzDlqq8erU98kjCYzjTiy67KJuQID\n'  +
-              'AQABo4GsMIGpMAkGA1UdEwQCMAAwIAYDVR0RBBkwF4IJbG9jYWxob3N0hwR/AAAB\n'  +
-              'hwR/AAACMB0GA1UdDgQWBBRN+qxeeW3ngsZaImHYKWaf4ztRkDALBgNVHQ8EBAMC\n'  +
-              'AvQwOwYDVR0lBDQwMgYIKwYBBQUHAwIGCCsGAQUFBwMDBggrBgEFBQcDBAYIKwYB\n'  +
-              'BQUHAwEGCCsGAQUFBwMIMBEGCWCGSAGG+EIBAQQEAwIA5zANBgkqhkiG9w0BAQUF\n'  +
-              'AAOCAQEAgoAgtNpwyHjf/lEaYNxPXU3IuvpBJb0J2pU/vU3ImGTZoCpEjqAnduUB\n'  +
-              'zPIL9jk2xoIn4w2u8h4AALi/0+8/w+Lf39EGVw2v5Obd5/L00aRtYq4syitWh7st\n'  +
-              'cGiJhL6OR6sZw1/Z+MsQWoXn1K8wEusalNs9zTimpn/wt+fFFem5Ao5sFKp7OvxE\n'  +
-              'tJGOIjEq0ErBvbejRMLQTFHaBKsSyA/G8fFyQaAdnOuPHpJJjNfWhrNfr3kxuKsF\n'  +
-              'c7BcCD7p6Q3GVcUsIpAudj6k0ueDottTlQ7PVwiJlWTISvzCrz4dI1dwE7VpZ04Y\n'  +
-              'AZpOcmiSQO2WFjUS/N5y9g+zJs/Osw==\n'                                  +
-              '-----END CERTIFICATE-----\n'
-        ;
+        }//keysmod
         
-        key   =
-              '-----BEGIN RSA PRIVATE KEY-----\n'                                   +
-              'MIIEpAIBAAKCAQEAqWZ5x4R8GVoRKeXe++SN54MzUD1BD/eNfmELIedKeof0m/Cx\n'  +
-              'XQZn2KyxYzvPmCKM6qv0Y458sadmaG0HQGUb55lmox6T7U5LjF3C7HM2PZjuQw5Z\n'  +
-              '4nnCEcu/yEcqNU/a5b9noBY132v/0iIvOn5f4ptQZ8JslU6YmCdznt23rgHUjcOx\n'  +
-              'LYdU8xT53HwEvxZoem8hVIYek+mX2nU8AIj0WMx+piqaxtxFHv6PNmNe6M81ggxL\n'  +
-              'Tr7DvECS+Nl+s5ec7uOClsgafKt5ZxvYufsI7vxTC47/Co2TYuNgpIVqmpykg1Yx\n'  +
-              'KyElGzSIpB7bzDlqq8erU98kjCYzjTiy67KJuQIDAQABAoIBABblbOxUsdlTXSKG\n'  +
-              'mV7+g1eZWiQsQ1D/Kra8Mx7//gcVvTAeljp2lS6qGMfK28I6WUWWvE+AgMYaVDMl\n'  +
-              'GWfQwrbI+yBtD51xibCNM711zQ0CUKHrnKaJwntZSLCvPbs68eE/v6fZmKp8FHW4\n'  +
-              'fR2w2xDr4TBFDRwZJXLbUjtUyHDSQSMUiIfAsJoDTloAsYXGm5bqVv+9mxvli0gp\n'  +
-              'lmiFW3CZCmZC9vjid1Gn4CI3SpwU/Mu6a8ldvA/fU6WnTJ+Wlpi8DcvacmaHLqAd\n'  +
-              'U+CXchyi1/Q6TmG3a82QRIntSLA4R+tr6OLQprMre1C9Mb/e+7L0TG0TCYlKLuvj\n'  +
-              '4W3PgckCgYEA/TEYkDtc0m4nXmPwxYJQkPyMT/BGqvoAcKBu7EF28+bN8de53SHP\n'  +
-              'PREsdFgN/vPGvjHsIXhPyNmRkw+kRYtUCmUWD2SJN0weZ0d+Q3NtGSfLiXIlJwaT\n'  +
-              '/vlyxevVg+JW/8c5sL7Fj4vAVxJCJzYM9Kzvsst4t85eAY/DIp09W6cCgYEAq0d3\n'  +
-              'D7aJwWLi2IdPjW2rJ/bdgLMDUGo0x85RCBH2qb7MPAVenQylcknXXvSLrwv93PbJ\n'  +
-              'w+IQuS1hRXmRLSq24TmOX7hWLILBhUh7bEwQqW6cr0TX4QgkbI8CJNwfyTKqj0ye\n'  +
-              'UEEUCnBaDboTqPAXM9+EAQwzmaSlkQM3VPQ0G58CgYEAve/yyWB/Ba11Ay5eFQzp\n'  +
-              'e5q5d858dQ8O/W6dR8bkgZwHqwF2gRk36kvT2YOlHDmsQkoZJhKnZ7kvp+74AOPA\n'  +
-              'q/uhTPLSrRUBSeEsK1WP5msgGX/ztw8MPx7KpweAKWvGcCL4eErk0ga4x5j+34OA\n'  +
-              'vJxvROW3Lcw2YV2DuZfTy8kCgYABv5gCjA158OV56l+whOcTYFzAfJNTFdJ2G7AO\n'  +
-              'EgjfkLgLAM8HcWKa+Q/+wyZN4iR0RfynSD59dW4hxGzr9hypzembJomSqL8K+kNw\n'  +
-              'RpKA+EUXMO+3N1sP1KHj+G9GoYLGNbUEArYOqTjyHO0oc1L5T5XMYPCB6AFcqpi9\n'  +
-              'AEUr5wKBgQC/m5Eq2XWG2XP1i3G0ut0ierM8+XXw1ydiyAOuHM3aUBwtCirsIBAd\n'  +
-              'kGlVjhwrYIs6DfcPf0hdroPmEHl8BBb1zGUISYZSNhVY2Sxfut26nYAIV85pSmrg\n'  +
-              'Lk1ryU8dYQMT7+7GqxfSaznp6iGm/Blfcnk9YbBOgvs7i6ewJC49kg==\n'          +
-              '-----END RSA PRIVATE KEY-----\n'
-        ;
+        
+        
+        
+        
+        
+        
         
         
         
