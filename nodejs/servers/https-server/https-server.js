@@ -19,7 +19,7 @@
         var fs                      = require('node:fs');
         var path                    = require('node:path');
         
-                                                                                lib.df=true;//lib.load=false;
+                                                                                lib.df=false;//lib.load=false;
         var resolve                 = lib('resolve.js',resolve);
         var {argv,argv_has}         = lib('argv.js','v2.0',{argv,argv_has});
         var server_cert             = lib('server-cert.js','v2.0',server_cert);
