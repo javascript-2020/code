@@ -101,10 +101,6 @@ unit test for file-server
               console.log(json);
               return;
         }
-        var {files,dirs}    = await res.json();
-        console.log('=== dir list ===');
-        console.json(dirs);
-        console.json(files);
         
         
 })();
