@@ -208,8 +208,8 @@ https://github.com/javascript-2020/code/blob/main/nodejs/servers/file-server/fil
                           ];
               str       = str.map((v,i)=>String(v).padEnd(spc[i]));
               str       = str.join(' ');
-              console.log(str);
-              
+                                                                                console.log(str);
+                                                                                
         }//log
         
         
