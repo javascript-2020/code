@@ -11,7 +11,7 @@
 */
 
                                                                                 console.clear();
-                                                                                terminal_title('file-server');
+                                                                                terminal_title('https-server');
                                                                                 console.log();
                                                                                 console.json=(...args)=>args.forEach(v=>console.log(JSON.stringify(v,null,4)));
                                                                                 //console.json(process.argv);
@@ -34,7 +34,7 @@
         docroot             += '/';
         
         if(!fs.existsSync(docroot) || !fs.statSync(docroot).isDirectory()){
-                                                                                console.error(`Error: ${docroot} is not a valid directory.`);
+                                                                                console.error(`Error: not a valid directory [${docroot}]`);
               process.exit(1);
         }
         
@@ -51,9 +51,8 @@
         
         
         function info(){
-                                                                                console.log(`listening : https://${host}:${port}/`);
-                                                                                console.log();
-                                                                                console.log(docroot);
+                                                                                console.log(`   listening :: https://${host}:${port}/`);
+                                                                                console.log(`     serving :: ${docroot}`);
                                                                                 console.log();
                                                                                 console.log('===');
                                                                                 console.log();
@@ -65,6 +64,7 @@
               res.setHeader('cache-control','no-store');
               res.setHeader('access-control-allow-origin','*');
               res.setHeader('access-control-allow-headers','content-type');
+              res.setHeader('access-control-expose-headers','content-range,accept-ranges,content-length');
               
               if(cors(req,res,abs)){
                                                                                 request.log(req);
