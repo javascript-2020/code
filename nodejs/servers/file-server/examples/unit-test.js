@@ -89,6 +89,13 @@ unit test for file-server
               console.log(json);
               return;
         }
+        
+        var res   = await fetch(url+'/dir/',{headers:{auth,mode:'dir.read'}});
+        if(!res.ok){
+              var json    = await res.json();
+              console.log(json);
+              return;
+        }
         var {files,dirs}    = await res.json();
         console.log('=== dir list ===');
         console.json(dirs);
