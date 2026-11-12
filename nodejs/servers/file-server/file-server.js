@@ -139,14 +139,14 @@ https://github.com/javascript-2020/code/blob/main/nodejs/servers/file-server/fil
                 case 'file.delete'        :
                                             ({error}    = file.delete(req,res,abs));
                                             break;
-                case 'upload'             :
-                case 'file.upload'        :
+                case 'download'           :
+                case 'file.download'      :
                 case 'load'               :
                 case 'file.load'          :
                                             ({error}    = file.load(req,res,abs));
                                             break;
-                case 'download'           :
-                case 'file.download'      :
+                case 'upload'             :
+                case 'file.upload'        :
                 case 'save'               :
                 case 'file.save'          :
                                             ({error}    = file.save(req,res,abs));
