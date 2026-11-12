@@ -21,7 +21,7 @@ unit test for file-server
         var auth    = 'auth-123';
         var url     = 'https://127.0.0.1:3010';
                                                                                 console.log('dir.create');
-        var res   = await fetch(url+'/dir',{auth,mode:'dir.create'});
+        var res   = await fetch(url+'/dir',{headers:{auth,mode:'dir.create'}});
         if(!res.ok){
               var json    = await res.json();
               console.json(json);
