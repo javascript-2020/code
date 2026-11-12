@@ -29,7 +29,7 @@ unit test for file-server
         }
         
                                                                                 console.log('file.save');
-        var res   = await fetch(url+'/dir/test.txt',{auth,mode:'file.save',body:'helloworld',method:'post'});
+        var res   = await fetch(url+'/dir/test.txt',{headers:{auth,mode:'file.save'},body:'helloworld',method:'post'});
         if(!res.ok){
               var json    = await res.json();
               console.log(json);
@@ -37,7 +37,7 @@ unit test for file-server
         }
         
                                                                                 console.log('file.load');
-        var res   = await fetch(url+'/dir/test.txt',{auth,mode:'file.load'});
+        var res   = await fetch(url+'/dir/test.txt',{headers:{auth,mode:'file.load'}});
         if(!res.ok){
               var json    = await res.json();
               console.log(json);
@@ -47,7 +47,7 @@ unit test for file-server
         console.log(txt);
         
                                                                                 console.log('file.create');
-        var res   = await fetch(url+'/dir/touch.txt',{auth,mode:'file.create'});
+        var res   = await fetch(url+'/dir/touch.txt',{headers:{auth,mode:'file.create'}});
         if(!res.ok){
               var json    = await res.json();
               console.log(json);
@@ -55,7 +55,7 @@ unit test for file-server
         }
         
         
-        var res   = await fetch(url+'/dir/del.txt',{auth,mode:'file.create'});
+        var res   = await fetch(url+'/dir/del.txt',{headers:{auth,mode:'file.create'}});
         if(!res.ok){
               var json    = await res.json();
               console.log(json);
@@ -63,7 +63,7 @@ unit test for file-server
         }
         
                                                                                 console.log('file.delete');
-        var res   = await fetch(url+'/dir/del.txt',{auth,mode:'file.delete'});
+        var res   = await fetch(url+'/dir/del.txt',{headers:{auth,mode:'file.delete'}});
         if(!res.ok){
               var json    = await res.json();
               console.log(json);
@@ -71,7 +71,7 @@ unit test for file-server
         }
         
                                                                                 console.log('dir.read');
-        var res   = await fetch(url+'/dir/',{auth,mode:'dir.read'});
+        var res   = await fetch(url+'/dir/',{headers:{auth,mode:'dir.read'}});
         if(!res.ok){
               var json    = await res.json();
               console.log(json);
@@ -83,7 +83,7 @@ unit test for file-server
         console.json(files);
         
                                                                                 console.log('dir.clear');
-        var res   = await fetch(url+'/dir/',{auth,mode:'dir.clear'});
+        var res   = await fetch(url+'/dir/',{headers:{auth,mode:'dir.clear'}});
         if(!res.ok){
               var json    = await res.json();
               console.log(json);
@@ -95,7 +95,7 @@ unit test for file-server
         console.json(files);
         
                                                                                 console.log('dir.delete');
-        var res   = await fetch(url+'/dir/',{auth,mode:'dir.delete'});
+        var res   = await fetch(url+'/dir/',{headers:{auth,mode:'dir.delete'}});
         if(!res.ok){
               var json    = await res.json();
               console.log(json);
