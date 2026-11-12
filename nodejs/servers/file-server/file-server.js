@@ -5,6 +5,8 @@
 
 file-server.js:d
 
+https://github.com/javascript-2020/code/blob/main/nodejs/servers/file-server/file-server.js
+
 26-02-18
 25-04-25
 02-11-26
@@ -18,11 +20,11 @@ file-server.js:d
         var path                    = require('node:path');
         var fs                      = require('node:fs');
         
-                                                                                lib.df=false;//lib.load=false;
+                                                                                lib.df=true;//lib.load=false;
         var resolve                 = lib('resolve.js',resolve);
         var {argv,argv_has}         = lib('argv.js','v2.0',{argv,argv_has});
         var server_cert             = lib('server-cert.js','v2.0',server_cert);
-        var getmime                 = lib('getmime.js',getmime);
+        var getmime                 = lib('getmime-min.js',getmime);
         var keysmod                 = lib('keys',keysmod);
                                                                                 lib.df && console.log();
                                                                                 
@@ -950,7 +952,7 @@ file-server.js:d
               if(result){
                                                                                 lib.df && process.stdout.write(abs+'\n');
                                                                                 !lib.list && (lib.list=[]);
-                                                                                lib.list.push(abs);
+                                                                                lib.list.push(require.resolve(abs));
                     return result;
               }
               
@@ -961,17 +963,18 @@ file-server.js:d
         
         
         lib.build   = function(){
-        
+                                                                                console.log('lib.build');
               var fs          = require('node:fs');
               var fn          = require.main.filename;
+                                                                                console.log(fn);
               var txt         = fs.readFileSync(fn,'utf8');
+              
               var i           = txt.indexOf('/'+'/libs:');
-              i               = txt.indexOf('//:',i);
               i               = txt.indexOf('\n\n\n',i);
-              txt             = txt.slice(i+1);
+              txt             = txt.slice(0,i+3);
               
-              lib.list.forEach(abs=>{
-              
+              lib.list.forEach((abs,i)=>{
+                                                                                console.log(i,abs);
                     var js    = fs.readFileSync(abs,'utf8');
                     var i     = js.indexOf('module.exports');
                     js        = js.slice(0,i)+'//'+js.slice(i);
@@ -981,6 +984,7 @@ file-server.js:d
               
               var i   = fn.lastIndexOf('.');
               fn      = fn.slice(0,i)+'-build'+fn.slice(i);
+                                                                                console.log(fn);
               fs.writeFileSync(fn,txt);
               
         }//build
