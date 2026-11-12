@@ -1171,13 +1171,20 @@ https://github.com/javascript-2020/code/blob/main/nodejs/servers/file-server/fil
 */
 
 
-        function server_cert(dir='./'){
+        function server_cert(dir='./',load=true){
         
+              if(typeof arguments[0]=='boolean'){
+                    load    = arguments[0];
+                    dir     = './';
+              }
+              
               var key;
               var cert;
               
               def();
-              load_cert();
+              if(load!==false){
+                    load_cert();
+              }
               
               return {key,cert};
               
