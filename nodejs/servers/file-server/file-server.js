@@ -21,7 +21,7 @@ https://github.com/javascript-2020/code/blob/main/nodejs/servers/file-server/fil
         var path                    = require('node:path');
         var fs                      = require('node:fs');
         
-                                                                                lib.df=true;//lib.load=false;
+                                                                                lib.df=false;//lib.load=false;
         var resolve                 = lib('resolve.js',resolve);
         var {argv,argv_has}         = lib('argv.js','v2.0',{argv,argv_has});
         var server_cert             = lib('server-cert.js','v2.0',server_cert);
