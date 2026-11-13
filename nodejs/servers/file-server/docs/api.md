@@ -7,32 +7,32 @@
 
 the server supports the following command line arguments :
 
-|arg       | description                     | default   | example          |
-|----------|---------------------------------|-----------|------------------|
-|-p, -port | specify port                    | 3000      | -p 3001          |
-|          |                                 |           |                  |
-|-h, -host | specify host                    | 127.0.0.1 | -h 127.0.0.1     |
-|          |                                 |           |                  |
-|-auth     | specify authorisation header    | auth-123  | -auth p455w0rd   |
-|          |                                 |           |                  |
-| -d, -dir | specify the source directory    |           | -d /work/tmp     |
-|          |                                 |           |                  |
-| -s, -serve | serve the files over https    |           | -s               |
-|          |                                 |           |                  |
+|arg          | description                     | default   | example          |
+|-------------|---------------------------------|-----------|------------------|
+|-p, -port    | specify port                    | 3000      | -p 3001          |
+|             |                                 |           |                  |
+|-h, -host    | specify host                    | 127.0.0.1 | -h 127.0.0.1     |
+|             |                                 |           |                  |
+|-auth        | specify authorisation header    | auth-123  | -auth p455w0rd   |
+|             |                                 |           |                  |
+| -d, -dir    | specify the source directory    |           | -d /work/tmp/    |
+|             |                                 |           |                  |
+| -s, -serve  | serve the files over https      |           | -s               |
+|             |                                 |           |                  |
 
 
 during operation the server supports the folling keypresses :
 
-|arg       | description                     |
-|----------|---------------------------------|
-|   esc / q /ctrl+c    | quit                            |
-|          |                                 |
-|  space   | clear screen                    |
-|          |                                 |
-| - ( minus ) | insert a marker in the output   |
-|          |                                 |
-|   i      | display the main server info    |
-|          |                                 |
+|arg                    | description                     |
+|-----------------------|---------------------------------|
+|   esc / q /ctrl+c     | quit                            |
+|                       |                                 |
+|  space                | clear screen                    |
+|                       |                                 |
+| -   ( hyphen )        | insert a marker in the output   |
+|                       |                                 |
+|   i                   | display the main server info    |
+|                       |                                 |
 
 
 ---
@@ -42,7 +42,7 @@ during operation the server supports the folling keypresses :
 
 ```
 
-node file-server -p 3001 -auth my-password -d /work/tmp
+node file-server -p 3001 -auth my-password -d /work/tmp/
 
 ```
 
