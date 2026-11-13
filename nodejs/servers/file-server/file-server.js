@@ -91,6 +91,7 @@ https://github.com/javascript-2020/code/blob/main/nodejs/servers/file-server/fil
   
   
         async function request(req,res){
+        console.log(req.method,req.url);
         
               res.setHeader('cache-control','no-store');
               res.setHeader('access-control-allow-origin','*');
@@ -254,6 +255,7 @@ https://github.com/javascript-2020/code/blob/main/nodejs/servers/file-server/fil
               }
                                                                                 request.log(200,req,'ping');
               res.end('pong');
+              return true;
               
         }//ping
         
