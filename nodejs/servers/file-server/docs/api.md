@@ -25,7 +25,7 @@ during operation the server supports the folling keypresses :
 
 |arg                    | description                     |
 |-----------------------|---------------------------------|
-|   esc / q /ctrl+c     | quit                            |
+|   esc / q / ctrl+c    | quit                            |
 |                       |                                 |
 |  space                | clear screen                    |
 |                       |                                 |
