@@ -19,13 +19,13 @@
         var fs                      = require('node:fs');
         var path                    = require('node:path');
         
-                                                                                lib.df=false;//lib.load=false;
-        var resolve                 = lib('resolve.js',resolve);
-        var {argv,argv_has}         = lib('argv.js','v2.0',{argv,argv_has});
-        var server_cert             = lib('server-cert.js','v2.0',server_cert);
-        var getmime                 = lib('getmime-min.js',getmime);
-        var keysmod                 = lib('keys',keysmod);
-                                                                                lib.df && console.log();
+                                                                                libs.df=false;//libs.load=false;
+        var resolve                 = libs('resolve.js',resolve);
+        var {argv,argv_has}         = libs('argv.js','v2.0',{argv,argv_has});
+        var server_cert             = libs('server-cert.js','v2.0',server_cert);
+        var getmime                 = libs('getmime-min.js',getmime);
+        var keysmod                 = libs('keys',keysmod);
+                                                                                libs.df && console.log();
                                                                                 
         var dir                     = argv('d','dir','.');
         var host                    = argv('h','host','127.0.0.1');
@@ -47,6 +47,10 @@
                                                                                 console.error(`Error: not a valid directory [${docroot}]`);
               process.exit(1);
         }
+        
+        
+        
+        var ok      = JSON.stringify({ok:'ok'});
         
         
   //:
@@ -319,11 +323,12 @@
   //:
   
   
-        lib.df        = true;
-        lib.enabled   = true;
+        libs.df         = true;
+        libs.enabled    = true;
         
-        function lib(name,version,def){
-                                                                                lib.df && process.stdout.write(`load ${name} => `);
+        function libs(name,version,def){
+                                                                                libs.df && process.stdout.write(`libs : ${name} => `);
+                                                                                !libs.list && (libs.list=[]);
               if(arguments.length==1){
                     def       = name;
                     name      = null;
@@ -336,90 +341,81 @@
               
               /*
               var path    = require('node:path');
-              if(!lib.dir){
-              var dir     = path.dirname(require.main.filename);
+              var base    = path.dirname(require.main.filename);
+              if(lib.base){
+                    base    = lib.base;
+              }
               */
               
-              var abs;
-              var result;
-              
-              if(lib.load!==false && name){
-              
-                    (()=>{
+              if(libs.load!==false){
+                    if(name){
                     
                           if(name.endsWith('.js')){
                                 name    = name.slice(0,-3);
                           }
                           
-                          try{
+                          var paths   = [];
                           
-                                abs             = `${name}.js`;
-                                if(version){
-                                      abs       = `${name}/${version}/${name}-${version}.js`;
-                                }
-                                result          = require(abs);
-                                return result;
+                          
+                        //  NODE_PATH
+                        
+                          if(!version){
+                                paths.push(`${name}.js`);
+                          }else{
+                                paths.push(`${name}/${version}/${name}-${version}.js`);
+                                paths.push(`${name}-${version}.js`);
+                          }
+                          
+                          
+                        //  libs/
+                        
+                          if(!version){
+                                paths.push(`./libs/${name}.js`);
+                          }else{
+                                paths.push(`./libs/${name}/${version}/${name}-${version}.js`);
+                                paths.push(`./libs/${name}-${version}.js`);
+                          }
+                          
+                          
+                        //  cwd
+                        
+                          if(!version){
+                                paths.push(`./${name}.js`);
+                          }else{
+                                paths.push(`./${name}-${version}.js`);
+                          }
+                          
+                          
+                          var n   = paths.length;
+                          for(var i=0;i<n;i++){
+                          
+                                var path    = paths[i];
+                                try{
                                 
-                          }//try
-                          catch(err){
-                          
-                                if(err.code!=='MODULE_NOT_FOUND')throw err;
+                                      result    = require(path);
+                                                                                libs.df && process.stdout.write(path+'\n');
+                                                                                libs.list.push(require.resolve(path));
+                                      return result;
+                                      
+                                }//try
+                                catch(err){
                                 
-                          }//catch
-                          
-                          try{
-                          
-                                abs             = `./libs/${name}.js`;
-                                if(version){
-                                      abs       = `./libs/${name}/${version}/${name}-${version}.js`;
-                                }
-                                result          = require(abs);
-                                return result;
+                                      if(err.code!=='MODULE_NOT_FOUND')throw err;
+                                      
+                                }//catch
                                 
-                          }//try
-                          catch(err){
+                          }//for
                           
-                                if(err.code!=='MODULE_NOT_FOUND')throw err;
-                                
-                          }//catch
-                          if(result)return;
-                          
-                          
-                          try{
-                          
-                                abs             = `./${name}.js`;
-                                if(version){
-                                      abs       = `./${name}-${version}.js`;
-                                }
-                                result          = require(abs);
-                                return result;
-                                
-                          }//try
-                          catch(err){
-                          
-                                if(err.code!=='MODULE_NOT_FOUND')throw err;
-                                
-                          }//catch
-                          
-                    })();
-                    
-              }
-              
-              if(result){
-                                                                                lib.df && process.stdout.write(abs+'\n');
-                                                                                !lib.list && (lib.list=[]);
-                                                                                lib.list.push(require.resolve(abs));
-                    return result;
-              }
-              
-                                                                                lib.df && process.stdout.write('def\n');
+                    }//name
+              }//load
+                                                                                libs.df && process.stdout.write('def\n');
               return def;
               
-        }//lib
+        }//libs
         
         
-        lib.build   = function(){
-                                                                                console.log('lib.build');
+        libs.build   = function(){
+                                                                                console.log('libs.build');
               var fs          = require('node:fs');
               var fn          = require.main.filename;
                                                                                 console.log(fn);
@@ -429,11 +425,10 @@
               i               = txt.indexOf('\n\n\n',i);
               txt             = txt.slice(0,i+3);
               
-              lib.list.forEach((abs,i)=>{
+              libs.list.forEach((abs,i)=>{
                                                                                 console.log(i,abs);
                     var js    = fs.readFileSync(abs,'utf8');
-                    var i     = js.indexOf('module.exports');
-                    js        = js.slice(0,i)+'//'+js.slice(i);
+                    js        = js.replaceAll('module.exports','//module.exports');
                     txt      += js;
                     
               });
