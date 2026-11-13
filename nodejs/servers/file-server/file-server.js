@@ -882,8 +882,10 @@ https://github.com/javascript-2020/code/blob/main/nodejs/servers/file-server/fil
               
               /*
               var path    = require('node:path');
-              if(!lib.dir){
-              var dir     = path.dirname(require.main.filename);
+              var base    = path.dirname(require.main.filename);
+              if(lib.base){
+                    base    = lib.base;
+              }
               */
               
               if(libs.load!==false){
@@ -896,20 +898,28 @@ https://github.com/javascript-2020/code/blob/main/nodejs/servers/file-server/fil
                           var paths   = [];
                           
                           
+                        //  NODE_PATH
+                        
                           if(!version){
                                 paths.push(`${name}.js`);
                           }else{
                                 paths.push(`${name}/${version}/${name}-${version}.js`);
+                                paths.push(`${name}-${version}.js`);
                           }
                           
                           
+                        //  libs/
+                        
                           if(!version){
                                 paths.push(`./libs/${name}.js`);
                           }else{
                                 paths.push(`./libs/${name}/${version}/${name}-${version}.js`);
+                                paths.push(`./libs/${name}-${version}.js`);
                           }
                           
                           
+                        //  cwd
+                        
                           if(!version){
                                 paths.push(`./${name}.js`);
                           }else{
@@ -959,8 +969,7 @@ https://github.com/javascript-2020/code/blob/main/nodejs/servers/file-server/fil
               libs.list.forEach((abs,i)=>{
                                                                                 console.log(i,abs);
                     var js    = fs.readFileSync(abs,'utf8');
-                    var i     = js.indexOf('module.exports');
-                    js        = js.slice(0,i)+'//'+js.slice(i);
+                    js        = js.replaceAll('module.exports','//module.exports');
                     txt      += js;
                     
               });
