@@ -20,16 +20,16 @@ the server supports the following command line arguments
 
 during operation the server supports the folling keypresses :
 
-|arg       | description                     |
-|----------|---------------------------------|
-|   esc / q /ctrl+c    | quit                            |
-|          |                                 |
-|  space   | clear screen                    |
-|          |                                 |
-| - ( minus ) | insert a marker in the output   |
-|          |                                 |
-|   i      | display the main server info    |
-|          |                                 |
+|arg                    | description                     |
+|-----------------------|---------------------------------|
+|   esc / q / ctrl+c    | quit                            |
+|                       |                                 |
+|  space                | clear screen                    |
+|                       |                                 |
+| - ( hyphen )          | insert a marker in the output   |
+|                       |                                 |
+|   i                   | display the main server info    |
+|                       |                                 |
 
 
 ---
