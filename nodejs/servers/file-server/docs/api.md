@@ -38,7 +38,7 @@ during operation the server supports the folling keypresses :
 ---
 
 
-### to start the server
+### start the server
 
 ```
 
