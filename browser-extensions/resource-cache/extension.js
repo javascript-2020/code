@@ -16,14 +16,13 @@ extension.js
         
         
         
-        var tabs            = new Set();
+        var tab_list        = new Set();
         
         var from            = 'resource-cache-extension';
         var webpage_from    = 'resource-cache-webpage';
         var port_name       = 'resource-cache';
         var cur_port;
         
-        var ok              = 'ok';
         
         var urls            = [
                                     `https://localhost/html/resource-cache.html`,
@@ -32,67 +31,54 @@ extension.js
                               ];
                               
                               
-        //delete_all();
+        var ok              = 'ok';
+        
+        
+        var runtime         = {};
+        var tabs            = {};
+        var action          = {};
+        var dnr             = {};
         
         
         
   //:
   
   
+        setTimeout(init,50);
+        
+        function init(){
+                                                                                console.log('init');
+                                                                                
+                                                                                
+              //delete_all();
+              
+              
+              chrome.action.onClicked.addListener(action.onclicked);
+              
+              
+              browser.runtime.onConnect.addListener(runtime.onconnect);
+              browser.runtime.onMessage.addListener(runtime.onmessage);
+              
+              
+              tabs.setup();
+              browser.tabs.onRemoved.addListener(tabs.onremoved);
+              
+              
+              if(!browser.declarativeNetRequest.onRuleMatchedDebug){
+                                                                                console.log('dnr.onRuleMatchedDebug');
+                    browser.declarativeNetRequest.onRuleMatchedDebug.addListener(dnr.match);
+                    
+              }
+              
+              
+              
+        }//init
+        
+        
+  //:
   
-        setup();
-        
-        async function setup(){
-        
-              var tabs    = await browser.tabs.query({url:urls});
-              for(var tab of tabs){
-                                                                                      console.log(tab);
-                    var promise   = browser.scripting.executeScript({target:{tabId:tab.id},files:['content-script.js']})
-                    promise.catch(err=>{
-                                                                                      console.log('error tab',tab.id,tab.title,tab.url)
-                                                                                      console.error(err);
-                    });
-                    
-              }//for
-              
-        }//setup
-        
-        
-        browser.runtime.onConnect.addListener(port=>{
-        
-              if(port.name!==port_name)return;
-              
-              cur_port      = port;
-              var sender    = port.sender;
-              
-              port.onMessage.addListener(request=>{
-              
-                    onmessage(request,sender,response);
-                    
-              });
-              
-        });
-        
-        
-        function response(data){
-        
-              cur_port.postMessage(data);
-              
-        }//response
-        
-        
-        
-        browser.runtime.onMessage.addListener(onmessage);
-        
-        
-        browser.tabs.onRemoved.addListener(tabId=>{
-                                                                                console.log('tab closed',tabId);
-              tabs.delete(tabId);
-              
-        });
-        
-        
-        chrome.action.onClicked.addListener(async tab=>{
+  
+        action.onclicked    = async function(tab){
         
               var existing    = await browser.tabs.query({url:urls});
               
@@ -104,57 +90,96 @@ extension.js
                     //browser.tabs.create({url:urls[0]});
               }
               
-        });
-        
-        
-        
-        var err;
-        try{
-        
-              browser.declarativeNetRequest.onRuleMatchedDebug.addListener(match);
-              
-        }//try
-        catch(err2){
-        
-              err   = err2;
-              
-        }//catch
-        if(err){
-                                                                                console.error(err.message);
-        }
+        }//onclicked
         
         
   //:
   
   
-        function onmessage(request,sender,response){
+        tabs.setup    = async function setup(){
+        
+              var tabs    = await browser.tabs.query({url:urls});
+              for(var tab of tabs){
+                                                                                console.log(tab);
+                    var promise   = browser.scripting.executeScript({
+                          target    : {tabId:tab.id},
+                          files     : ['content-script.js']
+                    })
+                    promise.catch(err=>{
+                                                                                console.log('error tab',tab.id,tab.title,tab.url)
+                                                                                console.error(err);
+                    });
+                    
+              }//for
+              
+        }//setup
+        
+        
+        tabs.onremoved    = function(tabId){
+                                                                                console.log('tab closed',tabId);
+              var tab   = tab_list.find(tab=>tab.id===tabId);
+              tab_list.delete(tab);
+              
+        }//onremoved
+        
+        
+  //:
+  
+  
+        runtime.onconnect   = function(port){
+        
+              if(port.name!==port_name)return;
+              
+              cur_port      = port;
+              var sender    = port.sender;
+              
+              port.onMessage.addListener(request=>{
+              
+                    runtime.onmessage(request,sender,runtime.response);
+                    
+              });
+              
+              port.onDisconnect.addListener(()=>{
+                                                                                console.log('port disconnect');
+              });
+              
+        }//onconnect
+        
+        
+        runtime.response    = function(data){
+        
+              cur_port.postMessage(data);
+              
+        }//response
+        
+        
+        runtime.onmessage   = function(request,sender,response){
         
               if(request.from!==webpage_from)return;
-              rec(request,sender,response);
+              
+              runtime.rec(request,sender,response);
+                                                                                //  return true to respond asynchronously
               return true;
               
         }//onmessage
         
         
-        function rec(request,sender,response){
+        runtime.rec   = function(request,sender,response){
                                                                                 console.log('rec',request);
               var {id,action,payload}   = request;
               
               var reply   = payload=>response({from,id,payload});
               
-              rec[action](payload,reply,sender);
-                                                                                //  return true to respond asynchronously
-              return true;
+              runtime.rec[action](payload,reply,sender);
               
         }//rec
         
         
-        rec.ping    = function(payload,reply,sender){
+        runtime.rec.ping    = function(payload,reply,sender){
                                                                                 console.log('rec.ping',sender);
               if(sender.tab && sender.tab.id){
                                                                                 console.log('tab opened',sender.tab.id);
-                    var id    = sender.tab.id;
-                    tabs.add(id);
+                    tab_list.add(sender.tab);
               }
               
               reply({pong:'pong'});
@@ -162,36 +187,39 @@ extension.js
         }//ping
         
         
-        rec.reload    = function(){
+        runtime.rec.reload    = function(){
                                                                                 console.log('rec.reload');
               browser.runtime.reload();
               
         }//reload
         
         
-        rec.add   = async function(payload,reply){
+        runtime.rec.add   = async function(payload,reply){
                                                                                 console.log('rec.add',payload);
               var rule    = payload;
                                                                                 console.log(rule);
               var {ok,error}      = await add(rule);
               if(error){
+                                                                                console.log(error);
                     reply({error});
                     return;
               }
+              
               reply({ok});
               
         }//add
         
         
-        rec.read   = async function(payload,reply){
+        runtime.rec.read   = async function(payload,reply){
                                                                                 console.log('rec.read',payload);
               var {rules,error}   = await read();
+              
               reply({rules,error});
               
         }//read
         
         
-        rec.delete    = async function(payload,reply){
+        runtime.rec.delete    = async function(payload,reply){
                                                                                 console.log('rec.delete',payload);
               var {id}    = payload;
               
@@ -202,7 +230,7 @@ extension.js
         }//delete
         
         
-        rec['delete-all']   = async function(payload,reply){
+        runtime.rec['delete-all']   = async function(payload,reply){
                                                                                 console.log('rec.delete-all');
               await delete_all();
               
@@ -220,7 +248,10 @@ extension.js
               var err;
               try{
               
-                    await browser.declarativeNetRequest.updateDynamicRules({removeRuleIds:[rule.id],addRules:[rule]});
+                    await browser.declarativeNetRequest.updateDynamicRules({
+                          removeRuleIds   : [rule.id],
+                          addRules        : [rule]
+                    });
                     
               }//try
               catch(err2){
@@ -249,6 +280,7 @@ extension.js
         async function del(id){
         
               await browser.declarativeNetRequest.updateDynamicRules({removeRuleIds:[id]});
+              
               return {ok};
               
         }//del
@@ -260,6 +292,7 @@ extension.js
               var removeRuleIds   = rules.map(r=>r.id);
                                                                                 console.log(removeRuleIds);
               await browser.declarativeNetRequest.updateDynamicRules({removeRuleIds});
+              
               return {ok};
               
         }//all
@@ -268,7 +301,7 @@ extension.js
   //:
   
   
-        function match(info){
+        dnr.match   = function(info){
                                                                                 console.log('[DNR Match Debug]',{
                                                                                       ruleId      : info.rule.ruleId,
                                                                                       initiator   : info.request.initiator,
@@ -293,6 +326,7 @@ extension.js
                     });
                     
               }//for
+              
               
         }//match
         
