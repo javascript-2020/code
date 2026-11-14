@@ -21,6 +21,7 @@ extension.js
         var from            = 'resource-cache-extension';
         var webpage_from    = 'resource-cache-webpage';
         var port_name       = 'resource-cache';
+        var cur_port;
         
         var ok              = 'ok';
         
@@ -61,17 +62,25 @@ extension.js
         
               if(port.name!==port_name)return;
               
+              cur_port      = port;
               var sender    = port.sender;
               
               port.onMessage.addListener(request=>{
               
-                    var response    = data=>port.postMessage(data);
-                    
                     onmessage(request,sender,response);
                     
               });
               
         });
+        
+        
+        function response(data){
+        
+              cur_port.postMessage(data);
+              
+        }//response
+        
+        
         
         browser.runtime.onMessage.addListener(onmessage);
         
