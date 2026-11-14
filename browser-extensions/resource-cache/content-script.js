@@ -58,7 +58,7 @@
                     
               });
               
-              port.onDisconnect.addListener(() => {
+              port.onDisconnect.addListener(()=>{
                                                                                 console.log('[content-script] extension connection lost');
                     window.removeEventListener('message',onmessage);
                     port    = null;
