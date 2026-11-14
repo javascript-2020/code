@@ -65,6 +65,9 @@ if this is a networked resource `fetch url` will load the resource, edit the fil
 
 to use a local resource, select `localfile`, edit the filename and click save
 
+to use an existing resource click
+<img style='border:1px solid gray;border-radius:3px;box-sizing:border-box;width:30px;height:30px;cursor:pointer;vertical-align:middle' src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAMAAAAM7l6QAAAAkFBMVEVHcEyNd4n9DXoCre4Are/vFHgBre77DnoKquYHquf8DXoNr+f7DXr7DXr0EHjpFnUHrOoHq+pxf4llmq3wE3j4DngCre7xEnSVm6H1EHjwE3jzEXgJq+gCre75DnneHW4Fq+sLqejzEXcJq+gCr+0GrOsFrOv4Dnj4Dnj7DXiOVKUErOwErO0ErO3BM5C4OJQxH3O3AAAAMHRSTlMAAf7v/Sfo6y4l9Qzi8GkKY20DBS2E8xYCcTZhGt66A4VZPDixe5mhmM87uLXBamH2lh6LAAABHklEQVQoz62T23aDIBBFccRoQRTveIsaTZqkt///u4KapKlKX7qfmHUWw5yZAUVhGAq0RAjDEBEKkQaBDPTvZEWjkxPm6R49uD906ozQKfJjSU6Yd7N7NEdOo+6fbcaYDUDKWQ52CowDFXgAroQ85Kh6kRzxrkeocCGxLKtkxHvuJR3wR5XtYZ+p0siidKfGXQJusWWMD18MPHloVtsSXS/w6m82oznD5Uo35ZKQz2F0V/XLOcfSU4dr6Q61ZvB7RXzlib7jN5m+r9PgXrpvKRKwD0hId63sETfT+/3cVgDkozuMpxan/Em2J0/0NE/A7FRoqOSxyj47pmoAQWpyY1rGlQWVpfHbrq7Qmhxp5MoROvmB9pcYf32iSGiIvgGWvhS7kcN0DQAAAABJRU5ErkJggg=='>
+in the files list to populate the field
 
 - **initiatorDomains**
 
