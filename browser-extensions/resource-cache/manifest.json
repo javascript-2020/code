@@ -8,7 +8,7 @@
               "version"                     : "1.0",
               
               "icons"                       : {"48":"icon.png"},
-              "action"                      : {"default_title":"Open Dashboard"},
+              "action"                      : {"default_title":"Open Resource-Cache"},
               
               
               "permissions"                 : ["declarativeNetRequest","declarativeNetRequestFeedback","scripting","activeTab"],
