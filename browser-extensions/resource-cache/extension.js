@@ -18,8 +18,8 @@ extension.js
         
         var tabs            = new Set();
         
-        var from            = 'cache-extension';
-        var webpage_from    = 'cache-webpage';
+        var from            = 'resource-cache-extension';
+        var webpage_from    = 'resource-cache-webpage';
         
         var ok              = 'ok';
         
