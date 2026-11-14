@@ -20,6 +20,7 @@ extension.js
         
         var from            = 'resource-cache-extension';
         var webpage_from    = 'resource-cache-webpage';
+        var port_name       = 'resource-cache';
         
         var ok              = 'ok';
         
@@ -58,7 +59,7 @@ extension.js
         
         browser.runtime.onConnect.addListener(port=>{
         
-              if(port.name!=='resource-cache')return;
+              if(port.name!==port_name)return;
               
               var sender    = port.sender;
               
