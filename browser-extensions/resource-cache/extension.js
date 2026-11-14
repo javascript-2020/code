@@ -3,7 +3,7 @@
 
 /*
 
-extension.js
+//  extension.js:
 
 01-11-26
 
@@ -346,9 +346,43 @@ extension.js
         
         
         
-        
-        
-        
-        
-        
-        
+  //:
+  //:
+  //  notes:
+  
+  
+/*
+
+
+
+// Clear network cache and cache storage for a specific origin only
+chrome.browsingData.remove(
+    {
+        origins: ["https://example.com"] // Must match the exact origin
+    },
+    {
+        cache: true,         // Standard HTTP cache
+        cacheStorage: true   // Cache API storage (if the site uses it)
+    },
+    () => {
+        console.log("Cache successfully cleared for example.com");
+    }
+);
+
+
+
+
+
+
+
+
+
+*/
+
+
+
+
+
+
+
+
