@@ -39,7 +39,7 @@
         });
         
         port.onDisconnect.addListener(() => {
-                                                                                //console.warn("[Content] Extension connection lost. Cleaning up listeners and UI...");
+                                                                                console.warn("[Content] Extension connection lost. Cleaning up listeners and UI...");
               window.removeEventListener('message',onmessage);
               
         });
