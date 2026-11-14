@@ -13,7 +13,7 @@
 (()=>{
 
         var id    = crypto.randomUUID();
-                                                                                console.log('[content-script]',id);
+                                                                                console.log('[content-script] start',id);
         /*
         if(document.documentElement.dataset.active==='true'){
               console.log("Content script already active in this tab. Aborting duplicate injection.");
@@ -73,6 +73,9 @@
         }//onmessage
         
         
+  //:
+  
+  
         onmessage.webpage   = function(e){
         
               if(!port)connect();
@@ -83,6 +86,9 @@
         }//webpage
         
         
+  //:
+  
+  
         onmessage.cs    = function(e){
         
               switch(e.data.action){
