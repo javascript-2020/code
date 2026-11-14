@@ -31,6 +31,7 @@
         
         var webpage_from      = 'resource-cache-webpage';
         var cs_from           = 'resource-cache-cs';
+        var port_name         = 'resource-cache';
         
         var port;
         
@@ -113,7 +114,7 @@
   
         function connect(){
                                                                                 console.log('[content-script] connect');
-              port    = browser.runtime.connect({name:'resource-cache'});
+              port    = browser.runtime.connect({name:port_name});
               
               port.onMessage.addListener(response=>{
                                                                                 //console.log('port.onMessage',msg);
