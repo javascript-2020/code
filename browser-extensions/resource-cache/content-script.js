@@ -87,11 +87,19 @@
         
               switch(e.data.action){
               
-                case 'init'   : destroy();        break;
+                case 'init'   : onmessage.cs.init(e);       break;
                 
               }//switch
               
         }//cs
+        
+        
+        onmessage.cs.init   = function(e){
+        
+              if(e.data.id===id)return;
+              destroy();
+              
+        }//init
         
         
   //:
