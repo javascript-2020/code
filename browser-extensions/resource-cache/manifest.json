@@ -16,19 +16,19 @@
               
               
               "background"                  : {
-                                                    "service_worker":"extension.js",
-                                                    "scripts": ["extension.js"]
+                                                    "service_worker"    : "extension.js",
+                                                    "scripts"           : ["extension.js"]
                                               },
                                               
               "content_scripts"             : [
                                                 {
-                                                      "run_at":"document_start",
-                                                      "matches":[
-                                                            "https://localhost/html/resource-cache.html",
-                                                            "https://127.0.0.1/html/resource-cache.html",
-                                                            "https://resource-cache.dev/html/resource-cache.html"
-                                                      ],
-                                                      "js":["content-script.js"]
+                                                      "run_at"    : "document_start",
+                                                      "matches"   : [
+                                                                          "https://localhost/html/resource-cache.html",
+                                                                          "https://127.0.0.1/html/resource-cache.html",
+                                                                          "https://resource-cache.dev/html/resource-cache.html"
+                                                                    ],
+                                                      "js"        : ["content-script.js"]
                                                 }
                                               ]
   
