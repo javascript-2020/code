@@ -81,8 +81,8 @@
         
               if(!port)connect();
               
-              port.postMessage(event.data);
-              //runtime.sendMessage(event.data,response=>window.postMessage(response,'*'));
+              port.postMessage(e.data);
+              //runtime.sendMessage(e.data,response=>window.postMessage(response,'*'));
               
         }//webpage
         
