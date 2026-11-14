@@ -9,13 +9,19 @@
 
 
 */
-                                                                                console.log('content-script.js');
+
+(()=>{
+
+        var id    = crypto.randomUUID();
+                                                                                console.log('[content-script]',id);
+        /*
         if(document.documentElement.dataset.active==='true'){
-            console.log("Content script already active in this tab. Aborting duplicate injection.");
-            // Optionally signal the old instance to ping back, or exit early
-            return;
+              console.log("Content script already active in this tab. Aborting duplicate injection.");
+              // Optionally signal the old instance to ping back, or exit early
+              return;
         }
         document.documentElement.dataset.active   = 'true';
+        */
         
         
         
@@ -32,9 +38,22 @@
   //:
   
   
+        window.postMessage({action:'init',id,from:cs_from},'*');
+        
         window.addEventListener('message',onmessage);
         connect();
         
+        
+        
+  //:
+  
+  
+        function destroy(){
+                                                                                console.log('[content-script] destroy',id);
+              window.removeEventListener('message',onmessage);
+              if(port)port.disconnect();
+              
+        }//destoy
         
         
   //:
@@ -68,7 +87,7 @@
         
               switch(e.data.action){
               
-                case ''   : break;
+                case 'init'   : destroy();        break;
                 
               }//switch
               
@@ -111,6 +130,11 @@
         });
 */
 
+
+
+
+
+})();
 
 
 
