@@ -50,7 +50,7 @@
   
         function connect(){
         
-              port    = runtime.connect({name:'resource-cache'});
+              port    = browser.runtime.connect({name:'resource-cache'});
               
               port.onMessage.addListener(response=>{
                                                                                 //console.log('port.onMessage',msg);
