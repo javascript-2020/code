@@ -117,7 +117,15 @@
         
         tabs.onremoved    = function(tabId){
                                                                                 console.log('tab closed',tabId);
-              var tab   = tab_list.find(tab=>tab.id===tabId);
+              var tab;
+              for(var tab2 of tab_list){
+              
+                    if(tab2.id===tabId){
+                          tab   = tab2;
+                          break;
+                    }
+                    
+              }//for
               tab_list.delete(tab);
               
         }//onremoved
