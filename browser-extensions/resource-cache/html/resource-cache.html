@@ -124,6 +124,10 @@
     {flex:1;font-weight:bold}
   #dir .file .size
     {width:100px}
+  #dir .file .redirect
+    {width:25px;height:25px;padding:3px;background:white;
+      content:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAMAAAAM7l6QAAAAkFBMVEVHcEyNd4n9DXoCre4Are/vFHgBre77DnoKquYHquf8DXoNr+f7DXr7DXr0EHjpFnUHrOoHq+pxf4llmq3wE3j4DngCre7xEnSVm6H1EHjwE3jzEXgJq+gCre75DnneHW4Fq+sLqejzEXcJq+gCr+0GrOsFrOv4Dnj4Dnj7DXiOVKUErOwErO0ErO3BM5C4OJQxH3O3AAAAMHRSTlMAAf7v/Sfo6y4l9Qzi8GkKY20DBS2E8xYCcTZhGt66A4VZPDixe5mhmM87uLXBamH2lh6LAAABHklEQVQoz62T23aDIBBFccRoQRTveIsaTZqkt///u4KapKlKX7qfmHUWw5yZAUVhGAq0RAjDEBEKkQaBDPTvZEWjkxPm6R49uD906ozQKfJjSU6Yd7N7NEdOo+6fbcaYDUDKWQ52CowDFXgAroQ85Kh6kRzxrkeocCGxLKtkxHvuJR3wR5XtYZ+p0siidKfGXQJusWWMD18MPHloVtsSXS/w6m82oznD5Uo35ZKQz2F0V/XLOcfSU4dr6Q61ZvB7RXzlib7jN5m+r9PgXrpvKRKwD0hId63sETfT+/3cVgDkozuMpxan/Em2J0/0NE/A7FRoqOSxyj47pmoAQWpyY1rGlQWVpfHbrq7Qmhxp5MoROvmB9pcYf32iSGiIvgGWvhS7kcN0DQAAAABJRU5ErkJggg==);
+    }
   #dir .file .del
     {width:25px;height:25px;padding:3px;background:white;
       content:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAiCAMAAAB/VplGAAAAq1BMVEVHcEzUAADXAADUAADVAADPAADYAADWAADLAADLAADbAADVAADXAADRAADKAADJAADVAADOAADkAADMAADiAADZAADUAADpAADoAADfAADJAADOAADrAADQAADbAADZAADWAADQAADIAADJAADsAADqAADHAADpAADwAADfAADTAAD2AADnAADiAADcAADWAADZAADPAADtAADlAAD6AADzAADMAADsAADJAAAFz1VZAAAAJnRSTlMACA8fA2MsfPdMGFZAtu3nv23t0q2Gj+KY9ng3xsrP/N2j3K+wzYD17h4AAAGhSURBVDjLdZPngoIwEIQJXRSRptjbXSgHoSn4/k92G7hQ5Jx/4QvJ7uyE41ohxdZn3EfNVIyXpth/EHbXWb808auqVKnfbsP2ebeUqirPc2PfrkRziUFHjeGFmkdRlOp8W4j6otiQu6suUZqm2Zkej9w8r4Avd4hhpKdZRgg5aRxanyPKB1dznAIwBClAsxS4ag47W2xJmIA2TkgI5WtxiPlTmJSNkjAEvtLGxnhJGce+H8fASbZcvPk2L2O/Lorab7jybqts+UUAKmrgK/4d899F8AQFhV9ai8lQxK/g+QN6BnXsiVPsAX48KN7I05FqhwAo8KBwpxR5BcP//Cwqfs0OP0zK5qRtXLPSNsIkS1ZS+l1j8ze6v4Dhcc1scdCICseMUM5MHbvC61HacjaS4e9onTc4TKzD30C3g9sltWo42ZqaA4GgcTh1xe8NDBmm3BU5zQnbsLCB8ncML4DyK3VD0ElGo7RjVd9wy//SI6xSoHZ3+A433GZGy0eIqTRoi/Jb36psV8OwQG3YGD5e+T56ypJqjF1Go7AgV/r07H8BUMxF2szPw1wAAAAASUVORK5CYII=);
@@ -360,6 +364,7 @@
                         <div class=index></div>
                         <div class=name></div>
                         <div class=size></div>
+                        <img class='redirect icon' title=redirect>
                         <img class='del icon' title='delete file'>
                   </div>
             </div>
@@ -406,8 +411,8 @@
         
         var auth          = 'auth-123';
         
-        var from          = 'cache-webpage';
-        var ext_from      = 'cache-extension';
+        var from          = 'resource-cache-webpage';
+        var ext_from      = 'resource-cache-extension';
         
         var rules;
         edit.cur          = null;
@@ -1299,6 +1304,7 @@
                     $(nitem,'.index').textContent       = i;
                     $(nitem,'.name').textContent        = file.name;
                     $(nitem,'.size').textContent        = hs(file.size);
+                    $(nitem,'.redirect').onclick        = e=>input.redirect.value=file.name;
                     $(nitem,'.del').onclick             = e=>del(nitem,file);
                     
                     dir_list.append(nitem);
