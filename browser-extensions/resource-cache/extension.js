@@ -87,7 +87,7 @@
                     browser.tabs.update(existing[0].id,{active:true});
                     browser.windows.update(existing[0].windowId,{focused:true});
               }else{
-                    browser.tabs.create({url:urls[1]});
+                    //browser.tabs.create({url:urls[1]});
               }
               
         }//onclicked
