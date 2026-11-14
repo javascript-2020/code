@@ -49,7 +49,7 @@
   
   
         function connect(){
-        
+                                                                                console.log('[content-script] connect');
               port    = browser.runtime.connect({name:'resource-cache'});
               
               port.onMessage.addListener(response=>{
@@ -59,7 +59,7 @@
               });
               
               port.onDisconnect.addListener(() => {
-                                                                                console.log("[Content] Extension connection lost. Cleaning up listeners and UI...");
+                                                                                console.log('[content-script] extension connection lost');
                     window.removeEventListener('message',onmessage);
                     port    = null;
                     
