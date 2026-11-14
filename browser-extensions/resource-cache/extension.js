@@ -3,14 +3,14 @@
 
 /*
 
-cache.js
+extension.js
 
 01-11-26
 
 
 */
                                                                                 console.clear();
-                                                                                console.log('cache.js');
+                                                                                console.log('extension.js');
                                                                                 
         if(typeof browser=='undefined')browser=chrome;
         
