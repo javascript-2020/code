@@ -10,12 +10,21 @@
 
 */
                                                                                 console.log('content-script.js');
-                                                                                
+        if(document.documentElement.dataset.active==='true'){
+            console.log("Content script already active in this tab. Aborting duplicate injection.");
+            // Optionally signal the old instance to ping back, or exit early
+            return;
+        }
+        document.documentElement.dataset.active   = 'true';
+        
+        
+        
         if(typeof browser=='undefined')browser=chrome;
         
         
         
-        var webpage_from      = 'cache-webpage';
+        var webpage_from      = 'resource-cache-webpage';
+        var cs_from           = 'resource-cache-cs';
         
         var port;
         
@@ -31,18 +40,39 @@
   //:
   
   
-        function onmessage(event){
+        function onmessage(e){
         
-              if(event.source!==window || !event.data || event.data.from!==webpage_from){
-                    return;
-              }
+              if(e.source!==window || !e.data)return;
               
+              switch(e.data.from){
+              
+                case webpage_from   : onmessage.webpage(e);       break;
+                case cs_from        : onmessage.cs(e);            break;
+                
+              }//switch
+              
+        }//onmessage
+        
+        
+        onmessage.webpage   = function(e){
+        
               if(!port)connect();
               
               port.postMessage(event.data);
               //runtime.sendMessage(event.data,response=>window.postMessage(response,'*'));
               
-        }//onmessage
+        }//webpage
+        
+        
+        onmessage.cs    = function(e){
+        
+              switch(e.data.action){
+              
+                case ''   : break;
+                
+              }//switch
+              
+        }//cs
         
         
   //:
@@ -60,7 +90,7 @@
               
               port.onDisconnect.addListener(()=>{
                                                                                 console.log('[content-script] extension connection lost');
-                    window.removeEventListener('message',onmessage);
+                    //window.removeEventListener('message',onmessage);
                     port    = null;
                     
               });
