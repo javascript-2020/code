@@ -1,25 +1,43 @@
 
 
 
+/*
+
+//  content-script.js:
+
+14-11-26
 
 
-
-
+*/
                                                                                 console.log('content-script.js');
-        var runtime           = chrome?.runtime||browser?.runtime
+                                                                                
+        if(typeof browser=='undefined')browser=chrome;
+        
+        
+        
         var webpage_from      = 'cache-webpage';
+        
+        var port;
         
         
   //:
   
   
         window.addEventListener('message',onmessage);
+        connect();
         
+        
+        
+  //:
+  
+  
         function onmessage(event){
         
               if(event.source!==window || !event.data || event.data.from!==webpage_from){
                     return;
               }
+              
+              if(!port)connect();
               
               port.postMessage(event.data);
               //runtime.sendMessage(event.data,response=>window.postMessage(response,'*'));
@@ -30,19 +48,24 @@
   //:
   
   
-        var port    = runtime.connect({name:'resource-cache'});
+        function connect(){
         
-        port.onMessage.addListener(response=>{
+              port    = runtime.connect({name:'resource-cache'});
+              
+              port.onMessage.addListener(response=>{
                                                                                 //console.log('port.onMessage',msg);
-              window.postMessage(response,'*');
+                    window.postMessage(response,'*');
+                    
+              });
               
-        });
-        
-        port.onDisconnect.addListener(() => {
+              port.onDisconnect.addListener(() => {
                                                                                 console.log("[Content] Extension connection lost. Cleaning up listeners and UI...");
-              window.removeEventListener('message',onmessage);
+                    window.removeEventListener('message',onmessage);
+                    port    = null;
+                    
+              });
               
-        });
+        }//connect
         
         
         
