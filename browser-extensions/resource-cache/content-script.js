@@ -13,7 +13,7 @@
 (()=>{
 
         var id    = crypto.randomUUID();
-                                                                                console.log('[content-script] start',id);
+                                                                                console.log('[content-script] start2',id);
         /*
         if(document.documentElement.dataset.active==='true'){
               console.log("Content script already active in this tab. Aborting duplicate injection.");
@@ -78,10 +78,16 @@
   
   
         onmessage.webpage   = function(e){
-        
+                                                                                console.log('[content-script] onmessaage.webpage',id);
               if(!port)connect();
               
-              port.postMessage(e.data);
+              try{
+                    port.postMessage(e.data);
+              }
+              catch(err){
+                    console.log('port.postmessage error');
+                    console.error(err);
+              }
               //runtime.sendMessage(e.data,response=>window.postMessage(response,'*'));
               
         }//webpage
@@ -113,8 +119,17 @@
   
   
         function connect(){
-                                                                                console.log('[content-script] connect');
-              port    = browser.runtime.connect({name:port_name});
+                                                                                console.log('[content-script] connect',id);
+              try{
+              
+                    port    = browser.runtime.connect({name:port_name});
+                    
+              }//try
+              catch(err){
+                    console.log('runtime.connect error');
+                    console.error(err);
+                    return;
+              }
               
               port.onMessage.addListener(response=>{
                                                                                 //console.log('port.onMessage',msg);
@@ -123,7 +138,11 @@
               });
               
               port.onDisconnect.addListener(()=>{
-                                                                                console.log('[content-script] extension connection lost');
+                                                                                console.log('[content-script] extension connection lost',id);
+                    if(port.error){
+                                                                                console.log(`[content-script] Disconnected due to an error: ${port.error.message}`);
+                    }
+                    
                     //window.removeEventListener('message',onmessage);
                     port    = null;
                     
