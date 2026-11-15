@@ -44,35 +44,28 @@
   //:
   
   
-        setTimeout(init,50);
+  
+        //delete_all();
         
-        function init(){
-                                                                                console.log('init');
-                                                                                
-                                                                                
-              //delete_all();
+        
+        chrome.action.onClicked.addListener((...args)=>action.onclicked(...args));
+        
+        
+        browser.runtime.onConnect.addListener((...args)=>runtime.onconnect(...args));
+        browser.runtime.onMessage.addListener((...args)=>runtime.onmessage(...args));
+        
+        
+        setTimeout(()=>tabs.setup(),50);
+        browser.tabs.onRemoved.addListener((...args)=>tabs.onremoved(...args));
+        
+        
+        if(!browser.declarativeNetRequest.onRuleMatchedDebug){
+                                                                          console.log('dnr.onRuleMatchedDebug');
+              browser.declarativeNetRequest.onRuleMatchedDebug.addListener((...args)=>dnr.match(...args));
               
-              
-              chrome.action.onClicked.addListener(action.onclicked);
-              
-              
-              browser.runtime.onConnect.addListener(runtime.onconnect);
-              browser.runtime.onMessage.addListener(runtime.onmessage);
-              
-              
-              tabs.setup();
-              browser.tabs.onRemoved.addListener(tabs.onremoved);
-              
-              
-              if(!browser.declarativeNetRequest.onRuleMatchedDebug){
-                                                                                console.log('dnr.onRuleMatchedDebug');
-                    browser.declarativeNetRequest.onRuleMatchedDebug.addListener(dnr.match);
-                    
-              }
-              
-              
-              
-        }//init
+        }
+        
+        
         
         
   //:
