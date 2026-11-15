@@ -24,7 +24,7 @@ the server requires nodejs and should be run with command
 node file-server.js -s -p 3010
 ```
 
--s : tells the server to serve files also, required for cached resources
+-s : serve the files over https, required for cached resources
 
 -p : specifies the port the server runs on ( note: this will be required in the redirect url )
 
@@ -90,7 +90,7 @@ google.com, youtube.com
 
 this is the type of resource that a redirect will apply to, these can be determined from `dev tools / network / type`
 
-or see [declarativeNetRequest.ResourceType [mdn]](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/declarativeNetRequest/ResourceType)
+see [declarativeNetRequest.ResourceType [mdn]](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/declarativeNetRequest/ResourceType)
 
 
 
