@@ -59,7 +59,7 @@
         browser.tabs.onRemoved.addListener((...args)=>tabs.onremoved(...args));
         
         
-        if(!browser.declarativeNetRequest.onRuleMatchedDebug){
+        if(browser.declarativeNetRequest.onRuleMatchedDebug){
                                                                           console.log('dnr.onRuleMatchedDebug');
               browser.declarativeNetRequest.onRuleMatchedDebug.addListener((...args)=>dnr.match(...args));
               
